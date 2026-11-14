@@ -99,8 +99,8 @@ export function CommandPalette({
     : [];
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-none flex items-start justify-center pt-16 sm:pt-24 px-4 overflow-y-auto no-print">
-      <div className="bg-white border border-slate-300 rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 bg-slate-900/60 flex items-start justify-center pt-16 sm:pt-24 px-4 overflow-y-auto no-print">
+      <div className="bg-white border border-slate-300 rounded-xl shadow-2xl w-full overflow-hidden flex flex-col">
         {/* Search Input Bar */}
         <div className="flex items-center gap-3 px-4 py-3.5 border-b border-slate-200 bg-slate-50">
           <Search className="w-4 h-4 text-slate-400 shrink-0 stroke-[1.5]" />

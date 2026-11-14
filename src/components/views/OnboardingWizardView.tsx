@@ -55,7 +55,7 @@ export function OnboardingWizardView({
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6">
+    <div className="py-8 px-4 sm:px-6">
       <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-xs space-y-6">
         {/* Step Indicator */}
         <div className="space-y-3 border-b border-slate-100 pb-5">

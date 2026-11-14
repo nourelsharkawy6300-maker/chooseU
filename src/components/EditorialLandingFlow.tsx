@@ -71,18 +71,18 @@ export function EditorialLandingFlow({
       {/* ==================================================================== */}
       {/* CHAPTER 01: THE POSSIBILITY (الإمكانية)                              */}
       {/* ==================================================================== */}
-      <section id="chapter-possibility" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <section id="chapter-possibility" className="px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-mono tracking-wider">
             <span className="w-2 h-2 rounded-full bg-blue-600" />
             <span>CHAPTER 01 / الإمكانية — THE POSSIBILITY</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight max-w-3xl">
+          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
             منصة واحدة. كل طالب. كل مجموع. كل مستقبل.
           </h2>
 
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             وداعاً لعشوائية التنسيق والحيرة بين الكليات. خوارزمية ذكية تحلل درجاتك وميزانيتك وطموحك الأكاديمي لمطابقتها مع أكثر من 120 مساراً جامعياً معتمداً.
           </p>
         </div>
@@ -265,18 +265,18 @@ export function EditorialLandingFlow({
       {/* ==================================================================== */}
       {/* CHAPTER 02: CHOOSE YOUR ROUTE (اختر مسارك — The 6 Sectors)           */}
       {/* ==================================================================== */}
-      <section id="chapter-sectors" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <section id="chapter-sectors" className="px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-purple-50 border border-purple-200 text-purple-700 text-[11px] font-mono tracking-wider">
             <span className="w-2 h-2 rounded-full bg-purple-600" />
             <span>CHAPTER 02 / القطاعات — CHOOSE YOUR ROUTE</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight max-w-3xl">
+          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
             6 أبعاد أكاديمية تغطي كافة تخصصات الجامعات المصرية
           </h2>
 
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             استكشف القطاعات التخصصية وتعرف على مجالات الدراسة والحدود الدنيا ومسارات العمل المستقبلية لكل قطاع.
           </p>
         </div>
@@ -344,18 +344,18 @@ export function EditorialLandingFlow({
       {/* ==================================================================== */}
       {/* CHAPTER 03: STICKY SCROLL-SPY JOURNEY (رحلتك خطوة بخطوة 01 / 04)      */}
       {/* ==================================================================== */}
-      <section id="chapter-methodology" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <section id="chapter-methodology" className="px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-mono tracking-wider">
             <span className="w-2 h-2 rounded-full bg-emerald-600" />
             <span>CHAPTER 03 / المنهجية — YOUR 4-STEP JOURNEY</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight max-w-3xl">
+          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
             خارطة الطريق: كيف تصنع قرارك الجامعي بأعلى دقة رياضية
           </h2>
 
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             عملية علمية متكاملة من 4 خطوات تختصر عليك شهوراً من التخبط بين المجموع والميزانية وسوق العمل.
           </p>
         </div>
@@ -536,11 +536,11 @@ export function EditorialLandingFlow({
       {/* ==================================================================== */}
       {/* FINAL CALL TO ACTION (START THE PLATFORM)                            */}
       {/* ==================================================================== */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="px-4 sm:px-6 lg:px-8">
         <div className="bg-[#0F172A] text-white rounded-2xl p-8 sm:p-12 text-center space-y-6 shadow-2xl relative overflow-hidden">
           <div className="absolute inset-0 bg-blue-600/10 rounded-2xl blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 space-y-3 max-w-2xl mx-auto">
+          <div className="relative z-10 space-y-3">
             <span className="text-[11px] font-mono text-blue-400 tracking-wider">
               LAUNCH YOUR FUTURE TODAY
             </span>

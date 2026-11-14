@@ -82,7 +82,7 @@ export function IntroSplash({ onComplete }: IntroSplashProps) {
     >
       {/* Centered Brand Presentation */}
       <div
-        className="flex flex-col items-center text-center px-6 max-w-sm"
+        className="flex flex-col items-center text-center px-6"
         style={{
           opacity: isReady && !isExiting ? 1 : isExiting ? 0.3 : 0,
           transform: isReady

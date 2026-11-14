@@ -176,7 +176,7 @@ export function WorkspaceTabs({
   const bestFitComparedFaculty = comparedFacultiesList[0] || null;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <div className="px-4 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       {/* =====================================================================
           1. RIGHT STICKY CONTROL SIDEBAR (lg:col-span-4)
          ===================================================================== */}
@@ -769,10 +769,10 @@ export function WorkspaceTabs({
             {/* Smart Zero-Match Auto-Recovery Alert */}
             {evaluation.allRanked.length === 0 ? (
               <div className="p-10 text-center space-y-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center mx-auto">
+                <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center">
                   <Info className="w-5 h-5" strokeWidth={1.5} />
                 </div>
-                <div className="max-w-md mx-auto space-y-1.5">
+                <div className="space-y-1.5">
                   <h3 className="text-[15px] font-semibold text-slate-900">
                     لا توجد كليات تطابق هذا السقف المالي أو القطاع حالياً
                   </h3>
@@ -835,7 +835,7 @@ export function WorkspaceTabs({
                               className="p-4 space-y-3 hover:bg-slate-50/50 transition"
                             >
                               <div className="flex flex-wrap items-start justify-between gap-4">
-                                <div className="space-y-1 max-w-xl">
+                                <div className="space-y-1">
                                   <div className="flex flex-wrap items-center gap-2">
                                     <span
                                       className={`px-2 py-0.5 rounded text-[11px] font-medium border ${getCategoryBadgeStyle(
@@ -1200,8 +1200,8 @@ export function WorkspaceTabs({
                 </table>
 
                 {!isReportUnlocked && (
-                  <div className="absolute inset-x-0 top-10 mx-auto max-w-md z-20 bg-white/95 backdrop-blur-md border border-slate-200 shadow-2xl rounded-xl p-6 text-center no-print">
-                    <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 flex items-center justify-center mx-auto mb-3">
+                  <div className="absolute inset-x-0 top-10 z-20 bg-white/95 border border-slate-200 shadow-2xl rounded-xl p-6 text-center no-print">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 flex items-center justify-center mb-3">
                       <Lock className="w-4 h-4" strokeWidth={1.5} />
                     </div>
                     <h3 className="text-[15px] font-semibold text-slate-900">
@@ -1447,8 +1447,8 @@ export function WorkspaceTabs({
           FACULTY AUDIT & METHODOLOGY SLIDE-OVER DRAWERS
          ===================================================================== */}
       {auditedFaculty && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex justify-end no-print">
-          <div className="bg-white w-full max-w-lg h-full shadow-2xl border-r border-slate-200 p-6 overflow-y-auto flex flex-col justify-between">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 -xs flex justify-end no-print">
+          <div className="bg-white w-full h-full shadow-2xl border-r border-slate-200 p-6 overflow-y-auto flex flex-col justify-between">
             <div className="space-y-5">
               <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
                 <div>
@@ -1560,8 +1560,8 @@ export function WorkspaceTabs({
       )}
 
       {isMethodologyOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
-          <div className="bg-white border border-slate-200 rounded-xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 -xs flex items-center justify-center p-4 no-print">
+          <div className="bg-white border border-slate-200 rounded-xl w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center gap-2">
                 <Scale className="w-4 h-4 text-blue-600" strokeWidth={1.5} />

@@ -142,7 +142,7 @@ export function AssessmentLabView({
 
       {/* QUIZ TAB */}
       {activeTab === "quiz" && (
-        <div className="max-w-3xl mx-auto space-y-4">
+        <div className="space-y-4">
           {/* Progress Header */}
           <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs space-y-2">
             <div className="flex items-center justify-between text-[12px]">

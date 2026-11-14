@@ -51,7 +51,7 @@ export function AuthPortalView({
   };
 
   return (
-    <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6">
+    <div className="py-8 px-4 sm:px-6">
       <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden grid grid-cols-1 lg:grid-cols-12">
         {/* Right Side: Authentication Form */}
         <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between space-y-6">

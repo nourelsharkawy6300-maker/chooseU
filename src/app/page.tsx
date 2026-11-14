@@ -560,7 +560,7 @@ export default function ChooseUEgyptPlatform() {
     stream === "Science" ? "علمي علوم" : stream === "Math" ? "علمي رياضة" : "أدبي";
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-slate-100 font-sans antialiased selection:bg-blue-600 selection:text-white" dir="rtl">
+    <div className="bg-[#0F172A] text-slate-100 font-sans antialiased selection:bg-blue-600 selection:text-white" dir="rtl">
       {/* Fast, Elegant Intro Curtain (Under 500ms, auto-unmounts completely) */}
       {showIntro && <IntroSplash onComplete={() => setShowIntro(false)} />}
 
@@ -633,9 +633,9 @@ export default function ChooseUEgyptPlatform() {
         /* ================================================================ */
         /* CASE B: FULL ENTERPRISE WORKSPACE & 4-STATION JOURNEY ARCHITECTURE */
         /* ================================================================ */
-        <div className="min-h-screen bg-[#0F172A] text-slate-100">
+        <div className="bg-[#0F172A] text-slate-100">
           {/* Permanent Sticky Dark Header across all views */}
-          <header className="sticky top-0 z-40 h-16 bg-[#0F172A]/95 backdrop-blur-md border-b border-slate-800 text-white px-4 sm:px-6 flex items-center justify-between gap-3 shadow-lg no-print">
+          <header className="sticky top-0 z-40 h-16 bg-[#0F172A]/95 border-b border-slate-800 text-white px-4 sm:px-6 flex items-center justify-between gap-3 shadow-lg no-print">
             {/* Right side: Mobile Menu Button + ChooseU Brand Logo + Breadcrumb */}
             <div className="flex items-center gap-3">
               <button
@@ -768,7 +768,7 @@ export default function ChooseUEgyptPlatform() {
 
             {/* Main Content Viewport */}
             <div className="flex-1 min-w-0">
-              <main className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+              <main className="p-4 sm:p-6 lg:p-8 w-full space-y-6">
                 {/* PRIMARY VIEW: 4-STATION JOURNEY STEPPER */}
                 {currentView === "journey" && (
                   <FourStationJourney

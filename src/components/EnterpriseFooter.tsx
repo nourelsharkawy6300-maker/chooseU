@@ -11,7 +11,7 @@ interface EnterpriseFooterProps {
 export function EnterpriseFooter({ onSelectView }: EnterpriseFooterProps) {
   return (
     <footer className="mt-20 border-t border-slate-800 bg-[#0B0F19] py-12 px-4 sm:px-6 lg:px-8 text-[12px] text-slate-400 no-print">
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Column 1: Philosophy & Identity */}
           <div className="space-y-3">

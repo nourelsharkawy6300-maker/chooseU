@@ -36,12 +36,12 @@ export function FacultyDetailDrawer({
     <div className="fixed inset-0 z-50 overflow-hidden flex justify-end">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-slate-900/60 -xs transition-opacity"
         onClick={onClose}
       />
 
       {/* Drawer Surface */}
-      <div className="relative w-full max-w-2xl bg-white h-full shadow-2xl flex flex-col z-10 overflow-y-auto border-r border-slate-200">
+      <div className="relative w-full bg-white h-full shadow-2xl flex flex-col z-10 overflow-y-auto border-r border-slate-200">
         {/* Header */}
         <div className="p-5 sm:p-6 border-b border-slate-200 bg-[#FAF8F5] sticky top-0 z-10 space-y-3">
           <div className="flex items-center justify-between">

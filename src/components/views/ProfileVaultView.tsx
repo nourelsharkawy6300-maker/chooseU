@@ -218,7 +218,7 @@ export function ProfileVaultView({
                           <td className="p-3 font-mono font-bold text-slate-900 tabular-nums whitespace-nowrap">
                             {tco.total4Yr.toLocaleString("en-US")} ج.م
                           </td>
-                          <td className="p-3 text-[11px] text-slate-600 max-w-xs leading-relaxed">
+                          <td className="p-3 text-[11px] text-slate-600 leading-relaxed">
                             {idx === 0
                               ? "أفضل عائد على الاستثمار وتوافق تام مع ميول الطالب."
                               : idx === 1
@@ -347,7 +347,7 @@ export function ProfileVaultView({
 
             {bookmarkedFaculties.length === 0 ? (
               <div className="text-center py-10 space-y-2">
-                <Bookmark className="w-8 h-8 text-slate-300 mx-auto stroke-[1.5]" />
+                <Bookmark className="w-8 h-8 text-slate-300 stroke-[1.5]" />
                 <p className="text-[12px] text-slate-500">
                   لم تقم بحفظ أي كليات بعد. يمكنك الضغط على أيقونة الحفظ في أي كلية لتظهر هنا.
                 </p>

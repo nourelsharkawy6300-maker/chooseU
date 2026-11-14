@@ -221,7 +221,7 @@ export function ExploreCatalogView({
       {/* 3. Catalog Grid */}
       {filteredFaculties.length === 0 ? (
         <div className="bg-white border border-slate-200 rounded-xl p-12 text-center space-y-3 shadow-xs">
-          <Building2 className="w-8 h-8 text-slate-400 mx-auto stroke-[1.5]" />
+          <Building2 className="w-8 h-8 text-slate-400 stroke-[1.5]" />
           <h3 className="text-sm font-bold text-slate-900">
             لم يتم العثور على كليات مطابقة لمعايير البحث الحالية
           </h3>

@@ -90,18 +90,18 @@ export function CompareArenaView({
       {/* 2. Empty or Insufficient State */}
       {comparedFaculties.length < 2 ? (
         <div className="bg-white border border-slate-200 rounded-xl p-8 sm:p-12 text-center space-y-4 shadow-xs">
-          <Scale className="w-10 h-10 text-slate-400 mx-auto stroke-[1.5]" />
+          <Scale className="w-10 h-10 text-slate-400 stroke-[1.5]" />
           <div className="space-y-1">
             <h3 className="text-base font-bold text-slate-900">
               اختر كليتين على الأقل لبدء المقارنة المباشرة
             </h3>
-            <p className="text-[12px] text-slate-500 max-w-md mx-auto">
+            <p className="text-[12px] text-slate-500">
               اضغط على أيقونة الميزان في بطاقة أي كلية في دليل الكليات أو لوحة التحكم لإضافتها هنا.
             </p>
           </div>
 
           {/* Quick Suggestions to add */}
-          <div className="pt-4 border-t border-slate-100 max-w-2xl mx-auto space-y-2">
+          <div className="pt-4 border-t border-slate-100 space-y-2">
             <div className="text-[11px] font-bold text-slate-600">
               اقتراحات سريعة للمقارنة في شعبتك:
             </div>

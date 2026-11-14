@@ -384,12 +384,12 @@ export function FourStationJourney({
   };
 
   return (
-    <div className="w-full bg-[#0F172A] text-slate-100 min-h-screen pb-24">
+    <div className="w-full bg-[#0F172A] text-slate-100 pb-24">
       {/* ==================================================================== */}
       {/* 1. STICKY OBSIDIAN 4-STATION STEPPER BAR                             */}
       {/* ==================================================================== */}
       <div className="sticky top-0 z-30 bg-[#0F172A]/95 border-b border-slate-800 px-4 py-3.5 shadow-md">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           {/* Brand & Active Station Indicator */}
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/40 flex items-center justify-center p-1.5 shrink-0">
@@ -450,7 +450,7 @@ export function FourStationJourney({
       {/* ==================================================================== */}
       {/* 2. MAIN WORKSPACE VIEWPORT                                           */}
       {/* ==================================================================== */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+      <main className="px-4 sm:px-6 py-8 space-y-8">
         {/* ================================================================== */}
         {/* STATION 1: DISCOVER (اكتشف)                                        */}
         {/* ================================================================== */}
@@ -1416,7 +1416,7 @@ export function FourStationJourney({
       {/* ==================================================================== */}
       {explainFaculty && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 animate-in fade-in duration-150">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full p-6 space-y-5 shadow-2xl">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-mono text-blue-400 tracking-wider">
@@ -1510,7 +1510,7 @@ export function FourStationJourney({
       {/* ==================================================================== */}
       {showReportModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 overflow-y-auto animate-in fade-in duration-150">
-          <div className="bg-[#0F172A] border border-slate-700 rounded-2xl max-w-3xl w-full p-6 sm:p-8 space-y-6 shadow-2xl my-8">
+          <div className="bg-[#0F172A] border border-slate-700 rounded-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl my-8">
             {/* Report Header Bar */}
             <div className="flex items-start justify-between border-b border-slate-800 pb-4">
               <div>

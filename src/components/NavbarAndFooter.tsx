@@ -64,8 +64,8 @@ export function PlatformNavbar({
 
   return (
     <>
-      <header className="h-16 bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 px-4 sm:px-6 lg:px-10 no-print">
-        <div className="max-w-7xl mx-auto h-full flex items-center justify-between gap-3">
+      <header className="h-16 bg-white/95 border-b border-slate-200 sticky top-0 z-40 px-4 sm:px-6 lg:px-10 no-print">
+        <div className="h-full flex items-center justify-between gap-3">
           {/* Right: Bespoke Geometric Brand Mark */}
           <button
             type="button"
@@ -183,7 +183,7 @@ export function PlatformFooter({
 }: PlatformFooterProps) {
   return (
     <footer className="bg-white border-t border-slate-200 pt-12 pb-8 px-6 lg:px-12 mt-auto no-print">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-slate-200 text-[12px] text-slate-500">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-slate-200 text-[12px] text-slate-500">
         {/* Column 1: Brand Overview & Audit Compliance */}
         <div className="space-y-3">
           <div className="flex items-center gap-2.5">
@@ -305,7 +305,7 @@ export function PlatformFooter({
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto pt-6 flex flex-wrap items-center justify-between gap-4 text-[11px] text-slate-400 tabular-nums">
+      <div className="pt-6 flex flex-wrap items-center justify-between gap-4 text-[11px] text-slate-400 tabular-nums">
         <span>
           ChooseU © 2026 — جميع الحقوق محفوظة لمنصة التوجيه الجامعي والتدقيق المالي
         </span>
@@ -371,8 +371,8 @@ export function AiCopilotDrawer({
       : "أدبي";
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex justify-end no-print">
-      <div className="bg-white w-full max-w-md h-full shadow-2xl border-r border-slate-200 flex flex-col justify-between">
+    <div className="fixed inset-0 z-50 bg-slate-900/50 -xs flex justify-end no-print">
+      <div className="bg-white w-full h-full shadow-2xl border-r border-slate-200 flex flex-col justify-between">
         {/* Top Drawer Header & Student Context Pills */}
         <div className="p-5 border-b border-slate-200 space-y-3 bg-slate-50/70">
           <div className="flex items-center justify-between">
