@@ -37,6 +37,14 @@ export default function AdvisorAdminPortalPage() {
     SecurityValidator.getLockoutRemainingSeconds()
   );
 
+  useEffect(() => {
+    if (lockoutSeconds <= 0) return;
+    const timer = setInterval(() => {
+      setLockoutSeconds((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [lockoutSeconds]);
+
   // Live Orders & Inspection State
   const [orders, setOrders] = useState<ConsultationOrderRow[]>([]);
   const [selectedOrderCode, setSelectedOrderCode] = useState<string>("");

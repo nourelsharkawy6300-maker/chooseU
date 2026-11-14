@@ -3,15 +3,8 @@
 import React, { useState } from "react";
 import {
   Layers,
-  ArrowLeft,
   Sparkles,
-  CheckCircle2,
-  AlertCircle,
-  Building2,
-  TrendingUp,
-  Percent,
   Briefcase,
-  ExternalLink,
 } from "lucide-react";
 import { Faculty, StreamType } from "@/types/chooseu";
 import { FACULTIES_DATABASE } from "@/data/faculties-db";
@@ -46,7 +39,6 @@ interface CareerPathwayAlternative {
 
 export function AlternativesEngineView({
   stream,
-  score,
   onOpenFacultyDrawer,
   onToggleCompare,
   comparedIds,
@@ -265,7 +257,7 @@ export function AlternativesEngineView({
 
         {/* 3 Alternatives Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {activePathway.alternatives.map((alt, idx) => {
+          {activePathway.alternatives.map((alt) => {
             const facultyObj = FACULTIES_DATABASE.find((f) => f.id === alt.facultyId) || FACULTIES_DATABASE[0];
             const isCompared = comparedIds.includes(facultyObj.id);
             const cutoffDiff = +(activePathway.dreamCutoff - alt.cutoff).toFixed(1);

@@ -5,12 +5,6 @@ import {
   Sparkles,
   ArrowRight,
   ShieldCheck,
-  CheckCircle2,
-  Lock,
-  User,
-  GraduationCap,
-  Layers,
-  MapPin,
 } from "lucide-react";
 import { StreamType, InterestCluster } from "@/types/chooseu";
 import { EGYPT_GOVERNORATES } from "@/data/faculties-db";

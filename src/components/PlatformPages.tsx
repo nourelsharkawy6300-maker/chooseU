@@ -865,7 +865,8 @@ export function SampleReportView({
   const formatTime = (sec: number) => {
     const m = Math.floor(sec / 60);
     const s = sec % 60;
-    return `0${m}:${s < 10 ? `0${s}` : s}`;
+    const sStr = s < 10 ? "0" + s : String(s);
+    return "0" + m + ":" + sStr;
   };
 
   const sampleFaculties =
@@ -962,7 +963,119 @@ export function SampleReportView({
       {/* A4 Print-Ready Sample Document */}
       <div className="relative bg-white border border-slate-200 rounded-xl shadow-sm p-6 sm:p-10 space-y-8 overflow-hidden print-only-sheet">
         {/* Diagonal Watermark */}
-        
+        <div className="pointer-events-none select-none absolute inset-0 flex items-center justify-center z-0 overflow-hidden no-print">
+          <span className="text-[28px] sm:text-[38px] font-bold text-slate-900/[0.04] -rotate-12 whitespace-nowrap tracking-wider">
+            نسخة معاينة استرشادية — ChooseU Advisory
+          </span>
+        </div>
+
+        <div className="relative z-10 space-y-8">
+          <div className="border-b-2 border-slate-900 pb-5 flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <div className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider">
+                ChooseU Executive Academic & Financial Audit
+              </div>
+              <h2 className="text-[20px] font-bold text-slate-900 mt-1">
+                التقرير الاستشاري المعتمد لتنسيق الجامعات والتدفق المالي لـ 4 سنوات
+              </h2>
+              <p className="text-[12px] text-slate-500 mt-1 tabular-nums">
+                وثيقة استشارية مدققة وفق حدود القبول الرسمية ولوائح المصروفات الجامعية (أكتوبر 2026)
+              </p>
+            </div>
+
+            <div className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-left text-[12px] tabular-nums space-y-0.5">
+              <div className="font-mono font-semibold text-slate-900">
+                REF: ORD-2026-SAMPLE
+              </div>
+              <div className="text-emerald-700 font-medium">
+                مراجعة المستشار المختص: معتمدة
+              </div>
+            </div>
+          </div>
+
+          {/* Student Metadata Summary */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-50 border border-slate-200 rounded-xl p-4 text-[12px] tabular-nums">
+            <div>
+              <span className="text-slate-500 block">اسم الطالب</span>
+              <strong className="text-slate-900 font-semibold">
+                {studentName.trim() || "نموذج طالب ثانوية عامة"}
+              </strong>
+            </div>
+            <div>
+              <span className="text-slate-500 block">الشعبة والمجموع</span>
+              <strong className="text-slate-900 font-semibold">
+                {stream === "Science"
+                  ? "علمي علوم"
+                  : stream === "Math"
+                  ? "علمي رياضة"
+                  : "أدبي"}{" "}
+                ({score.toFixed(1)}%)
+              </strong>
+            </div>
+            <div>
+              <span className="text-slate-500 block">
+                الميزانية السنوية والمحافظة
+              </span>
+              <strong className="text-slate-900 font-semibold">
+                {budget.toLocaleString()} ج.م • {gov}
+              </strong>
+            </div>
+            <div>
+              <span className="text-slate-500 block">المسار المتصدر</span>
+              <strong className="text-blue-700 font-semibold">
+                {TRACK_DETAILS[topTrack]?.title}
+              </strong>
+            </div>
+          </div>
+
+          {/* Recommended Tansik Ordering */}
+          <div className="space-y-3">
+            <h3 className="text-[15px] font-semibold text-slate-900">
+              أولاً: الترتيب الاستراتيجي الموصى به لرغبات التنسيق والبدائل الآمنة
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="border border-slate-200 rounded-xl p-4 bg-white space-y-2.5">
+                <div className="text-[12px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded inline-block">
+                  الرغبات الأساسية المستهدفة (الأقرب للمجموع والميول)
+                </div>
+                <ul className="space-y-2 text-[12px] text-slate-700 tabular-nums">
+                  {sampleFaculties.slice(0, 3).map((f, i) => (
+                    <li
+                      key={f.id}
+                      className="flex items-center justify-between border-b border-slate-100 pb-1.5 last:border-none"
+                    >
+                      <span className="font-medium text-slate-900">
+                        0{i + 1}. {f.name} ({f.university})
+                      </span>
+                      <span className="text-slate-500 font-semibold">
+                        حد 2026: {f.cutoff_2026.toFixed(1)}%
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="border border-slate-200 rounded-xl p-4 bg-white space-y-2.5">
+                <div className="text-[12px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded inline-block">
+                  البدائل الاستراتيجية المضمونة (تأمين التخصص)
+                </div>
+                <ul className="space-y-2 text-[12px] text-slate-700 tabular-nums">
+                  {sampleFaculties.slice(3, 6).map((f, i) => (
+                    <li
+                      key={f.id}
+                      className="flex items-center justify-between border-b border-slate-100 pb-1.5 last:border-none"
+                    >
+                      <span className="font-medium text-slate-900">
+                        0{i + 4}. {f.name} ({f.university})
+                      </span>
+                      <span className="text-slate-500 font-semibold">
+                        {f.y1_base_fee.toLocaleString()} ج.م/سنة
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
 
           {/* 4-Year TCO Cashflow Table */}
@@ -1563,12 +1676,18 @@ export function CheckoutModal({
       ? "علمي رياضة"
       : "أدبي";
 
+  const whatsappMsgBody = createdOrder
+    ? [
+        "مرحباً ChooseU، قمت بتحويل رسوم التقرير المعتمد (150 ج.م).",
+        "• رقم الطلب: " + createdOrder.order_code,
+        "• اسم الطالب: " + createdOrder.student_name,
+        "• الشعبة والمجموع: " + streamLabel + " (" + score.toFixed(1) + "%)",
+        "• الميزانية والمحافظة: " + budget.toLocaleString() + " ج.م — " + gov,
+        "• رقم مرجع InstaPay: " + createdOrder.instapay_ref,
+      ].join("\n")
+    : "";
   const whatsappSummaryUrl = createdOrder
-    ? `https://wa.me/201066594552?text=${encodeURIComponent(
-        `مرحباً ChooseU، قمت بتحويل رسوم التقرير المعتمد (150 ج.م).\n• رقم الطلب: ${createdOrder.order_code}\n• اسم الطالب: ${createdOrder.student_name}\n• الشعبة والمجموع: ${streamLabel} (${score.toFixed(
-          1
-        )}%)\n• الميزانية والمحافظة: ${budget.toLocaleString()} ج.م — ${gov}\n• رقم مرجع InstaPay: ${createdOrder.instapay_ref}`
-      )}`
+    ? "https://wa.me/201066594552?text=" + encodeURIComponent(whatsappMsgBody)
     : "https://wa.me/201066594552";
 
   return (

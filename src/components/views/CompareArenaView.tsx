@@ -5,13 +5,7 @@ import {
   Scale,
   Plus,
   Trash2,
-  Building2,
-  Trophy,
   CheckCircle2,
-  XCircle,
-  TrendingUp,
-  GraduationCap,
-  Briefcase,
   Share2,
 } from "lucide-react";
 import { Faculty, StreamType } from "@/types/chooseu";

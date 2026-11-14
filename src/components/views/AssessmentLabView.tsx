@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Sparkles,
   ArrowRight,
@@ -8,14 +8,6 @@ import {
   RotateCcw,
   Printer,
   CheckCircle2,
-  HelpCircle,
-  ShieldCheck,
-  Building2,
-  Scale,
-  DollarSign,
-  FileText,
-  Compass,
-  PieChart,
   Award,
 } from "lucide-react";
 import {
@@ -29,9 +21,7 @@ import {
 import {
   STREAM_QUIZ_BANKS,
   TRACK_DETAILS,
-  FACULTIES_DATABASE,
 } from "@/data/faculties-db";
-import { PersonaRadarHexagon } from "@/app/page";
 
 interface AssessmentLabViewProps {
   studentName: string;
@@ -51,13 +41,11 @@ export function AssessmentLabView({
   studentName,
   stream,
   score,
-  budget,
   governorate,
   quizAnswers,
   onAnswerQuestion,
   onResetQuiz,
   evaluation,
-  clusterAffinities,
   onOpenFacultyDrawer,
 }: AssessmentLabViewProps) {
   const questions = STREAM_QUIZ_BANKS[stream] || [];

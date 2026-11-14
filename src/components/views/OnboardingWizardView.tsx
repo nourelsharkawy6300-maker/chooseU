@@ -3,11 +3,7 @@
 import React, { useState } from "react";
 import {
   CheckCircle2,
-  ArrowRight,
   ArrowLeft,
-  MapPin,
-  Wallet,
-  Sparkles,
   Award,
   Home,
   Building2,

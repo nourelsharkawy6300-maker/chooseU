@@ -3,16 +3,8 @@
 import React, { useState } from "react";
 import {
   Briefcase,
-  TrendingUp,
-  AlertTriangle,
   Award,
-  DollarSign,
   Cpu,
-  Layers,
-  Sparkles,
-  CheckCircle2,
-  ExternalLink,
-  ShieldAlert,
 } from "lucide-react";
 
 interface CareerTrackData {

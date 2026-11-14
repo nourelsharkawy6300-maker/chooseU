@@ -778,8 +778,8 @@ export default function ChooseUEgyptPlatform() {
                     initialBudget={budget}
                     initialGov={governorate}
                     initialLivingMode={livingMode}
-                    onOpenFacultyDrawer={(f) => setActiveAuditedFaculty(f)}
-                    onSelectView={(v) => setCurrentView(v as EnterpriseViewKey)}
+                    onOpenFacultyDrawer={(f: Faculty) => setActiveAuditedFaculty(f)}
+                    onSelectView={(v: string) => setCurrentView(v as EnterpriseViewKey)}
                   />
                 )}
 
