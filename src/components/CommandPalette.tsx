@@ -1,0 +1,212 @@
+"use client";
+
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Search,
+  X,
+  Compass,
+  SlidersHorizontal,
+  Calculator,
+  Layers,
+  Scale,
+  Sparkles,
+  Briefcase,
+  CalendarCheck,
+  User,
+  ShieldCheck,
+  CheckCircle2,
+  Building2,
+  GraduationCap,
+} from "lucide-react";
+import { EnterpriseViewKey, Faculty } from "@/types/chooseu";
+import { FACULTIES_DATABASE } from "@/data/faculties-db";
+
+interface CommandPaletteProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelectView: (view: EnterpriseViewKey) => void;
+  onSelectFaculty: (fac: Faculty) => void;
+}
+
+export function CommandPalette({
+  isOpen,
+  onClose,
+  onSelectView,
+  onSelectFaculty,
+}: CommandPaletteProps) {
+  const [query, setQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        if (isOpen) onClose();
+        else setQuery("");
+      } else if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  const viewOptions: {
+    key: EnterpriseViewKey;
+    title: string;
+    category: string;
+    icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  }[] = [
+    { key: "journey", title: "رحلة الـ 4 محطات (4-Station Stepper)", category: "التوجيه", icon: Compass },
+    { key: "landing", title: "بوابة البداية وأنيميشن Route (Scroll Portal Hero)", category: "الرئيسية", icon: Sparkles },
+    { key: "dashboard", title: "لوحة التحكم الأكاديمية (Executive Dashboard)", category: "التحليل الذكي", icon: Compass },
+    { key: "assessment", title: "مختبر التقييم الأكاديمي والتقرير المعتمد (Assessment Lab)", category: "التحليل الذكي", icon: Sparkles },
+    { key: "tansik-simulator", title: "محاكي درجات التنسيق والحدود (Tansik Simulator)", category: "التحليل الذكي", icon: SlidersHorizontal },
+    { key: "calculator", title: "حاسبة التكلفة الحقيقية لـ 4 سنوات (4-Year TCO)", category: "التحليل الذكي", icon: Calculator },
+    { key: "explore", title: "دليل استكشاف الكليات والجامعات (Faculty Explorer)", category: "الاستكشاف", icon: Building2 },
+    { key: "compare", title: "مواجهة الكليات وجهاً لوجه (Head-to-Head VS Arena)", category: "الاستكشاف", icon: Scale },
+    { key: "alternatives", title: "محرك الحلم والبديل الواقعي (Dream vs. Reality)", category: "الاستكشاف", icon: Layers },
+    { key: "careers", title: "مرصد الوظائف وسوق العمل (Job Market Observatory)", category: "سوق العمل", icon: Briefcase },
+    { key: "timeline", title: "جدول مراحل التنسيق وحقيبة المستندات (Timeline)", category: "التخطيط", icon: CalendarCheck },
+    { key: "profile", title: "الملف الأكاديمي وتقرير ولي الأمر (Student Vault)", category: "الملف الشخصي", icon: User },
+    { key: "auth", title: "بوابة الدخول وإنشاء الحساب (Auth Portal)", category: "البوابة", icon: GraduationCap },
+    { key: "onboarding", title: "معالج الإعداد والتهيئة السريع (Onboarding Wizard)", category: "البوابة", icon: CheckCircle2 },
+    { key: "admin", title: "بوابة المستشارين والتحكم الإداري (Admin Governance)", category: "الإدارة", icon: ShieldCheck },
+  ];
+
+  const filteredViews = viewOptions.filter(
+    (v) =>
+      v.title.toLowerCase().includes(query.toLowerCase()) ||
+      v.category.toLowerCase().includes(query.toLowerCase())
+  );
+
+  const filteredFaculties = query.trim()
+    ? FACULTIES_DATABASE.filter(
+        (f) =>
+          f.name.toLowerCase().includes(query.toLowerCase()) ||
+          f.university.toLowerCase().includes(query.toLowerCase()) ||
+          f.gov.toLowerCase().includes(query.toLowerCase())
+      ).slice(0, 5)
+    : [];
+
+  return (
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-none flex items-start justify-center pt-16 sm:pt-24 px-4 overflow-y-auto no-print">
+      <div className="bg-white border border-slate-300 rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col">
+        {/* Search Input Bar */}
+        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-slate-200 bg-slate-50">
+          <Search className="w-4 h-4 text-slate-400 shrink-0 stroke-[1.5]" />
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="ابحث عن صفحة، كلية، جامعة، أو تخصص (اكتب للبحث)..."
+            className="w-full bg-transparent text-[13px] text-slate-900 placeholder:text-slate-400 focus:outline-none"
+          />
+          <kbd className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-mono text-slate-500 bg-white border border-slate-200 rounded">
+            ESC
+          </kbd>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1 text-slate-400 hover:text-slate-700 cursor-pointer"
+          >
+            <X className="w-4 h-4 stroke-[1.5]" />
+          </button>
+        </div>
+
+        {/* Search Results list */}
+        <div className="max-h-[60vh] overflow-y-auto p-2 space-y-4">
+          {/* Quick Views */}
+          <div>
+            <div className="px-3 py-1.5 text-[10px] font-bold text-slate-600 uppercase tracking-wider">
+              صفحات المنصة والأدوات الذكية
+            </div>
+            <div className="space-y-1">
+              {filteredViews.slice(0, 7).map((item) => {
+                const IconComp = item.icon;
+                return (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => {
+                      onSelectView(item.key);
+                      onClose();
+                    }}
+                    className="w-full flex items-center justify-between p-2.5 rounded-lg text-right hover:bg-slate-100 transition-colors cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-md bg-slate-200/80 group-hover:bg-[#0F172A] group-hover:text-white flex items-center justify-center text-slate-700 transition-colors">
+                        <IconComp className="w-3.5 h-3.5 stroke-[1.5]" />
+                      </div>
+                      <span className="text-[12px] font-semibold text-slate-800">
+                        {item.title}
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-slate-600 bg-white border border-slate-200 px-2 py-0.5 rounded">
+                      {item.category}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Quick Faculties */}
+          {filteredFaculties.length > 0 && (
+            <div className="pt-2 border-t border-slate-100">
+              <div className="px-3 py-1.5 text-[10px] font-bold text-slate-600 uppercase tracking-wider">
+                الكليات والبرامج المعتمدة
+              </div>
+              <div className="space-y-1">
+                {filteredFaculties.map((fac) => (
+                  <button
+                    key={fac.id}
+                    type="button"
+                    onClick={() => {
+                      onSelectFaculty(fac);
+                      onClose();
+                    }}
+                    className="w-full flex items-center justify-between p-2.5 rounded-lg text-right hover:bg-slate-100 transition-colors cursor-pointer group"
+                  >
+                    <div>
+                      <div className="text-[12px] font-bold text-slate-900">
+                        {fac.name}
+                      </div>
+                      <div className="text-[10px] text-slate-600">
+                        {fac.university} • محافظة {fac.gov}
+                      </div>
+                    </div>
+                    <div className="text-left">
+                      <span className="text-[11px] font-bold text-blue-700 tabular-nums">
+                        {fac.cutoff_2026}%
+                      </span>
+                      <span className="block text-[9px] text-slate-600">
+                        {fac.y1_base_fee.toLocaleString()} ج.م
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer shortcuts helper */}
+        <div className="px-4 py-2 border-t border-slate-200 bg-slate-50 text-[10px] text-slate-600 flex items-center justify-between">
+          <span>استخدم الأسهم للتنقل و Enter للاختيار</span>
+          <span>منظومة ChooseU 2026</span>
+        </div>
+      </div>
+    </div>
+  );
+}
