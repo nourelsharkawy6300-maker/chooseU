@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   EvaluationResult,
   Faculty,
@@ -18,6 +19,7 @@ import {
   computeFacultyTcoMetrics,
   formatFacultyCount,
 } from "../lib/engine";
+import { AnimatedCounter } from "./MotionPrimitives";
 import {
   ArrowLeft,
   ArrowRight,
@@ -134,15 +136,6 @@ export function WorkspaceTabs({
   const activeQuestions = STREAM_QUIZ_BANKS[stream] || [];
   const currentStreamAnswers = answersByStream[stream] || {};
 
-  const scorePercent = Math.min(
-    100,
-    Math.max(0, ((score - 50) / (100 - 50)) * 100)
-  );
-  const budgetPercent = Math.min(
-    100,
-    Math.max(0, ((budget - 5000) / (250000 - 5000)) * 100)
-  );
-
   const budgetTiers = useMemo(() => {
     let maxGov = 0;
     let maxAhli = 0;
@@ -257,13 +250,20 @@ export function WorkspaceTabs({
                   setStream(st.id);
                   setCurrentQuestionIndex(0);
                 }}
-                className={`py-1.5 px-2 rounded-lg text-[12px] whitespace-nowrap transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
+                className={`relative py-1.5 px-2 rounded-lg text-[12px] whitespace-nowrap transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer text-center ${
                   stream === st.id
-                    ? "bg-white text-slate-900 shadow-2xs font-semibold"
+                    ? "text-[#377ef0] font-bold"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
-                {st.label}
+                {stream === st.id && (
+                  <motion.div
+                    layoutId="workspace-stream-pill"
+                    className="absolute inset-0 rounded-lg bg-white shadow-2xs border border-slate-200"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{st.label}</span>
               </button>
             ))}
           </div>
@@ -515,13 +515,20 @@ export function WorkspaceTabs({
               key={tab.id}
               type="button"
               onClick={() => setWorkspaceTab(tab.id)}
-              className={`flex-1 min-w-[140px] py-2 px-3 rounded-lg text-[12px] font-semibold transition cursor-pointer text-center ${
+              className={`relative flex-1 min-w-[140px] py-2 px-3 rounded-lg text-[12px] font-semibold transition cursor-pointer text-center ${
                 workspaceTab === tab.id
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-200"
-                  : "text-slate-600 hover:bg-slate-200 hover:text-slate-900"
+                  ? "text-[#377ef0] font-bold"
+                  : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              {tab.label}
+              {workspaceTab === tab.id && (
+                <motion.div
+                  layoutId="workspace-active-tab-pill"
+                  className="absolute inset-0 rounded-lg bg-white shadow-xs border border-slate-200"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10">{tab.label}</span>
             </button>
           ))}
         </div>
@@ -688,7 +695,7 @@ export function WorkspaceTabs({
                         Math.min(activeQuestions.length - 1, i + 1)
                       )
                     }
-                    className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2 rounded-xl text-[12px] font-medium flex items-center gap-2 cursor-pointer"
+                    className="bg-[#377ef0] hover:bg-[#2962be] text-white px-5 py-2 rounded-xl text-[12px] font-medium flex items-center gap-2 cursor-pointer transition-colors"
                   >
                     <span>السؤال التالي</span>
                     <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
@@ -750,7 +757,7 @@ export function WorkspaceTabs({
                     onClick={() => setTansikShift(0)}
                     className={`py-2 px-3 rounded-xl transition cursor-pointer font-medium border ${
                       tansikShift === 0
-                        ? "bg-slate-900 text-white border-slate-900 shadow-2xs font-semibold"
+                        ? "bg-[#377ef0] text-white border-[#377ef0] shadow-2xs font-semibold"
                         : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"
                     }`}
                   >
@@ -779,7 +786,7 @@ export function WorkspaceTabs({
                 </div>
               </div>
 
-              {/* Sector Filter Pills */}
+              {/* Sector Filter Pills with layoutId spring pill */}
               <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-200">
                 <span className="text-[11px] font-semibold text-slate-500 ml-1">
                   تصفية حسب نوع الكلية:
@@ -795,13 +802,20 @@ export function WorkspaceTabs({
                     key={sec}
                     type="button"
                     onClick={() => setSectorFilter(sec)}
-                    className={`px-3 py-1 rounded-lg text-[11px] font-medium border transition cursor-pointer ${
+                    className={`relative px-3 py-1 rounded-lg text-[11px] font-medium transition cursor-pointer ${
                       sectorFilter === sec
-                        ? "bg-slate-900 text-white border-slate-900"
-                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                        ? "text-[#377ef0] font-bold"
+                        : "text-slate-600 hover:text-slate-900 border border-slate-200 hover:bg-slate-50"
                     }`}
                   >
-                    {sec}
+                    {sectorFilter === sec && (
+                      <motion.div
+                        layoutId="workspace-sector-pill"
+                        className="absolute inset-0 rounded-lg bg-blue-50 border border-blue-300 shadow-2xs"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10">{sec}</span>
                   </button>
                 ))}
               </div>
@@ -829,7 +843,7 @@ export function WorkspaceTabs({
                     setSectorFilter("الكل");
                     setTansikShift(0);
                   }}
-                  className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-[12px] font-medium cursor-pointer tabular-nums"
+                  className="bg-[#377ef0] hover:bg-[#2962be] text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold cursor-pointer tabular-nums shadow-sm"
                 >
                   ضبط الميزانية تلقائياً إلى{" "}
                   {evaluation.minNeededBudget.toLocaleString()} ج.م
@@ -907,14 +921,14 @@ export function WorkspaceTabs({
                           </div>
                           <div className="space-y-0.5 min-w-[90px]">
                             <div className="text-[10px] text-slate-400">المصروفات السنوية</div>
-                            <div className="font-bold text-slate-900 tabular-nums">
-                              {fac.y1_base_fee.toLocaleString()} ج.م
+                            <div className="font-bold text-slate-900">
+                              <AnimatedCounter value={fac.y1_base_fee} suffix=" ج.م" />
                             </div>
                           </div>
                           <div className="space-y-0.5 min-w-[95px]">
                             <div className="text-[10px] text-slate-400">التكلفة الإجمالية</div>
-                            <div className="font-bold text-blue-700 tabular-nums">
-                              {m.total4Yr.toLocaleString()} ج.م
+                            <div className="font-bold text-[#377ef0]">
+                              <AnimatedCounter value={m.total4Yr} suffix=" ج.م" />
                             </div>
                           </div>
                         </div>
@@ -975,7 +989,7 @@ export function WorkspaceTabs({
               <button
                 type="button"
                 onClick={() => setWorkspaceTab("tco_table")}
-                className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 cursor-pointer"
+                className="bg-[#377ef0] hover:bg-[#2962be] text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 cursor-pointer shadow-sm transition"
               >
                 <span>مصفوفة الـ 4 سنوات والتضخم (TCO)</span>
                 <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
@@ -1288,7 +1302,7 @@ export function WorkspaceTabs({
               <button
                 type="button"
                 onClick={() => setWorkspaceTab("compare")}
-                className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 cursor-pointer"
+                className="bg-[#377ef0] hover:bg-[#2962be] text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 cursor-pointer transition-colors"
               >
                 <span>مقارنة الكليات وجهاً لوجه</span>
                 <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
@@ -1498,11 +1512,50 @@ export function WorkspaceTabs({
       </div>
 
       {/* =====================================================================
+          FLOATING COMPARE TRAY (Primer Blueprint / Sparkle Gold Accent)
+         ===================================================================== */}
+      <AnimatePresence>
+        {comparedIds.length > 0 && workspaceTab !== "compare" && (
+          <motion.div
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 350, damping: 28 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-white/95 backdrop-blur-md border border-slate-200 shadow-xl rounded-2xl px-5 py-3 flex items-center gap-4 no-print"
+          >
+            <div className="flex items-center gap-2 text-[13px] text-slate-700">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#377ef0] animate-pulse" />
+              <span>تم تحديد</span>
+              <span className="font-bold text-[#377ef0]">
+                <AnimatedCounter value={comparedIds.length} />
+              </span>
+              <span>كليات للمقارنة</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setWorkspaceTab("compare")}
+              className="bg-[#377ef0] hover:bg-[#2962be] text-white px-4 py-2 rounded-xl text-[12px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+            >
+              <span>قارن الكليات المختارة</span>
+              <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* =====================================================================
           FACULTY AUDIT & METHODOLOGY SLIDE-OVER DRAWERS
          ===================================================================== */}
-      {auditedFaculty && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 flex justify-end no-print">
-          <div className="bg-white w-full h-full shadow-2xl border-r border-slate-200 p-6 overflow-y-auto flex flex-col justify-between max-w-md">
+      <AnimatePresence>
+        {auditedFaculty && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex justify-end no-print">
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 320, damping: 30 }}
+              className="bg-white w-full h-full shadow-2xl border-r border-slate-200 p-6 overflow-y-auto flex flex-col justify-between max-w-md"
+            >
             <div className="space-y-5">
               <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
                 <div>
@@ -1609,56 +1662,65 @@ export function WorkspaceTabs({
                 إصدار التقرير المعتمد الكامل — 150 ج.م
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
+    </AnimatePresence>
 
-      {isMethodologyOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4 no-print">
-          <div className="bg-white border border-slate-200 rounded-xl w-full max-w-lg p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-              <div className="flex items-center gap-2">
-                <Scale className="w-4 h-4 text-blue-600" strokeWidth={1.5} />
-                <h3 className="text-[16px] font-semibold text-slate-900">
-                  منهجية الحساب ومراجعة البيانات في ChooseU
-                </h3>
+      <AnimatePresence>
+        {isMethodologyOpen && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 350, damping: 25 }}
+              className="bg-white border border-slate-200 rounded-xl w-full max-w-lg p-6 shadow-2xl space-y-4"
+            >
+              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                <div className="flex items-center gap-2">
+                  <Scale className="w-4 h-4 text-blue-600" strokeWidth={1.5} />
+                  <h3 className="text-[16px] font-semibold text-slate-900">
+                    منهجية الحساب ومراجعة البيانات في ChooseU
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsMethodologyOpen(false)}
+                  className="text-slate-500 hover:text-slate-700 cursor-pointer"
+                >
+                  <X className="w-4 h-4" strokeWidth={1.5} />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => setIsMethodologyOpen(false)}
-                className="text-slate-500 hover:text-slate-700 cursor-pointer"
-              >
-                <X className="w-4 h-4" strokeWidth={1.5} />
-              </button>
-            </div>
 
-            <div className="space-y-3 text-[12px] text-slate-600 leading-relaxed tabular-nums">
-              <p>
-                <strong className="text-slate-900 block mb-0.5">
-                  1. معادلة الترتيب الموزون (Weighted Relevance Score):
-                </strong>
-                تُرتب الكليات وفق معادلة هندسية تجمع بين تقارب حد القبول مع مجموع الطالب (40%)، التوافق مع تقييم الميول المهنية (35%)، ملاءمة الميزانية (15%)، والقرب الجغرافي (10%).
-              </p>
-              <p>
-                <strong className="text-slate-900 block mb-0.5">
-                  2. حساب التكلفة التراكمية لـ 4 سنوات (Compound TCO):
-                </strong>
-                تُحسب التكلفة الكلية بإضافة الرسوم المعملية والإدارية السنوية ومعدل الزيادة المركبة للمصروفات (10% مستقر، 15% مرجعي، 22% تحوط أقصى) إلى جانب تكلفة الانتقال المحلي أو السكن الطلابي.
-              </p>
-            </div>
+              <div className="space-y-3 text-[12px] text-slate-600 leading-relaxed tabular-nums">
+                <p>
+                  <strong className="text-slate-900 block mb-0.5">
+                    1. معادلة الترتيب الموزون (Weighted Relevance Score):
+                  </strong>
+                  تُرتب الكليات وفق معادلة هندسية تجمع بين تقارب حد القبول مع مجموع الطالب (40%)، التوافق مع تقييم الميول المهنية (35%)، ملاءمة الميزانية (15%)، والقرب الجغرافي (10%).
+                </p>
+                <p>
+                  <strong className="text-slate-900 block mb-0.5">
+                    2. حساب التكلفة التراكمية لـ 4 سنوات (Compound TCO):
+                  </strong>
+                  تُحسب التكلفة الكلية بإضافة الرسوم المعملية والإدارية السنوية ومعدل الزيادة المركبة للمصروفات (10% مستقر، 15% مرجعي، 22% تحوط أقصى) إلى جانب تكلفة الانتقال المحلي أو السكن الطلابي.
+                </p>
+              </div>
 
-            <div className="pt-2 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setIsMethodologyOpen(false)}
-                className="bg-slate-900 text-white px-5 py-2 rounded-xl text-[12px] font-medium cursor-pointer"
-              >
-                إغلاق النافذة
-              </button>
-            </div>
+              <div className="pt-2 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsMethodologyOpen(false)}
+                  className="bg-[#377ef0] hover:bg-[#2962be] text-white px-5 py-2 rounded-xl text-[12px] font-medium cursor-pointer transition-colors"
+                >
+                  إغلاق النافذة
+                </button>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 }

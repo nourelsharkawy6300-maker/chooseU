@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Compass,
   Calculator,
@@ -12,6 +13,13 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useStudent } from "@/context/StudentContext";
+import {
+  MaskRevealHeading,
+  SpotlightCard,
+  MagneticButton,
+  ArchitecturalDivider,
+  AnimatedCounter,
+} from "@/components/MotionPrimitives";
 
 const MODULES = [
   {
@@ -59,74 +67,73 @@ const MODULES = [
 ];
 
 export default function HomePage() {
+  const router = useRouter();
   const { studentName, scorePercentage, stream } = useStudent();
   const streamAr =
     stream === "Science" ? "علمي علوم" : stream === "Math" ? "علمي رياضة" : "أدبي";
 
   return (
     <div className="space-y-10">
-      {/* Editorial Hero Header */}
-      <div
-        style={{
-          animation: "fade-up var(--dur-base) var(--ease-out-expo) both",
-        }}
-        className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 sm:p-12 text-start shadow-2xs"
-      >
-        <div className="max-w-3xl space-y-5 text-start">
-          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 leading-[1.45]">
-            قرارك الأكاديمي والمالي
-            <br />
-            <span className="text-blue-600">
-              مدقق بحسابات حقيقية لسنوات دراستك
-            </span>
-          </h1>
+      {/* Editorial Hero Header with Primer Blueprint & Mask Reveal */}
+      <div className="relative overflow-hidden rounded-2xl border border-[#e2e2e2] bg-white primer-grid-bg p-8 sm:p-12 text-start shadow-xs">
+        <span className="grid-crosshair top-0 start-0" />
+        <span className="grid-crosshair top-0 end-0" />
+        <span className="grid-crosshair bottom-0 start-0" />
+        <span className="grid-crosshair bottom-0 end-0" />
 
-          <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl">
-            مرحباً بك {studentName} ({streamAr} — {scorePercentage.toFixed(1)}%). اختر القسم الذي ترغب في
+        <div className="max-w-3xl space-y-5 text-start relative z-10">
+          <MaskRevealHeading as="h1" className="text-3xl sm:text-5xl font-black text-[#1c1736] leading-[1.3]">
+            قرارك الأكاديمي والمالي
+          </MaskRevealHeading>
+
+          <MaskRevealHeading as="h2" delay={0.12} className="text-3xl sm:text-5xl font-black text-[#377ef0] leading-[1.3]">
+            مدقق بحسابات حقيقية لسنوات دراستك
+          </MaskRevealHeading>
+
+          <p className="text-sm sm:text-base text-[#48425f] leading-relaxed max-w-2xl pt-2">
+            مرحباً بك {studentName} ({streamAr} — <span dir="ltr" className="font-mono tabular-nums font-bold text-[#377ef0]"><AnimatedCounter value={scorePercentage} />%</span>). اختر القسم الذي ترغب في
             استكشافه أو ابدأ مباشرة في لوحة التحكم وتنسيق الرغبات لاستكمال الخطوات الأكاديمية.
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Link
-              href="/workspace"
-              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-blue-700 shadow-sm cursor-pointer"
+          <div className="flex flex-wrap items-center gap-3 pt-3">
+            <MagneticButton
+              variant="primary"
+              onClick={() => router.push("/workspace")}
+              icon={<ArrowRight className="h-4 w-4" />}
             >
-              <span>ابدأ التنسيق</span>
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+              ابدأ التنسيق
+            </MagneticButton>
 
-            <Link
-              href="/sample-report"
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-900"
+            <MagneticButton
+              variant="secondary"
+              onClick={() => router.push("/sample-report")}
             >
-              <span>معاينة نموذج التقرير A4</span>
-            </Link>
+              معاينة نموذج التقرير A4
+            </MagneticButton>
           </div>
         </div>
       </div>
 
-      {/* Grid of Platform Modules */}
+      <ArchitecturalDivider />
+
+      {/* Grid of Platform Modules Wrapped in Interactive Spotlight Cards */}
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {MODULES.map((m, idx) => (
-            <Link
-              key={m.href}
-              href={m.href}
-              style={{
-                animation: "fade-up var(--dur-base) var(--ease-out-expo) both",
-                animationDelay: `${(idx + 1) * 60}ms`,
-              }}
-              className="group relative flex items-center justify-between rounded-xl border border-slate-200 bg-white p-5 transition-all hover:border-slate-300 hover:bg-slate-50/80 shadow-2xs text-start"
-            >
-              <div className="space-y-1.5 min-w-0 flex-1 pl-4">
-                <h3 className="text-[15px] font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                  {m.title}
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed line-clamp-2">
-                  {m.desc}
-                </p>
-              </div>
-              <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-[-2px] transition-all shrink-0" />
+          {MODULES.map((m) => (
+            <Link key={m.href} href={m.href} className="block group">
+              <SpotlightCard className="p-5 h-full transition-all group-hover:border-[#377ef0]/40 shadow-2xs">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="space-y-1.5 min-w-0 flex-1">
+                    <h3 className="text-[15px] font-bold text-[#1c1736] group-hover:text-[#377ef0] transition-colors">
+                      {m.title}
+                    </h3>
+                    <p className="text-xs text-[#48425f] leading-relaxed line-clamp-2">
+                      {m.desc}
+                    </p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-[#377ef0] group-hover:-translate-x-1 transition-all shrink-0" />
+                </div>
+              </SpotlightCard>
             </Link>
           ))}
         </div>

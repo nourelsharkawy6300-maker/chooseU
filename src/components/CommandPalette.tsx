@@ -92,7 +92,7 @@ export function CommandPalette({
     : [];
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/50 flex items-start justify-center pt-16 sm:pt-24 px-4 overflow-y-auto no-print">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-start justify-center pt-16 sm:pt-24 px-4 overflow-y-auto no-print">
       <div className="bg-white border border-slate-200 rounded-xl shadow-2xl w-full max-w-xl overflow-hidden flex flex-col">
         {/* Search Input Bar */}
         <div className="flex items-center gap-3 px-4 py-3.5 border-b border-slate-200 bg-slate-50">
@@ -138,7 +138,7 @@ export function CommandPalette({
                     className="w-full flex items-center justify-between p-2.5 rounded-lg text-right hover:bg-slate-100 transition-colors cursor-pointer group"
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-md bg-slate-200/80 group-hover:bg-slate-900 group-hover:text-white flex items-center justify-center text-slate-700 transition-colors">
+                      <div className="w-7 h-7 rounded-md bg-slate-200/80 group-hover:bg-[#377ef0] group-hover:text-white flex items-center justify-center text-slate-700 transition-colors">
                         <IconComp className="w-3.5 h-3.5 stroke-[1.5]" />
                       </div>
                       <span className="text-[12px] font-semibold text-slate-800">

@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { AnimatedCounter } from "@/components/MotionPrimitives";
 import {
   ArrowLeft,
   ArrowRight,
@@ -410,21 +411,32 @@ export function FourStationJourney({
   };
 
   return (
-    <div className="w-full bg-slate-50 text-slate-900 pb-24">
+    <div className="w-full primer-grid-bg bg-[var(--paper)] text-[var(--ink)] pb-24 min-h-screen relative">
       {/* ==================================================================== */}
       {/* 1. STICKY OBSIDIAN 4-STATION STEPPER BAR                             */}
       {/* ==================================================================== */}
-      <div className="sticky top-0 z-30 bg-white/95 border-b border-slate-200 px-4 py-3.5 shadow-xs">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
+        {/* Continuous Spring Progress Bar at the top edge */}
+        <div className="w-full h-1 bg-slate-200 overflow-hidden">
+          <motion.div
+            className="h-full bg-[#377ef0]"
+            initial={false}
+            animate={{ width: `${(station / 4) * 100}%` }}
+            transition={{ type: "spring", stiffness: 280, damping: 28 }}
+          />
+        </div>
+        <div className="px-4 py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 relative">
+          <span className="grid-crosshair top-0 start-0" />
+          <span className="grid-crosshair top-0 end-0" />
           {/* Brand & Active Station Indicator */}
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center p-1.5 shrink-0">
-              <Compass className="w-4 h-4 text-blue-600 stroke-[1.5]" />
+              <Compass className="w-4 h-4 text-[#377ef0] stroke-[1.5]" />
             </div>
             <div>
               <div className="text-[13px] font-bold text-slate-900">
                 المحطة {station} من 4:{" "}
-                <span className="text-blue-600">
+                <span className="text-[#377ef0]">
                   {station === 1 && "اكتشف"}
                   {station === 2 && "طابق"}
                   {station === 3 && "حاكِ"}
@@ -434,8 +446,8 @@ export function FourStationJourney({
             </div>
           </div>
 
-          {/* Stepper Buttons (1, 2, 3, 4) */}
-          <div className="w-full sm:w-auto grid grid-cols-4 sm:flex sm:items-center gap-1 sm:gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 text-[11px] sm:text-[12px]">
+          {/* Stepper Buttons (1, 2, 3, 4) with sliding layoutId */}
+          <div className="w-full sm:w-auto grid grid-cols-4 sm:flex sm:items-center gap-1 sm:gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 text-[11px] sm:text-[12px] relative">
             {[
               { id: 1 as const, title: "01 الاكتشاف", short: "اكتشف", icon: Compass },
               { id: 2 as const, title: "02 المطابقة", short: "طابق", icon: Layers },
@@ -451,14 +463,21 @@ export function FourStationJourney({
                   key={st.id}
                   type="button"
                   onClick={() => setStation(st.id)}
-                  className={`flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer text-center ${
+                  className={`relative flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer text-center z-10 ${
                     isActive
-                      ? "bg-blue-600 text-white font-bold shadow-xs"
+                      ? "text-white font-bold"
                       : isPassed
-                      ? "text-emerald-700 bg-white/70 hover:bg-white"
-                      : "text-slate-400 hover:text-slate-600 hover:bg-white/40"
+                      ? "text-emerald-700 hover:text-emerald-900"
+                      : "text-slate-500 hover:text-slate-900"
                   }`}
                 >
+                  {isActive && (
+                    <motion.div
+                      layoutId="active-station-card"
+                      className="absolute inset-0 bg-[#377ef0] rounded-lg shadow-sm -z-10"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
                   {isPassed ? (
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2] shrink-0" />
                   ) : (
@@ -488,10 +507,10 @@ export function FourStationJourney({
           {station === 1 && (
             <motion.div
               key="station-1"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -16, filter: "blur(4px)" }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="space-y-6"
             >
             {/* Header Description */}
@@ -561,27 +580,42 @@ export function FourStationJourney({
                         {q.options.map((opt, optIdx) => {
                           const isSelected = assessmentAnswers[q.id] === opt.track;
                           return (
-                            <button
+                            <motion.button
                               key={optIdx}
                               type="button"
+                              whileHover={{ y: -2 }}
+                              whileTap={{ scale: 0.985 }}
+                              transition={{ type: "spring", stiffness: 380, damping: 26 }}
                               onClick={() => handleAnswerQuestion(q.id, opt.track)}
-                              className={`w-full text-right p-3 rounded-lg border text-[12px] transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer flex items-center justify-between gap-3 ${
+                              className={`w-full text-right p-3 rounded-lg border text-[12px] transition-colors cursor-pointer flex items-center justify-between gap-3 ${
                                 isSelected
-                                  ? "bg-blue-50 border-blue-400 text-blue-900 font-medium"
+                                  ? "bg-blue-50/80 border-[#377ef0] text-blue-950 font-medium shadow-xs"
                                   : "bg-white hover:bg-slate-50 border-slate-200 text-slate-700"
                               }`}
                             >
-                              <span className="leading-snug">{opt.label}</span>
+                              <div className="flex items-center gap-2 leading-snug">
+                                {isSelected && (
+                                  <svg className="w-4 h-4 text-[#377ef0] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <motion.path
+                                      initial={{ pathLength: 0 }}
+                                      animate={{ pathLength: 1 }}
+                                      transition={{ duration: 0.28, ease: "easeOut" }}
+                                      d="M20 6L9 17l-5-5"
+                                    />
+                                  </svg>
+                                )}
+                                <span>{opt.label}</span>
+                              </div>
                               <span
                                 className={`text-[10px] px-2 py-0.5 rounded border shrink-0 ${
                                   isSelected
-                                    ? "bg-blue-600 border-blue-600 text-white"
+                                    ? "bg-[#377ef0] border-[#377ef0] text-white font-medium"
                                     : "bg-slate-100 border-slate-200 text-slate-600"
                                 }`}
                               >
                                 {opt.badge}
                               </span>
-                            </button>
+                            </motion.button>
                           );
                         })}
                       </div>
@@ -806,7 +840,7 @@ export function FourStationJourney({
                   <div className="text-[12px] text-slate-600">
                     ملفك جاهز: تم رصد{" "}
                     <span className="text-slate-900 font-bold tabular-nums">
-                      {rankedFaculties.length}
+                      <AnimatedCounter value={rankedFaculties.length} />
                     </span>{" "}
                     برنامج وكلية متوافقة مع شعبتك ومجموعك.
                   </div>
@@ -831,10 +865,10 @@ export function FourStationJourney({
         {station === 2 && (
           <motion.div
             key="station-2"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -16, filter: "blur(4px)" }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-6"
           >
             {/* Header */}
@@ -1101,10 +1135,10 @@ export function FourStationJourney({
         {station === 3 && (
           <motion.div
             key="station-3"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -16, filter: "blur(4px)" }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-6"
           >
             {/* Header */}
@@ -1324,7 +1358,7 @@ export function FourStationJourney({
                     <Award className="w-4 h-4 text-blue-600 stroke-[1.5]" />
                     <h3 className="text-sm font-bold text-slate-900">خارطة السنوات الأكاديمية</h3>
                   </div>
-                  <div className="flex gap-1 text-[10px] font-mono">
+                  <div className="flex gap-1 text-[10px]">
                     {[1, 2, 3, 4].map((yr) => (
                       <button
                         key={yr}
@@ -1336,14 +1370,14 @@ export function FourStationJourney({
                             : "bg-white text-slate-600 hover:text-slate-900 border border-slate-200"
                         }`}
                       >
-                        Y{yr}
+                        <span dir="ltr" className="font-mono tabular-nums">Y{yr}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Connected nodes along a line */}
-                <div className="relative border-s border-slate-300 ms-3 ps-6 space-y-3 py-1">
+                {/* Connected nodes along a lineage line with self-drawing path */}
+                <div className="relative border-s-2 border-blue-200 ms-3 ps-6 space-y-3 py-1">
                   {[
                     {
                       year: 1,
@@ -1365,16 +1399,15 @@ export function FourStationJourney({
                       title: "مشروع التخرج والتوظيف المباشر",
                       desc: "تنفيذ مشروع تخرج له جدوى تجارية تطبيقية، حضور معارض التوظيف، وتوقيع أول عقد عمل قبل استلام شهادة التخرج.",
                     },
-                  ].map((node, idx) => {
+                  ].map((node) => {
                     const isActive = activeRoadmapYear === node.year;
                     return (
-                      <div
+                      <motion.div
                         key={node.year}
                         onClick={() => setActiveRoadmapYear(node.year)}
-                        style={{
-                          animation: `fade-up 250ms var(--ease-out-expo) ${idx * 60}ms both`,
-                        }}
-                        className={`relative p-3 rounded-xl border transition-all duration-150 cursor-pointer hover:-translate-y-0.5 active:scale-[0.98] ${
+                        whileHover={{ x: -2 }}
+                        transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                        className={`relative p-3 rounded-xl border transition-all duration-150 cursor-pointer ${
                           isActive
                             ? "bg-blue-50/70 border-blue-300 shadow-2xs"
                             : "bg-white border-slate-200/80 hover:bg-slate-50"
@@ -1396,18 +1429,15 @@ export function FourStationJourney({
                             >
                               السنة {node.year}: {node.title}
                             </span>
-                            <span
-                              dir="ltr"
-                              className="font-mono text-[10px] text-slate-400 tabular-nums"
-                            >
-                              Y0{node.year}
+                            <span className="text-[10px] text-slate-500 font-medium">
+                              السنة 0{node.year}
                             </span>
                           </div>
                           <p className="text-slate-600 leading-relaxed text-[11px]">
                             {node.desc}
                           </p>
                         </div>
-                      </div>
+                      </motion.div>
                     );
                   })}
                 </div>
@@ -1438,10 +1468,10 @@ export function FourStationJourney({
         {station === 4 && (
           <motion.div
             key="station-4"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -16, filter: "blur(4px)" }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-6"
           >
             {/* Header */}
@@ -1485,7 +1515,7 @@ export function FourStationJourney({
                 </div>
 
                 <div className="text-[11px] text-slate-500 hidden sm:block">
-                  بياناتك: <span dir="ltr" className="font-mono tabular-nums">{score}%</span> • <span dir="ltr" className="font-mono">{stream}</span> • {governorate}
+                  بياناتك: <span dir="ltr" className="font-mono tabular-nums"><AnimatedCounter value={score} />%</span> • <span>{stream === "Math" ? "علمي رياضة" : stream === "Science" ? "علمي علوم" : stream === "stem" ? "STEM" : "أدبي"}</span> • {governorate}
                 </div>
               </div>
 
@@ -1505,7 +1535,7 @@ export function FourStationJourney({
                     >
                       <div className="whitespace-pre-line">{msg.text}</div>
                       <div
-                        className={`text-[9px] mt-1 font-mono text-right ${
+                        className={`text-[9px] mt-1 text-right ${
                           msg.sender === "user" ? "text-blue-200" : "text-slate-500"
                         }`}
                       >

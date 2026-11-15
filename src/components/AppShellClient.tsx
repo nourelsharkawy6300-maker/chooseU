@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Compass,
   Calculator,
@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useStudent } from "@/context/StudentContext";
 import { StreamType } from "@/types/chooseu";
+import { AnimatedCounter } from "./MotionPrimitives";
 
 interface NavItem {
   label: string;
@@ -141,11 +142,11 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               >
                 {isActive && (
                   <motion.div
-                    layoutId="desktop-active-nav"
-                    className="absolute inset-0 rounded-lg bg-blue-50 border border-blue-200"
+                    layoutId="sidebar-active-pill"
+                    className="absolute inset-0 rounded-lg bg-blue-50/80 border border-blue-200"
                     transition={{
                       type: "spring",
-                      stiffness: 350,
+                      stiffness: 380,
                       damping: 30,
                     }}
                   />
@@ -228,8 +229,8 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               >
                 <Percent className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
                 <span className="text-slate-500 hidden sm:inline">المجموع:</span>
-                <span dir="ltr" className="font-mono font-semibold text-slate-900 tabular-nums whitespace-nowrap">
-                  {scorePercentage.toFixed(1)}%
+                <span className="font-semibold text-slate-900 whitespace-nowrap">
+                  <AnimatedCounter value={scorePercentage} decimals={1} suffix="%" />
                 </span>
               </button>
 
@@ -241,8 +242,8 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               >
                 <Wallet className="h-3.5 w-3.5 text-amber-600 shrink-0" />
                 <span className="text-slate-500 hidden md:inline">الميزانية السنوية:</span>
-                <span dir="ltr" className="font-mono font-semibold text-slate-900 tabular-nums whitespace-nowrap">
-                  {annualBudgetEgp.toLocaleString()} EGP
+                <span className="font-semibold text-slate-900 whitespace-nowrap">
+                  <AnimatedCounter value={annualBudgetEgp} suffix=" EGP" />
                 </span>
               </button>
             </div>
@@ -268,82 +269,94 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Mobile Navigation Drawer */}
-        {isMobileNavOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden">
-            <div
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-              onClick={() => setIsMobileNavOpen(false)}
-            />
-            <div className="fixed inset-y-0 right-0 w-72 bg-white border-l border-slate-200 p-4 flex flex-col justify-between shadow-2xl z-50">
-              <div>
-                <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
-                  <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold">
-                      U
+        <AnimatePresence>
+          {isMobileNavOpen && (
+            <div className="fixed inset-0 z-50 lg:hidden">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+                onClick={() => setIsMobileNavOpen(false)}
+              />
+              <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                className="fixed inset-y-0 right-0 w-72 bg-white border-l border-slate-200 p-4 flex flex-col justify-between shadow-2xl z-50"
+              >
+                <div>
+                  <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#377ef0] text-white font-bold">
+                        U
+                      </div>
+                      <span className="font-bold text-slate-900">ChooseU</span>
                     </div>
-                    <span className="font-bold text-slate-900">ChooseU</span>
+                    <button
+                      type="button"
+                      onClick={() => setIsMobileNavOpen(false)}
+                      className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setIsMobileNavOpen(false)}
-                    className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-                <nav className="space-y-1">
-                  {NAVIGATION_ITEMS.map((item) => {
-                    const IconComponent = item.icon;
-                    const isActive = pathname === item.href;
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setIsMobileNavOpen(false)}
-                        className={`group relative flex items-start gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200 ${
-                          isActive
-                            ? "text-blue-900 font-semibold"
-                            : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                        }`}
-                      >
-                        {isActive && (
-                          <motion.div
-                            layoutId="mobile-active-nav"
-                            className="absolute inset-0 rounded-lg bg-blue-50 border border-blue-200"
-                            transition={{
-                              type: "spring",
-                              stiffness: 350,
-                              damping: 30,
-                            }}
-                          />
-                        )}
-                        <IconComponent
-                          className={`relative z-10 mt-0.5 h-4 w-4 shrink-0 transition-colors duration-200 ${
-                            isActive ? "text-blue-600" : "text-slate-400"
+                  <nav className="space-y-1">
+                    {NAVIGATION_ITEMS.map((item) => {
+                      const IconComponent = item.icon;
+                      const isActive = pathname === item.href;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setIsMobileNavOpen(false)}
+                          className={`group relative flex items-start gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200 ${
+                            isActive
+                              ? "text-blue-900 font-semibold"
+                              : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                           }`}
-                        />
-                        <div className="relative z-10 min-w-0 flex-1">
-                          <p className="truncate font-medium">{item.label}</p>
-                          <p className={`truncate text-xs ${isActive ? "text-blue-600" : "text-slate-500"}`}>{item.sublabel}</p>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </nav>
-              </div>
-              <div className="border-t border-slate-200 pt-3">
-                <Link
-                  href="/admin"
-                  onClick={() => setIsMobileNavOpen(false)}
-                  className="flex items-center gap-2 rounded-lg bg-slate-50 border border-slate-200 px-3 py-2 text-xs text-slate-700 hover:bg-slate-100"
-                >
-                  <ShieldCheck className="h-4 w-4 text-blue-600" />
-                  <span>دخول الإدارة</span>
-                </Link>
-              </div>
+                        >
+                          {isActive && (
+                            <motion.div
+                              layoutId="mobile-nav-pill"
+                              className="absolute inset-0 rounded-lg bg-blue-50 border border-blue-200"
+                              transition={{
+                                type: "spring",
+                                stiffness: 380,
+                                damping: 30,
+                              }}
+                            />
+                          )}
+                          <IconComponent
+                            className={`relative z-10 mt-0.5 h-4 w-4 shrink-0 transition-colors duration-200 ${
+                              isActive ? "text-[#377ef0]" : "text-slate-400"
+                            }`}
+                          />
+                          <div className="relative z-10 min-w-0 flex-1">
+                            <p className="truncate font-medium">{item.label}</p>
+                            <p className={`truncate text-xs ${isActive ? "text-[#377ef0]" : "text-slate-500"}`}>{item.sublabel}</p>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </nav>
+                </div>
+                <div className="border-t border-slate-200 pt-3">
+                  <Link
+                    href="/admin"
+                    onClick={() => setIsMobileNavOpen(false)}
+                    className="flex items-center gap-2 rounded-lg bg-slate-50 border border-slate-200 px-3 py-2 text-xs text-slate-700 hover:bg-slate-100"
+                  >
+                    <ShieldCheck className="h-4 w-4 text-[#377ef0]" />
+                    <span>دخول الإدارة</span>
+                  </Link>
+                </div>
+              </motion.div>
             </div>
-          </div>
-        )}
+          )}
+        </AnimatePresence>
 
         {/* Scrollable Canvas */}
         <main
@@ -356,24 +369,39 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
         </main>
 
         {/* Quick Profile Editor Modal */}
-        {isEditingProfile && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 animate-in fade-in duration-150">
-            <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-lg p-6 space-y-5 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-                <div className="flex items-center gap-2">
-                  <SlidersHorizontal className="h-5 w-5 text-blue-600" />
-                  <h3 className="text-base font-bold text-slate-900">
-                    تعديل الملف الأكاديمي ومعايير التنسيق
-                  </h3>
+        <AnimatePresence>
+          {isEditingProfile && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 bg-black/60 backdrop-blur-xs"
+                onClick={() => setIsEditingProfile(false)}
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 12 }}
+                transition={{ type: "spring", stiffness: 380, damping: 28 }}
+                className="relative z-10 bg-white border border-[#e2e2e2] rounded-2xl w-full max-w-lg p-6 space-y-5 shadow-2xl"
+              >
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                  <div className="flex items-center gap-2">
+                    <SlidersHorizontal className="h-5 w-5 text-[#377ef0]" />
+                    <h3 className="text-base font-bold text-slate-900">
+                      تعديل الملف الأكاديمي ومعايير التنسيق
+                    </h3>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingProfile(false)}
+                    className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setIsEditingProfile(false)}
-                  className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
 
               {/* Stream Selection */}
               <div className="space-y-2">
@@ -487,13 +515,14 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               <button
                 type="button"
                 onClick={() => setIsEditingProfile(false)}
-                className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-colors cursor-pointer shadow-md"
+                className="w-full py-2.5 rounded-lg bg-[#377ef0] hover:bg-[#2962be] text-white text-xs font-bold transition-colors cursor-pointer shadow-md"
               >
                 تطبيق وتحديث نتائج التنسيق والمصفوفة
               </button>
-            </div>
+            </motion.div>
           </div>
         )}
+      </AnimatePresence>
 
         {/* Mobile Bottom Navigation Bar (Screens < 1024px) */}
         <nav

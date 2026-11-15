@@ -2,10 +2,17 @@
 
 @theme {
   --color-paper: #fbfaf6;
+  --color-surface-white: #ffffff;
+  --color-surface-muted: #f3f3f3;
+  --color-border-grid: #e2e2e2;
   --color-ink: #1c1736;
   --color-ink-2: #48425f;
   --color-ink-3: #68637d;
-  --color-border-grid: #e2e2e2;
+  --color-blue: #377ef0;
+  --color-blue-hover: #2962be;
+  --color-orange: #fe6d2e;
+  --color-gold: #f5a623;
+  --color-violet: #6b4ff0;
   --color-accent: #377ef0;
   --color-accent-hover: #2962be;
   --color-highlight: #f5a623;
@@ -14,25 +21,36 @@
 :root {
   --font-sans-arabic: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-dramatic: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-fast: 150ms;
   --dur-base: 250ms;
+
   --paper: #fbfaf6;
+  --surface-white: #ffffff;
+  --surface-muted: #f3f3f3;
+  --border-grid: #e2e2e2;
   --ink: #1c1736;
   --ink-2: #48425f;
   --ink-3: #68637d;
-  --border-grid: #e2e2e2;
+  --color-blue: #377ef0;
+  --color-blue-hover: #2962be;
+  --color-orange: #fe6d2e;
+  --color-gold: #f5a623;
+  --color-violet: #6b4ff0;
   --accent: #377ef0;
   --accent-hover: #2962be;
   --highlight: #f5a623;
+
   --bg-canvas: var(--paper);
   --bg-shell: #ffffff;
   --bg-surface: #ffffff;
   --border-subtle: #e2e8f0;
   --border-default: #cbd5e1;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --accent-primary: #2563eb;
+  --text-primary: #1c1736;
+  --text-secondary: #48425f;
+  --accent-primary: #377ef0;
 }
 
 html,
@@ -59,6 +77,66 @@ pre,
 table td,
 table th {
   font-variant-numeric: tabular-nums;
+}
+
+/* Primer Architectural Blueprint Grid */
+.primer-grid-bg {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to right, rgba(226, 226, 226, 0.45) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(226, 226, 226, 0.45) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Architectural Crosshair Corners (+) */
+.grid-crosshair {
+  position: relative;
+}
+.grid-crosshair::before,
+.grid-crosshair::after {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 300;
+  color: #94a3b8;
+  line-height: 1;
+  pointer-events: none;
+  position: absolute;
+  z-index: 10;
+}
+
+/* Architectural Grid Line Animations */
+@keyframes gridLineX {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes gridLineY {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+/* Spotlight Card Hover Physics */
+.spotlight-card {
+  position: relative;
+  background-color: var(--surface-white);
+  overflow: hidden;
+}
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(55, 126, 240, 0.08),
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 250ms ease;
+  z-index: 1;
+}
+.spotlight-card:hover::before {
+  opacity: 1;
 }
 
 @keyframes fade-up {
@@ -144,11 +222,24 @@ input[type="range"]::-moz-range-thumb {
   html,
   body {
     background: #ffffff !important;
-    color: #0f172a !important;
+    color: #1c1736 !important;
     height: auto !important;
     overflow: visible !important;
     font-size: 11pt !important;
     line-height: 1.5 !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+    animation: none !important;
   }
 
   aside,
@@ -178,7 +269,7 @@ input[type="range"]::-moz-range-thumb {
     width: 100% !important;
     max-width: 210mm !important;
     background: #ffffff !important;
-    color: #0f172a !important;
+    color: #1c1736 !important;
   }
 
   table,

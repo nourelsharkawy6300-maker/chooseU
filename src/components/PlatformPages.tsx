@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
 import {
   ConsultationOrderRow,
   EvaluationResult,
@@ -127,7 +128,7 @@ export function LandingView({
                   onClick={() => setStream(st.id)}
                   className={`py-1.5 px-2 rounded-lg text-[12px] whitespace-nowrap transition cursor-pointer ${
                     stream === st.id
-                      ? "bg-slate-900 text-white font-semibold"
+                      ? "bg-[#377ef0] text-white font-semibold shadow-2xs"
                       : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
@@ -615,7 +616,6 @@ interface DirectoryViewProps {
 export function DirectoryView({
   comparedIds,
   onToggleCompare,
-  onSelectFutureCareer,
   onOpenCompareTab,
 }: DirectoryViewProps) {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -684,13 +684,20 @@ export function DirectoryView({
                 key={st.id}
                 type="button"
                 onClick={() => setStreamFilter(st.id)}
-                className={`py-1.5 px-2 rounded-lg whitespace-nowrap transition cursor-pointer ${
+                className={`relative py-1.5 px-2 rounded-lg whitespace-nowrap transition cursor-pointer text-center ${
                   streamFilter === st.id
-                    ? "bg-white text-slate-900 shadow-2xs font-semibold"
+                    ? "text-[#377ef0] font-bold"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
-                {st.label}
+                {streamFilter === st.id && (
+                  <motion.div
+                    layoutId="directory-stream-pill"
+                    className="absolute inset-0 rounded-lg bg-white shadow-2xs border border-slate-200"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{st.label}</span>
               </button>
             ))}
           </div>
@@ -752,7 +759,7 @@ export function DirectoryView({
         >
           {filteredFaculties.map((fac, idx) => {
             const isCompared = comparedIds.includes(fac.id);
-            const numStr = String(idx + 1).padStart(2, "0");
+            const numStr = String(idx + 1).padStart(3, "0");
             return (
               <div
                 key={fac.id}
@@ -1179,7 +1186,7 @@ export function TrackOrderView({
             type="button"
             disabled={isLoading}
             onClick={handleSearchOrder}
-            className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-2 transition cursor-pointer shrink-0"
+            className="bg-[#377ef0] hover:bg-[#2962be] text-white px-6 py-2.5 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition cursor-pointer shrink-0 shadow-sm"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.5} />
@@ -1340,7 +1347,7 @@ export function TrackOrderView({
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 transition cursor-pointer"
+                  className="bg-[#377ef0] hover:bg-[#2962be] text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 transition cursor-pointer shadow-sm"
                 >
                   <Printer className="w-4 h-4" strokeWidth={1.5} />
                   <span>طباعة وتحميل التقرير المعتمد النهائي (PDF)</span>
@@ -1567,7 +1574,7 @@ export function CheckoutModal({
     : "https://wa.me/201066594552";
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4 overflow-y-auto no-print">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
       <div className="bg-white border border-slate-200 rounded-xl max-w-xl w-full mx-auto p-6 shadow-2xl space-y-5 my-auto">
         <div className="flex items-center justify-between border-b border-slate-200 pb-4">
           <div>
