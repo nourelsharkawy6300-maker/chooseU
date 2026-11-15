@@ -70,9 +70,9 @@ export default function HomePage() {
         style={{
           animation: "fade-up var(--dur-base) var(--ease-out-expo) both",
         }}
-        className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 sm:p-12 text-right shadow-2xs"
+        className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 sm:p-12 text-start shadow-2xs"
       >
-        <div className="max-w-3xl space-y-5">
+        <div className="max-w-3xl space-y-5 text-start">
           <h1 className="text-3xl sm:text-5xl font-black text-slate-900 leading-[1.45]">
             قرارك الأكاديمي والمالي
             <br />
@@ -107,43 +107,28 @@ export default function HomePage() {
 
       {/* Grid of Platform Modules */}
       <div className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {MODULES.map((m, idx) => {
-            const Icon = m.icon;
-            return (
-              <Link
-                key={m.href}
-                href={m.href}
-                style={{
-                  animation: "fade-up var(--dur-base) var(--ease-out-expo) both",
-                  animationDelay: `${(idx + 1) * 60}ms`,
-                }}
-                className="group relative flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-6 transition-all hover:border-slate-300 hover:bg-slate-50/80 shadow-2xs"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-700 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <span className="rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">
-                      {m.badge}
-                    </span>
-                  </div>
-                  <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                    {m.title}
-                  </h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {m.desc}
-                  </p>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-blue-600 font-semibold group-hover:translate-x-[-2px] transition-transform">
-                  <span>فتح الوحدة</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </div>
-              </Link>
-            );
-          })}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {MODULES.map((m, idx) => (
+            <Link
+              key={m.href}
+              href={m.href}
+              style={{
+                animation: "fade-up var(--dur-base) var(--ease-out-expo) both",
+                animationDelay: `${(idx + 1) * 60}ms`,
+              }}
+              className="group relative flex items-center justify-between rounded-xl border border-slate-200 bg-white p-5 transition-all hover:border-slate-300 hover:bg-slate-50/80 shadow-2xs text-start"
+            >
+              <div className="space-y-1.5 min-w-0 flex-1 pl-4">
+                <h3 className="text-[15px] font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                  {m.title}
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed line-clamp-2">
+                  {m.desc}
+                </p>
+              </div>
+              <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-[-2px] transition-all shrink-0" />
+            </Link>
+          ))}
         </div>
       </div>
     </div>
