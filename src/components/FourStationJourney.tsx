@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
@@ -450,11 +451,19 @@ export function FourStationJourney({
       {/* 2. MAIN WORKSPACE VIEWPORT                                           */}
       {/* ==================================================================== */}
       <main className="px-4 sm:px-6 py-8 space-y-8">
-        {/* ================================================================== */}
-        {/* STATION 1: DISCOVER (اكتشف)                                        */}
-        {/* ================================================================== */}
-        {station === 1 && (
-          <div className="space-y-6">
+        <AnimatePresence mode="wait">
+          {/* ================================================================== */}
+          {/* STATION 1: DISCOVER (اكتشف)                                        */}
+          {/* ================================================================== */}
+          {station === 1 && (
+            <motion.div
+              key="station-1"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-6"
+            >
             {/* Header Description */}
             <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
@@ -768,14 +777,21 @@ export function FourStationJourney({
                 </div>
               </div>
             )}
-          </div>
+          </motion.div>
         )}
 
         {/* ================================================================== */}
         {/* STATION 2: MATCH (طابق)                                            */}
         {/* ================================================================== */}
         {station === 2 && (
-          <div className="space-y-6">
+          <motion.div
+            key="station-2"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-6"
+          >
             {/* Header */}
             <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
@@ -1031,14 +1047,21 @@ export function FourStationJourney({
                 </div>
               </div>
             )}
-          </div>
+          </motion.div>
         )}
 
         {/* ================================================================== */}
         {/* STATION 3: SIMULATE (حاكِ)                                          */}
         {/* ================================================================== */}
         {station === 3 && (
-          <div className="space-y-6">
+          <motion.div
+            key="station-3"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-6"
+          >
             {/* Header */}
             <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
@@ -1312,14 +1335,21 @@ export function FourStationJourney({
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* ================================================================== */}
         {/* STATION 4: DECIDE (المحطة الرابعة: الاستشارة والقرار النهائي)           */}
         {/* ================================================================== */}
         {station === 4 && (
-          <div className="space-y-6">
+          <motion.div
+            key="station-4"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-6"
+          >
             {/* Header */}
             <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
               <div className="space-y-1">
@@ -1457,9 +1487,10 @@ export function FourStationJourney({
                 <span>إصدار وثيقة القرار النهائي الرسمية ←</span>
               </button>
             </div>
-          </div>
+          </motion.div>
         )}
-      </main>
+      </AnimatePresence>
+    </main>
 
       {/* ==================================================================== */}
       {/* 3. EXPLAINABLE AI - WHY? MODAL                                       */}
