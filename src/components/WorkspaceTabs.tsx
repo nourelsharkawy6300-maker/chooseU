@@ -434,35 +434,28 @@ export function WorkspaceTabs({
           2. LEFT MAIN ANALYTICAL CANVAS (lg:col-span-8)
          ===================================================================== */}
       <div className="lg:col-span-8 space-y-5">
-        {/* Guided Step Banner for Parent & Student */}
-        <div className="bg-blue-50/70 border border-blue-200 rounded-xl p-4 sm:p-5 flex items-start gap-3.5 shadow-2xs">
-          <div className="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-[13px] shrink-0 mt-0.5 tabular-nums">
-            {workspaceTab === "quiz" ? "1" : workspaceTab === "scenarios" ? "2" : workspaceTab === "tco_table" ? "3" : "4"}
-          </div>
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold text-blue-900 bg-white px-2 py-0.5 rounded border border-blue-200 shadow-2xs">
-                {workspaceTab === "quiz" && "الخطوة الأولى • اختبار الميول"}
-                {workspaceTab === "scenarios" && "الخطوة الثانية • الكليات المرشحة والتنسيق"}
-                {workspaceTab === "tco_table" && "الخطوة الثالثة • حساب المصاريف والسكن"}
-                {workspaceTab === "compare" && "الخطوة الرابعة • المقارنة والقرار النهائي"}
-              </span>
-            </div>
-            <p className="text-[13px] text-slate-700 leading-relaxed font-medium">
-              {workspaceTab === "quiz" &&
-                "أجب عن 6 أسئلة عملية سريعة لنكتشف ميولك ومجالات شغفك الأنسب بدون أي تعقيد."}
-              {workspaceTab === "scenarios" &&
-                "استعرض الكليات المناسبة لمجموعك وجرّب سيناريوهات تغير درجات التنسيق صعوداً أو هبوطاً بنقرة واحدة."}
-              {workspaceTab === "tco_table" &&
-                "احسب التكلفة الحقيقية الكاملة لـ 4 سنوات دراسية شاملة المصروفات، المعامل، والزيادة السنوية بالتضخم، وتكلفة الانتقال أو السكن."}
-              {workspaceTab === "compare" &&
-                "قارن بين كلياتك المفضلة وجهاً لوجه عبر 8 معايير دقيقة لتصل مع ولي أمرك للقرار الأنسب والأكثر أماناً."}
-            </p>
-          </div>
+        {/* Guided Step Heading */}
+        <div className="space-y-1 py-1">
+          <h2 className="text-lg font-bold text-slate-900">
+            {workspaceTab === "quiz" && "اختبار الميول"}
+            {workspaceTab === "scenarios" && "الكليات المرشحة والتنسيق"}
+            {workspaceTab === "tco_table" && "حساب المصاريف والسكن"}
+            {workspaceTab === "compare" && "المقارنة والقرار النهائي"}
+          </h2>
+          <p className="text-[13px] text-slate-600 leading-relaxed">
+            {workspaceTab === "quiz" &&
+              "أجب عن 6 أسئلة عملية سريعة لنكتشف ميولك ومجالات شغفك الأنسب بدون أي تعقيد."}
+            {workspaceTab === "scenarios" &&
+              "استعرض الكليات المناسبة لمجموعك وجرّب سيناريوهات تغير درجات التنسيق صعوداً أو هبوطاً بنقرة واحدة."}
+            {workspaceTab === "tco_table" &&
+              "احسب التكلفة الحقيقية الكاملة لـ 4 سنوات دراسية شاملة المصروفات، المعامل، والزيادة السنوية بالتضخم، وتكلفة الانتقال أو السكن."}
+            {workspaceTab === "compare" &&
+              "قارن بين كلياتك المفضلة وجهاً لوجه عبر 8 معايير دقيقة لتصل مع ولي أمرك للقرار الأنسب والأكثر أماناً."}
+          </p>
         </div>
 
         {/* 4-Tab Workspace Switcher with Parent-Friendly Labels */}
-        <div className="bg-slate-100 border border-slate-200 rounded-xl p-1.5 grid grid-cols-2 sm:grid-cols-4 gap-1.5 shadow-2xs">
+        <div className="bg-slate-100 border border-slate-200 rounded-xl p-1.5 flex flex-wrap gap-2 shadow-2xs">
           {[
             { id: "quiz" as WorkspaceSubTab, label: "1. اختبار الميول السريع" },
             {
@@ -482,7 +475,7 @@ export function WorkspaceTabs({
               key={tab.id}
               type="button"
               onClick={() => setWorkspaceTab(tab.id)}
-              className={`py-2.5 px-3 rounded-xl text-[12px] font-semibold transition cursor-pointer text-center whitespace-nowrap ${
+              className={`flex-1 min-w-[140px] py-2 px-3 rounded-lg text-[12px] font-semibold transition cursor-pointer text-center ${
                 workspaceTab === tab.id
                   ? "bg-white text-slate-900 shadow-xs border border-slate-200"
                   : "text-slate-600 hover:bg-slate-200 hover:text-slate-900"
@@ -690,7 +683,7 @@ export function WorkspaceTabs({
                       strokeWidth={1.5}
                     />
                     <h2 className="text-[17px] font-semibold text-slate-900">
-                      محاكي السيناريوهات وتوقعات التنسيق (What-If)
+                      محاكي السيناريوهات وتوقعات التنسيق
                     </h2>
                   </div>
                   <p className="text-[12px] text-slate-500 mt-0.5">
