@@ -14,6 +14,7 @@ import {
   Wallet,
   Percent,
 } from "lucide-react";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const ibmPlexArabic = IBM_Plex_Sans_Arabic({
@@ -224,6 +225,7 @@ export default function RootLayout({
             </main>
           </div>
         </div>
+        <Analytics />
       </body>
     </html>
   );
