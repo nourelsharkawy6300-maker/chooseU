@@ -232,7 +232,7 @@ export function WorkspaceTabs({
                   setStream(st.id);
                   setCurrentQuestionIndex(0);
                 }}
-                className={`py-1.5 px-2 rounded-lg text-[12px] whitespace-nowrap transition cursor-pointer ${
+                className={`py-1.5 px-2 rounded-lg text-[12px] whitespace-nowrap transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
                   stream === st.id
                     ? "bg-white text-slate-900 shadow-2xs font-semibold"
                     : "text-slate-600 hover:text-slate-900"
@@ -352,7 +352,7 @@ export function WorkspaceTabs({
                 key={preset}
                 type="button"
                 onClick={() => setBudget(preset)}
-                className={`px-2 py-0.5 rounded text-[11px] border transition-colors cursor-pointer ${
+                className={`px-2 py-0.5 rounded text-[11px] border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
                   budget === preset
                     ? "bg-blue-50 text-blue-700 border-blue-300 font-bold"
                     : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
@@ -596,7 +596,7 @@ export function WorkspaceTabs({
                                 },
                               }))
                             }
-                            className={`w-full text-right px-4 py-3.5 rounded-xl border text-[13px] transition flex items-center justify-between gap-3 cursor-pointer ${
+                            className={`w-full text-right px-4 py-3.5 rounded-xl border text-[13px] transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-between gap-3 cursor-pointer ${
                               selected
                                 ? "bg-blue-50 border-blue-600 text-blue-900 font-medium"
                                 : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-normal"
@@ -657,7 +657,7 @@ export function WorkspaceTabs({
                   <button
                     type="button"
                     onClick={() => setWorkspaceTab("scenarios")}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-[13px] font-semibold flex items-center gap-2 cursor-pointer shadow-sm transition"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-[13px] font-semibold flex items-center gap-2 cursor-pointer shadow-sm transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
                   >
                     <span>اعرض الكليات المناسبة لمجموعي وميولي</span>
                     <ArrowLeft className="w-4 h-4" strokeWidth={2} />
@@ -1234,7 +1234,7 @@ export function WorkspaceTabs({
                       <button
                         type="button"
                         onClick={onOpenCheckout}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl text-[13px] font-semibold transition cursor-pointer tabular-nums shadow-sm"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl text-[13px] font-semibold transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer tabular-nums shadow-sm"
                       >
                         فتح التقرير المقارن الكامل واعتماد المستشار — 150 ج.م
                       </button>
@@ -1572,7 +1572,7 @@ export function WorkspaceTabs({
                   setAuditedFaculty(null);
                   onOpenCheckout();
                 }}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-[12px] font-medium cursor-pointer tabular-nums shadow-sm"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-[12px] font-medium cursor-pointer tabular-nums shadow-sm transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
               >
                 إصدار التقرير المعتمد الكامل — 150 ج.م
               </button>

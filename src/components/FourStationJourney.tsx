@@ -540,7 +540,7 @@ export function FourStationJourney({
                               key={optIdx}
                               type="button"
                               onClick={() => handleAnswerQuestion(q.id, opt.track)}
-                              className={`w-full text-right p-3 rounded-lg border text-[12px] transition-colors cursor-pointer flex items-center justify-between gap-3 ${
+                              className={`w-full text-right p-3 rounded-lg border text-[12px] transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer flex items-center justify-between gap-3 ${
                                 isSelected
                                   ? "bg-blue-50 border-blue-400 text-blue-900 font-medium"
                                   : "bg-white hover:bg-slate-50 border-slate-200 text-slate-700"
@@ -628,7 +628,7 @@ export function FourStationJourney({
                           key={st.id}
                           type="button"
                           onClick={() => setStream(st.id as StreamType)}
-                          className={`py-1.5 rounded-md text-center cursor-pointer transition-colors ${
+                          className={`py-1.5 rounded-md text-center cursor-pointer transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] ${
                             stream === st.id
                               ? "bg-blue-600 text-white font-bold"
                               : "text-slate-600 hover:text-slate-900"
@@ -719,7 +719,7 @@ export function FourStationJourney({
                           key={preset}
                           type="button"
                           onClick={() => setBudget(preset)}
-                          className={`px-1.5 py-0.5 rounded text-[10px] border transition-colors cursor-pointer ${
+                          className={`px-1.5 py-0.5 rounded text-[10px] border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
                             budget === preset
                               ? "bg-emerald-50 text-emerald-800 border-emerald-300 font-semibold"
                               : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
@@ -738,7 +738,7 @@ export function FourStationJourney({
                       <button
                         type="button"
                         onClick={() => setLivingMode("commute")}
-                        className={`py-1.5 rounded-md cursor-pointer transition-colors ${
+                        className={`py-1.5 rounded-md cursor-pointer transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] ${
                           livingMode === "commute"
                             ? "bg-blue-600 text-white font-bold"
                             : "text-slate-600 hover:text-slate-900"
@@ -749,7 +749,7 @@ export function FourStationJourney({
                       <button
                         type="button"
                         onClick={() => setLivingMode("dorm")}
-                        className={`py-1.5 rounded-md cursor-pointer transition-colors ${
+                        className={`py-1.5 rounded-md cursor-pointer transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] ${
                           livingMode === "dorm"
                             ? "bg-blue-600 text-white font-bold"
                             : "text-slate-600 hover:text-slate-900"
@@ -774,7 +774,7 @@ export function FourStationJourney({
                   <button
                     type="button"
                     onClick={() => setStation(2)}
-                    className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold text-[13px] transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-sm"
+                    className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold text-[13px] transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-sm"
                   >
                     <span>الانتقال للمحطة 2: المطابقة والتوصيات</span>
                     <ArrowLeft className="w-4 h-4 stroke-[2]" />
@@ -824,7 +824,7 @@ export function FourStationJourney({
                 <button
                   type="button"
                   onClick={() => setStation(3)}
-                  className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[11px] font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-xs"
+                  className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[11px] font-bold transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer flex items-center gap-1 shadow-xs"
                 >
                   <span>المحطة 3 (المحاكاة)</span>
                   <ArrowLeft className="w-3.5 h-3.5" />
@@ -1094,7 +1094,7 @@ export function FourStationJourney({
                 <button
                   type="button"
                   onClick={() => setStation(4)}
-                  className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[11px] font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-xs"
+                  className="px-4 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 rounded-lg text-[11px] font-semibold transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer flex items-center gap-1 shadow-xs"
                 >
                   <span>المحطة 4 (القرار النهائي)</span>
                   <ArrowLeft className="w-3.5 h-3.5" />
@@ -1333,7 +1333,7 @@ export function FourStationJourney({
                 <button
                   type="button"
                   onClick={() => setStation(4)}
-                  className="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold text-[12px] transition-colors cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold text-[12px] transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2"
                 >
                   <span>الانتقال للمحطة 4: الاستشارة الأكاديمية والتقرير النهائي</span>
                   <ArrowLeft className="w-3.5 h-3.5" />
@@ -1464,7 +1464,7 @@ export function FourStationJourney({
                 <button
                   type="button"
                   onClick={handleSendMessage}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[12px] font-bold transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[12px] font-bold transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer flex items-center gap-1.5 shrink-0"
                 >
                   <span>إرسال</span>
                   <Send className="w-3.5 h-3.5 stroke-[2]" />
