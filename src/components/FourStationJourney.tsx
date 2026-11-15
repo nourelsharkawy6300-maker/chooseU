@@ -1361,7 +1361,7 @@ export function FourStationJourney({
                 </div>
 
                 <div className="text-[11px] text-slate-500 hidden sm:block">
-                  CONTEXT: <span dir="ltr" className="font-mono tabular-nums">{score}%</span> • <span dir="ltr" className="font-mono">{stream}</span> • {governorate}
+                  بياناتك: <span dir="ltr" className="font-mono tabular-nums">{score}%</span> • <span dir="ltr" className="font-mono">{stream}</span> • {governorate}
                 </div>
               </div>
 
@@ -1509,7 +1509,7 @@ export function FourStationJourney({
               <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
                 <div className="flex items-center justify-between font-bold text-slate-900">
                   <span>2. تطابق الميول والسمات (Psychometric Trait)</span>
-                  <span className="text-blue-700">تطابق <span dir="ltr" className="font-mono tabular-nums">94%</span></span>
+                  <span className="text-blue-700">تطابق <span dir="ltr" className="font-mono tabular-nums">{explainFaculty.matchScore}%</span></span>
                 </div>
                 <p className="text-[11px] text-slate-600">
                   إجاباتك في اختبار الميول أظهرت تفضيلاً استثنائياً لحل المشكلات البرمجية ومسار{" "}

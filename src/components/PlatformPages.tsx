@@ -1148,7 +1148,7 @@ export function TrackOrderView({
             متابعة حالة الطلب واستلام التقرير المعتمد
           </h1>
           <p className="text-[13px] text-slate-500 mt-1">
-            أدخل رقم الطلب (مثال: ORD-2026-710) أو رقم الواتساب المسجل للاستعلام المباشر من قاعدة البيانات.
+            أدخل رقم الطلب أو رقم الواتساب المسجل للاستعلام المباشر من قاعدة البيانات.
           </p>
         </div>
 
@@ -1157,7 +1157,7 @@ export function TrackOrderView({
             type="text"
             value={queryInput}
             onChange={(e) => setQueryInput(e.target.value)}
-            placeholder="أدخل رقم الطلب (مثال: ORD-2026-710) أو رقم الواتساب..."
+            placeholder="أدخل رقم الطلب أو رقم الواتساب..."
             className="flex-1 border border-slate-200 focus:border-slate-900 rounded-xl px-4 py-2.5 text-[13px] font-mono dir-ltr text-left tabular-nums focus:outline-none"
           />
           <button
@@ -1177,7 +1177,7 @@ export function TrackOrderView({
 
         {notFound && (
           <div className="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-[12px]">
-            لم يتم العثور على طلب مسجل بهذا الكود أو الرقم. يمكنك تجربة الكود النموذجي المعتمد <code className="font-mono font-bold">ORD-2026-710</code> للمعاينة.
+            مفيش طلب بالكود ده. اتأكد من الكود وجرّب تاني.
           </div>
         )}
       </div>
