@@ -1,9 +1,27 @@
 @import "tailwindcss";
 
+@theme {
+  --color-paper: #fbfaf6;
+  --color-ink: #1c1736;
+  --color-ink-2: #48425f;
+  --color-ink-3: #68637d;
+  --color-border-grid: #e2e2e2;
+  --color-accent: #377ef0;
+  --color-accent-hover: #2962be;
+  --color-highlight: #f5a623;
+}
+
 :root {
   --font-sans-arabic: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --paper: #FBFAF6;
+  --paper: #fbfaf6;
+  --ink: #1c1736;
+  --ink-2: #48425f;
+  --ink-3: #68637d;
+  --border-grid: #e2e2e2;
+  --accent: #377ef0;
+  --accent-hover: #2962be;
+  --highlight: #f5a623;
   --bg-canvas: var(--paper);
   --bg-shell: #ffffff;
   --bg-surface: #ffffff;
@@ -18,7 +36,7 @@ html,
 body {
   font-family: var(--font-sans-arabic);
   background-color: var(--paper);
-  color: #0f172a;
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
   min-height: 100%;
   line-height: 1.6;
