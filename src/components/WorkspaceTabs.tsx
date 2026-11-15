@@ -836,139 +836,131 @@ export function WorkspaceTabs({
                 </button>
               </div>
             ) : (
-              <div className="p-6 space-y-6">
-                {[
-                  {
-                    key: "target",
-                    title: "رغبات أساسية مناسبة لمجموعك",
-                    desc: "كليات تتوافق مع مجموعك الفعلي ضمن النطاق التنافسي المباشر",
-                    items: evaluation.targetGroup,
-                  },
-                  {
-                    key: "safe",
-                    title: "كليات آمنة ومضمونة",
-                    desc: "كليات يتجاوز مجموعك حد القبول فيها بهامش أمان مطمئن",
-                    items: evaluation.safeGroup,
-                  },
-                  {
-                    key: "fallback",
-                    title: "بدائل الجامعات الأهلية والخاصة",
-                    desc: "خيارات تضمن التخصص الدقيق في حال ارتفاع تنسيق الكليات الحكومية",
-                    items: evaluation.fallbackGroup,
-                  },
-                ]
-                  .filter((grp) => grp.items.length > 0)
-                  .map((grp) => (
-                    <div key={grp.key} className="space-y-3">
-                      <div className="flex items-center justify-between bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl text-[12px] font-semibold text-slate-800">
-                        <span>{grp.title}</span>
-                        <span className="text-slate-500 tabular-nums">
-                          {formatFacultyCount(grp.items.length)}
-                        </span>
-                      </div>
-
-                      <div className="divide-y divide-slate-200 border border-slate-200 rounded-xl bg-white">
-                        {grp.items.map((fac) => {
-                          const isCompared = comparedIds.includes(fac.id);
-                          return (
-                            <div
-                              key={fac.id}
-                              className="p-4 space-y-3 hover:bg-slate-50 transition"
-                            >
-                              <div className="flex flex-wrap items-start justify-between gap-4">
-                                <div className="space-y-1">
-                                  <div className="flex flex-wrap items-center gap-2">
-                                    <span
-                                      className={`px-2 py-0.5 rounded text-[11px] font-medium border ${getCategoryBadgeStyle(
-                                        fac.type
-                                      )}`}
-                                    >
-                                      {fac.type}
-                                    </span>
-                                    <span
-                                      className={`px-2 py-0.5 rounded text-[11px] font-medium border tabular-nums ${fac.safetyBadge.style}`}
-                                    >
-                                      {fac.safetyBadge.label}
-                                    </span>
-                                    <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-semibold tabular-nums">
-                                      توافق {fac.matchScore}%
-                                    </span>
-                                  </div>
-                                  <h4 className="text-[15px] font-semibold text-slate-900">
-                                    {fac.name}
-                                  </h4>
-                                  <p className="text-[12px] text-slate-500">
-                                    {fac.university} • محافظة {fac.gov}
-                                  </p>
-                                </div>
-
-                                <div className="text-left text-[12px] tabular-nums shrink-0">
-                                  <div className="text-slate-500">
-                                    حد القبول:{" "}
-                                    <strong className="text-slate-900">
-                                      {fac.shiftedCutoff.toFixed(1)}%
-                                    </strong>
-                                  </div>
-                                  <div className="font-bold text-[14px] text-slate-900 mt-0.5">
-                                    {fac.y1_base_fee.toLocaleString()} ج.م/سنة
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Explainable AI Match Reason */}
-                              <div className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-[11px] text-slate-600 leading-relaxed tabular-nums">
-                                <strong className="text-slate-800">
-                                  سبب الترشيح:{" "}
-                                </strong>
-                                {fac.whyMatch}
-                              </div>
-
-                              {/* Card Actions */}
-                              <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <button
-                                    type="button"
-                                    onClick={() => setAuditedFaculty(fac)}
-                                    className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg text-[11px] font-medium flex items-center gap-1 cursor-pointer"
-                                  >
-                                    <FileText
-                                      className="w-3.5 h-3.5 text-slate-500"
-                                      strokeWidth={1.5}
-                                    />
-                                    <span>تفاصيل اللائحة</span>
-                                  </button>
-
-                                  {onSelectFutureCareer && (
-                                    <button
-                                      type="button"
-                                      onClick={() => onSelectFutureCareer(fac)}
-                                      className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg text-[11px] font-medium flex items-center gap-1 cursor-pointer"
-                                    >
-                                      <Briefcase
-                                        className="w-3.5 h-3.5 text-blue-600"
-                                        strokeWidth={1.5}
-                                      />
-                                      <span>استكشاف المسار الوظيفي</span>
-                                    </button>
-                                  )}
-                                </div>
-
-                                <label className="flex items-center gap-1.5 text-[11px] font-medium text-slate-700 cursor-pointer select-none border border-slate-300 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50">
-                                  <input
-                                    type="checkbox"
-                                    checked={isCompared}
-                                    onChange={() => onToggleCompare(fac.id)}
-                                    className="rounded border-slate-300 text-blue-600"
-                                  />
-                                  <span>إضافة للمقارنة</span>
-                                </label>
-                              </div>
+              <div className="p-6">
+                <div className="border border-slate-200 rounded-xl bg-white divide-y divide-slate-200 overflow-hidden shadow-2xs">
+                  {evaluation.allRanked.map((fac, idx) => {
+                    const rowNum = String(idx + 1).padStart(3, "0");
+                    const m = computeFacultyTcoMetrics(
+                      fac,
+                      gov,
+                      livingMode,
+                      inflationScenario
+                    );
+                    const isCompared = comparedIds.includes(fac.id);
+                    return (
+                      <div
+                        key={fac.id}
+                        className="p-4 hover:bg-slate-50/70 transition flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+                      >
+                        {/* Number & Primary Info */}
+                        <div className="flex items-start gap-3 min-w-0 flex-1">
+                          <span
+                            dir="ltr"
+                            className="font-mono tabular-nums text-slate-400 text-xs font-semibold pt-1 shrink-0 w-8 text-center"
+                          >
+                            {rowNum}
+                          </span>
+                          <div className="min-w-0 flex-1 space-y-1">
+                            <div className="flex flex-wrap items-center gap-1.5">
+                              <span
+                                className={`px-2 py-0.5 rounded text-[11px] font-medium border ${getCategoryBadgeStyle(
+                                  fac.type
+                                )}`}
+                              >
+                                {fac.type}
+                              </span>
+                              <span
+                                className={`px-2 py-0.5 rounded text-[11px] font-medium border tabular-nums ${fac.safetyBadge.style}`}
+                              >
+                                {fac.safetyBadge.label}
+                              </span>
+                              <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-semibold tabular-nums">
+                                توافق {fac.matchScore}%
+                              </span>
                             </div>
-                          );
-                        })}
+                            <h4 className="text-[14px] font-semibold text-slate-900 leading-snug">
+                              {fac.name}
+                            </h4>
+                            <p className="text-[12px] text-slate-500">
+                              {fac.university}
+                            </p>
+                            {fac.whyMatch && (
+                              <p className="text-[11px] text-slate-600 line-clamp-1">
+                                <strong className="text-slate-700">سبب الترشيح: </strong>
+                                {fac.whyMatch}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Aligned Metadata Columns: governorate, cutoff, yearly fee, total cost */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center sm:text-start shrink-0 text-[12px] py-1 border-t sm:border-t-0 border-slate-100">
+                          <div className="space-y-0.5 min-w-[70px]">
+                            <div className="text-[10px] text-slate-400">المحافظة</div>
+                            <div className="font-medium text-slate-700">{fac.gov}</div>
+                          </div>
+                          <div className="space-y-0.5 min-w-[70px]">
+                            <div className="text-[10px] text-slate-400">حد القبول</div>
+                            <div className="font-semibold text-slate-900 tabular-nums">
+                              {fac.shiftedCutoff.toFixed(1)}%
+                            </div>
+                          </div>
+                          <div className="space-y-0.5 min-w-[90px]">
+                            <div className="text-[10px] text-slate-400">المصروفات السنوية</div>
+                            <div className="font-bold text-slate-900 tabular-nums">
+                              {fac.y1_base_fee.toLocaleString()} ج.م
+                            </div>
+                          </div>
+                          <div className="space-y-0.5 min-w-[95px]">
+                            <div className="text-[10px] text-slate-400">التكلفة الإجمالية</div>
+                            <div className="font-bold text-blue-700 tabular-nums">
+                              {m.total4Yr.toLocaleString()} ج.م
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Actions & Compare Toggle */}
+                        <div className="flex flex-wrap items-center gap-2 shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-slate-100">
+                          <button
+                            type="button"
+                            onClick={() => setAuditedFaculty(fac)}
+                            className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-2.5 py-1.5 rounded-lg text-[11px] font-medium flex items-center gap-1 cursor-pointer transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
+                          >
+                            <FileText
+                              className="w-3.5 h-3.5 text-slate-500"
+                              strokeWidth={1.5}
+                            />
+                            <span>تفاصيل اللائحة</span>
+                          </button>
+
+                          {onSelectFutureCareer && (
+                            <button
+                              type="button"
+                              onClick={() => onSelectFutureCareer(fac)}
+                              className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-2.5 py-1.5 rounded-lg text-[11px] font-medium flex items-center gap-1 cursor-pointer transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
+                            >
+                              <Briefcase
+                                className="w-3.5 h-3.5 text-blue-600"
+                                strokeWidth={1.5}
+                              />
+                              <span>استكشاف المسار</span>
+                            </button>
+                          )}
+
+                          <label className="flex items-center gap-1.5 text-[11px] font-medium text-slate-700 cursor-pointer select-none border border-slate-300 px-2.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]">
+                            <input
+                              type="checkbox"
+                              checked={isCompared}
+                              onChange={() => onToggleCompare(fac.id)}
+                              className="rounded border-slate-300 text-blue-600"
+                            />
+                            <span>حفظ في مسودة الرغبات</span>
+                          </label>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
+                </div>
               </div>
             )}
 
