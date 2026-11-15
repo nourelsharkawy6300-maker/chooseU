@@ -551,43 +551,50 @@ export function FutureMeView({
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {career.roadmap_years.map((step, idx) => (
-            <div
-              key={step.year}
-              className="border border-slate-200 rounded-xl p-5 bg-slate-50/50 flex flex-col justify-between space-y-4 hover:border-blue-300 transition"
-            >
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-[12px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded tabular-nums">
-                    {step.year}
-                  </span>
-                  <span className="text-[11px] font-mono text-slate-400 tabular-nums">
-                    0{idx + 1}
-                  </span>
+        <div className="relative border-s border-slate-300 ms-3 ps-6 space-y-6 py-2">
+          {[
+            { title: "السنة التأسيسية", idx: 0 },
+            { title: "التخصص", idx: 1 },
+            { title: "التخرج", idx: 2 },
+            { title: "دخول سوق العمل", idx: 3 },
+          ].map(({ title, idx }) => {
+            const step =
+              career.roadmap_years[idx] ||
+              career.roadmap_years[career.roadmap_years.length - 1];
+            return (
+              <div key={title} className="relative">
+                {/* Timeline node */}
+                <span className="absolute -start-[31px] top-1.5 w-3 h-3 rounded-full bg-white border-2 border-blue-600 ring-2 ring-blue-100 shrink-0" />
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-[14px] font-bold text-slate-900 leading-snug">
+                      {title}
+                    </h4>
+                    {step?.year && (
+                      <span className="text-[11px] text-slate-400 font-medium">
+                        ({step.year})
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[12px] text-slate-600 leading-relaxed">
+                    {step?.focus}
+                  </p>
+                  {step?.skills && step.skills.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {step.skills.map((sk) => (
+                        <span
+                          key={sk}
+                          className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium"
+                        >
+                          {sk}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <h4 className="text-[14px] font-semibold text-slate-900 leading-snug">
-                  {step.focus}
-                </h4>
               </div>
-
-              <div className="space-y-1.5 pt-3 border-t border-slate-200/80">
-                <div className="text-[11px] font-semibold text-slate-500">
-                  المهارات المستهدفة:
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {step.skills.map((sk) => (
-                    <span
-                      key={sk}
-                      className="px-2 py-0.5 rounded bg-white border border-slate-200 text-[11px] font-medium text-slate-700"
-                    >
-                      {sk}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
