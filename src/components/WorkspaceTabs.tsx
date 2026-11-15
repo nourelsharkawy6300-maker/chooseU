@@ -81,15 +81,15 @@ interface WorkspaceTabsProps {
 
 function getCategoryBadgeStyle(type: string): string {
   if (type === "حكومي انتظام") {
-    return "bg-emerald-50 text-emerald-800 border-emerald-200";
+    return "bg-emerald-950/60 text-emerald-300 border-emerald-800/60";
   }
   if (type === "برامج خاصة وساعات معتمدة") {
-    return "bg-blue-50 text-blue-800 border-blue-200";
+    return "bg-blue-950/60 text-blue-300 border-blue-800/60";
   }
   if (type === "جامعات أهلية") {
-    return "bg-slate-100 text-slate-800 border-slate-300";
+    return "bg-slate-800/80 text-slate-200 border-slate-700";
   }
-  return "bg-amber-50 text-amber-800 border-amber-200";
+  return "bg-amber-950/60 text-amber-300 border-amber-800/60";
 }
 
 export function WorkspaceTabs({
@@ -180,11 +180,11 @@ export function WorkspaceTabs({
       {/* =====================================================================
           1. RIGHT STICKY CONTROL SIDEBAR (lg:col-span-4)
          ===================================================================== */}
-      <aside className="lg:col-span-4 bg-white border border-slate-200 rounded-xl p-6 lg:sticky lg:top-20 space-y-5 shadow-2xs">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-3.5">
+      <aside className="lg:col-span-4 bg-[#0F172A] border border-slate-800 rounded-xl p-6 lg:sticky lg:top-20 space-y-5 shadow-2xs">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3.5">
           <div className="flex items-center gap-2">
-            <Sliders className="w-4 h-4 text-slate-900" strokeWidth={1.5} />
-            <h2 className="text-[15px] font-semibold text-slate-900">
+            <Sliders className="w-4 h-4 text-slate-100" strokeWidth={1.5} />
+            <h2 className="text-[15px] font-semibold text-slate-100">
               معطيات الطالب والفلترة
             </h2>
           </div>
@@ -192,7 +192,7 @@ export function WorkspaceTabs({
             <button
               type="button"
               onClick={onResetParameters}
-              className="text-[11px] font-medium text-slate-500 hover:text-slate-900 flex items-center gap-1 cursor-pointer"
+              className="text-[11px] font-medium text-slate-400 hover:text-slate-200 flex items-center gap-1 cursor-pointer"
             >
               <RotateCcw className="w-3 h-3" strokeWidth={1.5} />
               <span>إعادة ضبط المعايير</span>
@@ -202,7 +202,7 @@ export function WorkspaceTabs({
 
         {/* Student Name */}
         <div>
-          <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
+          <label className="block text-[13px] font-medium text-slate-300 mb-1.5">
             اسم الطالب
           </label>
           <input
@@ -210,16 +210,16 @@ export function WorkspaceTabs({
             value={studentName}
             onChange={(e) => setStudentName(e.target.value)}
             placeholder="أدخل اسم الطالب لتخصيص التقرير..."
-            className="w-full border border-slate-200 focus:border-blue-600 rounded-xl px-3.5 py-2 text-[13px] text-slate-900 placeholder:text-slate-400 focus:outline-none"
+            className="w-full border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2 text-[13px] bg-slate-900 text-slate-100 placeholder:text-slate-500 focus:outline-none"
           />
         </div>
 
         {/* 3-Way Academic Stream Segmented Control */}
         <div>
-          <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
+          <label className="block text-[13px] font-medium text-slate-300 mb-1.5">
             الشعبة الدراسية
           </label>
-          <div className="bg-slate-100 p-1 rounded-xl grid grid-cols-3 gap-1">
+          <div className="bg-slate-950 border border-slate-800 p-1 rounded-xl grid grid-cols-3 gap-1">
             {[
               { id: "Science" as StreamType, label: "علمي علوم" },
               { id: "Math" as StreamType, label: "علمي رياضة" },
@@ -234,8 +234,8 @@ export function WorkspaceTabs({
                 }}
                 className={`py-1.5 px-2 rounded-lg text-[12px] whitespace-nowrap transition cursor-pointer ${
                   stream === st.id
-                    ? "bg-white text-slate-900 shadow-2xs font-semibold"
-                    : "text-slate-600 hover:text-slate-900"
+                    ? "bg-blue-600 text-white shadow-xs font-semibold"
+                    : "text-slate-400 hover:text-slate-200"
                 }`}
               >
                 {st.label}
@@ -246,17 +246,17 @@ export function WorkspaceTabs({
 
         {/* 2-Way Analysis Mode Segmented Control */}
         <div>
-          <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
+          <label className="block text-[13px] font-medium text-slate-300 mb-1.5">
             وضع التحليل
           </label>
-          <div className="bg-slate-100 p-1 rounded-xl grid grid-cols-2 gap-1">
+          <div className="bg-slate-950 border border-slate-800 p-1 rounded-xl grid grid-cols-2 gap-1">
             <button
               type="button"
               onClick={() => setAnalysisMode("trial")}
               className={`py-1.5 px-3 rounded-lg text-[12px] transition cursor-pointer ${
                 analysisMode === "trial"
-                  ? "bg-white text-slate-900 shadow-2xs font-semibold"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-blue-600 text-white shadow-xs font-semibold"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               درجات تجريبية
@@ -266,8 +266,8 @@ export function WorkspaceTabs({
               onClick={() => setAnalysisMode("tansik")}
               className={`py-1.5 px-3 rounded-lg text-[12px] transition cursor-pointer ${
                 analysisMode === "tansik"
-                  ? "bg-white text-slate-900 shadow-2xs font-semibold"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-blue-600 text-white shadow-xs font-semibold"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               التنسيق الرسمي
@@ -278,7 +278,7 @@ export function WorkspaceTabs({
         {/* Score Slider (50 to 100, step 0.5) + Numeric Input */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <label className="text-[13px] font-medium text-slate-700">
+            <label className="text-[13px] font-medium text-slate-300">
               المجموع المئوي (%)
             </label>
             <div className="flex items-center gap-1 tabular-nums">
@@ -292,9 +292,9 @@ export function WorkspaceTabs({
                   const val = parseFloat(e.target.value);
                   if (!isNaN(val)) setScore(Math.min(100, Math.max(50, val)));
                 }}
-                className="w-18 border border-slate-200 focus:border-blue-600 rounded-lg px-2 py-1 text-[13px] font-semibold text-slate-900 text-left tabular-nums focus:outline-none"
+                className="w-18 border border-slate-800 focus:border-blue-500 rounded-lg px-2 py-1 text-[13px] font-semibold text-slate-100 bg-slate-900 text-left tabular-nums focus:outline-none"
               />
-              <span className="text-[12px] text-slate-500">%</span>
+              <span className="text-[12px] text-slate-400">%</span>
             </div>
           </div>
           <input
@@ -305,7 +305,7 @@ export function WorkspaceTabs({
             value={score}
             onChange={(e) => setScore(parseFloat(e.target.value))}
             style={{
-              background: `linear-gradient(to left, #2563eb ${scorePercent}%, #e2e8f0 ${scorePercent}%)`,
+              background: `linear-gradient(to left, #2563eb ${scorePercent}%, #334155 ${scorePercent}%)`,
             }}
             className="enterprise-slider"
           />
@@ -319,7 +319,7 @@ export function WorkspaceTabs({
         {/* Max Annual Budget Slider (5000 to 250000, step 5000) + Numeric Input */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <label className="text-[13px] font-medium text-slate-700">
+            <label className="text-[13px] font-medium text-slate-300">
               الحد الأقصى للميزانية السنوية
             </label>
             <div className="flex items-center gap-1 tabular-nums">
@@ -334,9 +334,9 @@ export function WorkspaceTabs({
                   if (!isNaN(val))
                     setBudget(Math.min(250000, Math.max(5000, val)));
                 }}
-                className="w-24 border border-slate-200 focus:border-blue-600 rounded-lg px-2 py-1 text-[13px] font-semibold text-slate-900 text-left tabular-nums focus:outline-none"
+                className="w-24 border border-slate-800 focus:border-blue-500 rounded-lg px-2 py-1 text-[13px] font-semibold text-slate-100 bg-slate-900 text-left tabular-nums focus:outline-none"
               />
-              <span className="text-[11px] text-slate-500">ج.م</span>
+              <span className="text-[11px] text-slate-400">ج.م</span>
             </div>
           </div>
           <input
@@ -347,12 +347,12 @@ export function WorkspaceTabs({
             value={budget}
             onChange={(e) => setBudget(parseInt(e.target.value, 10))}
             style={{
-              background: `linear-gradient(to left, #2563eb ${budgetPercent}%, #e2e8f0 ${budgetPercent}%)`,
+              background: `linear-gradient(to left, #2563eb ${budgetPercent}%, #334155 ${budgetPercent}%)`,
             }}
             className="enterprise-slider"
           />
           <div className="flex items-center gap-1.5 pt-1">
-            <span className="text-[11px] text-slate-500">سقف تقريبي:</span>
+            <span className="text-[11px] text-slate-400">سقف تقريبي:</span>
             {[50000, 100000, 150000, 200000].map((preset) => (
               <button
                 key={preset}
@@ -360,31 +360,31 @@ export function WorkspaceTabs({
                 onClick={() => setBudget(preset)}
                 className={`px-2 py-0.5 rounded text-[11px] font-mono border transition-colors cursor-pointer ${
                   budget === preset
-                    ? "bg-blue-50 text-blue-700 border-blue-300 font-bold"
-                    : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                    ? "bg-blue-600/20 text-blue-300 border-blue-500/40 font-bold"
+                    : "bg-slate-900 text-slate-400 border-slate-800 hover:text-white"
                 }`}
               >
                 <span dir="ltr">{(preset / 1000).toFixed(0)}k</span> ج.م
               </button>
             ))}
           </div>
-          <p className="text-[12px] text-slate-500">
+          <p className="text-[12px] text-slate-400">
             سقف المصروفات الدراسية السنوية المتاحة للأسرة قبل احتساب الانتقال أو الإقامة.
           </p>
         </div>
 
         {/* Governorate Select Dropdown */}
         <div>
-          <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
+          <label className="block text-[13px] font-medium text-slate-300 mb-1.5">
             محافظة الإقامة الحالية
           </label>
           <select
             value={gov}
             onChange={(e) => setGov(e.target.value)}
-            className="w-full border border-slate-200 focus:border-blue-600 rounded-xl px-3.5 py-2.5 text-[13px] font-medium bg-white text-slate-900 focus:outline-none"
+            className="w-full border border-slate-800 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-[13px] font-medium bg-slate-900 text-slate-100 focus:outline-none"
           >
             {EGYPT_GOVERNORATES.map((g) => (
-              <option key={g} value={g}>
+              <option key={g} value={g} className="bg-slate-900 text-slate-100">
                 {g}
               </option>
             ))}
@@ -393,17 +393,17 @@ export function WorkspaceTabs({
 
         {/* Living Mode for Distant Faculties */}
         <div>
-          <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
+          <label className="block text-[13px] font-medium text-slate-300 mb-1.5">
             نمط الاستقرار للكليات البعيدة
           </label>
-          <div className="bg-slate-100 p-1 rounded-xl grid grid-cols-2 gap-1">
+          <div className="bg-slate-950 border border-slate-800 p-1 rounded-xl grid grid-cols-2 gap-1">
             <button
               type="button"
               onClick={() => setLivingMode("commute")}
               className={`py-1.5 px-2 rounded-lg text-[12px] transition cursor-pointer ${
                 livingMode === "commute"
-                  ? "bg-white text-slate-900 shadow-2xs font-semibold"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-blue-600 text-white shadow-xs font-semibold"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               انتقال يومي
@@ -413,8 +413,8 @@ export function WorkspaceTabs({
               onClick={() => setLivingMode("dorm")}
               className={`py-1.5 px-2 rounded-lg text-[12px] transition cursor-pointer ${
                 livingMode === "dorm"
-                  ? "bg-white text-slate-900 shadow-2xs font-semibold"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-blue-600 text-white shadow-xs font-semibold"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               سكن طلابي وإعاشة
@@ -423,17 +423,17 @@ export function WorkspaceTabs({
         </div>
 
         {/* Live Status Box */}
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-1.5">
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1.5">
           <div className="flex items-center justify-between">
-            <span className="text-[12px] text-slate-500">
+            <span className="text-[12px] text-slate-400">
               نتيجة المطابقة الفورية
             </span>
-            <span className="w-2 h-2 rounded-full bg-blue-600" />
+            <span className="w-2 h-2 rounded-full bg-blue-500" />
           </div>
-          <div className="text-[16px] font-bold text-slate-900 tabular-nums">
+          <div className="text-[16px] font-bold text-slate-100 tabular-nums">
             {formatFacultyCount(evaluation.allRanked.length)}
           </div>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-slate-400">
             المسار المتصدر: {TRACK_DETAILS[topTrack]?.title}
           </p>
         </div>
@@ -444,20 +444,20 @@ export function WorkspaceTabs({
          ===================================================================== */}
       <div className="lg:col-span-8 space-y-5">
         {/* Guided Step Banner for Parent & Student */}
-        <div className="bg-gradient-to-r from-blue-50/90 to-blue-50/40 border border-blue-200/80 rounded-xl p-4 sm:p-5 flex items-start gap-3.5 shadow-2xs">
-          <div className="w-8 h-8 rounded-xl bg-[#0F172A] text-white flex items-center justify-center font-bold text-[13px] shrink-0 mt-0.5 tabular-nums">
+        <div className="bg-[#0F172A] border border-slate-800 rounded-xl p-4 sm:p-5 flex items-start gap-3.5 shadow-2xs">
+          <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-[13px] shrink-0 mt-0.5 tabular-nums">
             {workspaceTab === "quiz" ? "1" : workspaceTab === "scenarios" ? "2" : workspaceTab === "tco_table" ? "3" : "4"}
           </div>
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold text-blue-800 bg-white px-2 py-0.5 rounded border border-blue-200 shadow-2xs">
+              <span className="text-[11px] font-bold text-blue-300 bg-blue-950/80 px-2.5 py-0.5 rounded border border-blue-800/80">
                 {workspaceTab === "quiz" && "الخطوة الأولى • اختبار الميول"}
                 {workspaceTab === "scenarios" && "الخطوة الثانية • الكليات المرشحة والتنسيق"}
                 {workspaceTab === "tco_table" && "الخطوة الثالثة • حساب المصاريف والسكن"}
                 {workspaceTab === "compare" && "الخطوة الرابعة • المقارنة والقرار النهائي"}
               </span>
             </div>
-            <p className="text-[13px] text-slate-700 leading-relaxed font-medium">
+            <p className="text-[13px] text-slate-300 leading-relaxed font-medium">
               {workspaceTab === "quiz" &&
                 "أجب عن 6 أسئلة عملية سريعة لنكتشف ميولك ومجالات شغفك الأنسب بدون أي تعقيد."}
               {workspaceTab === "scenarios" &&
@@ -471,7 +471,7 @@ export function WorkspaceTabs({
         </div>
 
         {/* 4-Tab Workspace Switcher with Parent-Friendly Labels */}
-        <div className="bg-white border border-slate-200 rounded-xl p-1.5 grid grid-cols-2 sm:grid-cols-4 gap-1.5 shadow-2xs">
+        <div className="bg-[#0F172A] border border-slate-800 rounded-xl p-1.5 grid grid-cols-2 sm:grid-cols-4 gap-1.5 shadow-2xs">
           {[
             { id: "quiz" as WorkspaceSubTab, label: "1. اختبار الميول السريع" },
             {
@@ -493,8 +493,8 @@ export function WorkspaceTabs({
               onClick={() => setWorkspaceTab(tab.id)}
               className={`py-2.5 px-3 rounded-xl text-[12px] font-semibold transition cursor-pointer text-center whitespace-nowrap ${
                 workspaceTab === tab.id
-                  ? "bg-[#0F172A] text-white shadow-xs"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                  ? "bg-blue-600 text-white shadow-xs"
+                  : "text-slate-400 hover:bg-slate-800/80 hover:text-white"
               }`}
             >
               {tab.label}
@@ -508,18 +508,18 @@ export function WorkspaceTabs({
         {workspaceTab === "quiz" && (
           <div className="space-y-6">
             {/* Top Affinity Breakdown Card */}
-            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div className="bg-[#0F172A] border border-slate-800 rounded-xl p-5 shadow-2xs space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
                 <div className="flex items-center gap-2">
                   <BarChart3
-                    className="w-4 h-4 text-blue-600"
+                    className="w-4 h-4 text-blue-400"
                     strokeWidth={1.5}
                   />
-                  <h3 className="text-[14px] font-semibold text-slate-900">
+                  <h3 className="text-[14px] font-semibold text-slate-100">
                     خريطة التوافق التخصصي ({TRACK_DETAILS[topTrack]?.title})
                   </h3>
                 </div>
-                <span className="text-[11px] text-slate-500">
+                <span className="text-[11px] text-slate-400">
                   تتحدث الأوزان النسبية تلقائياً مع كل إجابة
                 </span>
               </div>
@@ -531,20 +531,20 @@ export function WorkspaceTabs({
                       <span
                         className={
                           idx === 0
-                            ? "font-semibold text-slate-900"
-                            : "text-slate-600"
+                            ? "font-semibold text-slate-100"
+                            : "text-slate-400"
                         }
                       >
                         {item.title}
                       </span>
-                      <span className="font-semibold text-slate-900 tabular-nums">
+                      <span className="font-semibold text-slate-100 tabular-nums">
                         {item.percentage}%
                       </span>
                     </div>
-                    <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                    <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all duration-300 ${
-                          idx === 0 ? "bg-blue-600" : "bg-slate-600"
+                          idx === 0 ? "bg-blue-500" : "bg-slate-600"
                         }`}
                         style={{ width: `${Math.max(8, item.percentage)}%` }}
                       />
@@ -555,10 +555,10 @@ export function WorkspaceTabs({
             </div>
 
             {/* Single-Question Focus Card */}
-            <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
-              <div className="px-6 py-5 border-b border-slate-200 space-y-3">
+            <div className="bg-[#0F172A] border border-slate-800 rounded-xl shadow-2xs overflow-hidden">
+              <div className="px-6 py-5 border-b border-slate-800 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[12px] font-medium text-slate-500">
+                  <span className="text-[12px] font-medium text-slate-400">
                     مقياس الميول غير المنحاز • شعبة{" "}
                     {stream === "Science"
                       ? "علمي علوم"
@@ -566,13 +566,13 @@ export function WorkspaceTabs({
                       ? "علمي رياضة"
                       : "أدبي"}
                   </span>
-                  <span className="text-[12px] font-semibold text-slate-900 tabular-nums">
+                  <span className="text-[12px] font-semibold text-slate-100 tabular-nums">
                     السؤال {currentQuestionIndex + 1} من{" "}
                     {activeQuestions.length}
                   </span>
                 </div>
 
-                <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-blue-600 transition-all duration-200 rounded-full"
                     style={{
@@ -588,7 +588,7 @@ export function WorkspaceTabs({
 
               {activeQuestions[currentQuestionIndex] && (
                 <div className="p-6 space-y-5">
-                  <h2 className="text-[16px] font-semibold text-slate-900 leading-relaxed">
+                  <h2 className="text-[16px] font-semibold text-slate-100 leading-relaxed">
                     {activeQuestions[currentQuestionIndex].question}
                   </h2>
 
@@ -607,23 +607,23 @@ export function WorkspaceTabs({
                               setAnswersByStream((prev) => ({
                                 ...prev,
                                 [stream]: {
-                                  ...prev[stream],
+                                   ...prev[stream],
                                   [qId]: opt.track,
                                 },
                               }))
                             }
                             className={`w-full text-right px-4 py-3.5 rounded-xl border text-[13px] transition flex items-center justify-between gap-3 cursor-pointer ${
                               selected
-                                ? "bg-blue-50/50 border-blue-600 text-slate-900 font-medium"
-                                : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-normal"
+                                ? "bg-blue-600/20 border-blue-500/50 text-white font-medium"
+                                : "bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800/80 hover:text-white font-normal"
                             }`}
                           >
                             <div className="flex items-center gap-3">
                               <span
                                 className={`w-5 h-5 rounded-full border flex items-center justify-center text-[11px] shrink-0 ${
                                   selected
-                                    ? "border-blue-600 bg-blue-600 text-white font-bold"
-                                    : "border-slate-300 bg-white text-slate-500"
+                                    ? "border-blue-500 bg-blue-600 text-white font-bold"
+                                    : "border-slate-700 bg-slate-950 text-slate-400"
                                 }`}
                               >
                                 {optionLetters[optIdx]}
@@ -632,7 +632,7 @@ export function WorkspaceTabs({
                                 {opt.label}
                               </span>
                             </div>
-                            <kbd className="text-[11px] font-mono text-slate-400 border border-slate-200 bg-slate-50 px-2 py-0.5 rounded shrink-0 tabular-nums">
+                            <kbd className="text-[11px] font-mono text-slate-400 border border-slate-800 bg-slate-950 px-2 py-0.5 rounded shrink-0 tabular-nums">
                               {optIdx + 1}
                             </kbd>
                           </button>
@@ -643,14 +643,14 @@ export function WorkspaceTabs({
                 </div>
               )}
 
-              <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-between">
+              <div className="bg-slate-900/60 border-t border-slate-800 px-6 py-4 flex items-center justify-between">
                 <button
                   type="button"
                   disabled={currentQuestionIndex === 0}
                   onClick={() =>
                     setCurrentQuestionIndex((i) => Math.max(0, i - 1))
                   }
-                  className="border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 px-4 py-2 rounded-xl text-[12px] font-medium flex items-center gap-1.5 cursor-pointer"
+                  className="border border-slate-700 bg-slate-800/80 hover:bg-slate-800 disabled:opacity-40 text-slate-300 px-4 py-2 rounded-xl text-[12px] font-medium flex items-center gap-1.5 cursor-pointer"
                 >
                   <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
                   <span>السؤال السابق</span>
@@ -664,7 +664,7 @@ export function WorkspaceTabs({
                         Math.min(activeQuestions.length - 1, i + 1)
                       )
                     }
-                    className="bg-[#0F172A] hover:bg-slate-800 text-white px-5 py-2 rounded-xl text-[12px] font-medium flex items-center gap-2 cursor-pointer"
+                    className="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl text-[12px] font-medium flex items-center gap-2 cursor-pointer shadow-sm"
                   >
                     <span>السؤال التالي</span>
                     <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
@@ -673,7 +673,7 @@ export function WorkspaceTabs({
                   <button
                     type="button"
                     onClick={() => setWorkspaceTab("scenarios")}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-[13px] font-semibold flex items-center gap-2 cursor-pointer shadow-sm transition"
+                    className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl text-[13px] font-semibold flex items-center gap-2 cursor-pointer shadow-sm transition"
                   >
                     <span>اعرض الكليات المناسبة لمجموعي وميولي</span>
                     <ArrowLeft className="w-4 h-4" strokeWidth={2} />
@@ -688,21 +688,21 @@ export function WorkspaceTabs({
             SUB-TAB 2: 2. محاكي السيناريوهات What-If (SCENARIOS)
            =================================================================== */}
         {workspaceTab === "scenarios" && (
-          <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
+          <div className="bg-[#0F172A] border border-slate-800 rounded-xl shadow-2xs overflow-hidden">
             {/* Interactive What-If Bar */}
-            <div className="p-6 border-b border-slate-200 space-y-4">
+            <div className="p-6 border-b border-slate-800 space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
                     <SlidersHorizontal
-                      className="w-4 h-4 text-slate-900"
+                      className="w-4 h-4 text-blue-400"
                       strokeWidth={1.5}
                     />
-                    <h2 className="text-[17px] font-semibold text-slate-900">
+                    <h2 className="text-[17px] font-semibold text-slate-100">
                       محاكي السيناريوهات وتوقعات التنسيق (What-If)
                     </h2>
                   </div>
-                  <p className="text-[12px] text-slate-500 mt-0.5">
+                  <p className="text-[12px] text-slate-400 mt-0.5">
                     اضغط على أي زر محاكاة لترى فوراً كيف يتغير قبول الكليات لو تغيّر التنسيق أو الميزانية.
                   </p>
                 </div>
@@ -714,8 +714,8 @@ export function WorkspaceTabs({
                     onClick={() => setTansikShift(-1.5)}
                     className={`py-2 px-3 rounded-xl transition cursor-pointer font-medium border ${
                       tansikShift === -1.5
-                        ? "bg-emerald-600 text-white border-emerald-600 shadow-2xs font-semibold"
-                        : "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100"
+                        ? "bg-emerald-600 text-white border-emerald-600 shadow-xs font-semibold"
+                        : "bg-emerald-950/60 text-emerald-300 border-emerald-800/60 hover:bg-emerald-900/60"
                     }`}
                   >
                     ماذا لو التنسيق نزل 1.5%؟
@@ -726,8 +726,8 @@ export function WorkspaceTabs({
                     onClick={() => setTansikShift(0)}
                     className={`py-2 px-3 rounded-xl transition cursor-pointer font-medium border ${
                       tansikShift === 0
-                        ? "bg-[#0F172A] text-white border-[#0F172A] shadow-2xs font-semibold"
-                        : "bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200"
+                        ? "bg-blue-600 text-white border-blue-500 shadow-xs font-semibold"
+                        : "bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800"
                     }`}
                   >
                     التنسيق المتوقع (الافتراضي)
@@ -738,8 +738,8 @@ export function WorkspaceTabs({
                     onClick={() => setTansikShift(1.5)}
                     className={`py-2 px-3 rounded-xl transition cursor-pointer font-medium border ${
                       tansikShift === 1.5
-                        ? "bg-amber-600 text-white border-amber-600 shadow-2xs font-semibold"
-                        : "bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100"
+                        ? "bg-amber-600 text-white border-amber-600 shadow-xs font-semibold"
+                        : "bg-amber-950/60 text-amber-300 border-amber-800/60 hover:bg-amber-900/60"
                     }`}
                   >
                     ماذا لو التنسيق رفع 1.5%؟
@@ -748,7 +748,7 @@ export function WorkspaceTabs({
                   <button
                     type="button"
                     onClick={() => setBudget(Math.min(250000, budget + 10000))}
-                    className="py-2 px-3 rounded-xl transition cursor-pointer font-semibold border bg-blue-50 text-blue-800 border-blue-200 hover:bg-blue-100"
+                    className="py-2 px-3 rounded-xl transition cursor-pointer font-semibold border bg-blue-950/60 text-blue-300 border-blue-800/60 hover:bg-blue-900/60"
                   >
                     ماذا لو زودنا الميزانية 10 آلاف؟
                   </button>
@@ -756,8 +756,8 @@ export function WorkspaceTabs({
               </div>
 
               {/* Sector Filter Pills */}
-              <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-100">
-                <span className="text-[11px] font-semibold text-slate-500 ml-1">
+              <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-800">
+                <span className="text-[11px] font-semibold text-slate-400 ml-1">
                   تصفية حسب نوع الكلية:
                 </span>
                 {[
@@ -773,8 +773,8 @@ export function WorkspaceTabs({
                     onClick={() => setSectorFilter(sec)}
                     className={`px-3 py-1 rounded-lg text-[11px] font-medium border transition cursor-pointer ${
                       sectorFilter === sec
-                        ? "bg-[#0F172A] text-white border-[#0F172A]"
-                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                        ? "bg-blue-600 text-white border-blue-500"
+                        : "bg-slate-900 text-slate-400 border-slate-800 hover:text-white hover:bg-slate-800"
                     }`}
                   >
                     {sec}
@@ -786,14 +786,14 @@ export function WorkspaceTabs({
             {/* Smart Zero-Match Auto-Recovery Alert */}
             {evaluation.allRanked.length === 0 ? (
               <div className="p-10 text-center space-y-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-amber-950/60 border border-amber-800/60 text-amber-300 flex items-center justify-center">
                   <Info className="w-5 h-5" strokeWidth={1.5} />
                 </div>
                 <div className="space-y-1.5">
-                  <h3 className="text-[15px] font-semibold text-slate-900">
+                  <h3 className="text-[15px] font-semibold text-slate-100">
                     لا توجد كليات تطابق هذا السقف المالي أو القطاع حالياً
                   </h3>
-                  <p className="text-[12px] text-slate-500 leading-relaxed tabular-nums">
+                  <p className="text-[12px] text-slate-400 leading-relaxed tabular-nums">
                     مجموعك ({score.toFixed(1)}%) يؤهلك لكليات متاحة، ولكنها تتطلب ضبط الميزانية إلى{" "}
                     {evaluation.minNeededBudget.toLocaleString()} ج.م أو فتح كافة القطاعات الجامعية.
                   </p>
@@ -805,7 +805,7 @@ export function WorkspaceTabs({
                     setSectorFilter("الكل");
                     setTansikShift(0);
                   }}
-                  className="bg-[#0F172A] hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-[12px] font-medium cursor-pointer tabular-nums"
+                  className="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-[12px] font-medium cursor-pointer tabular-nums"
                 >
                   ضبط الميزانية تلقائياً إلى{" "}
                   {evaluation.minNeededBudget.toLocaleString()} ج.م
@@ -836,20 +836,20 @@ export function WorkspaceTabs({
                   .filter((grp) => grp.items.length > 0)
                   .map((grp) => (
                     <div key={grp.key} className="space-y-3">
-                      <div className="flex items-center justify-between bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl text-[12px] font-semibold text-slate-800">
+                      <div className="flex items-center justify-between bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl text-[12px] font-semibold text-slate-200">
                         <span>{grp.title}</span>
                         <span className="text-slate-500 tabular-nums">
                           {formatFacultyCount(grp.items.length)}
                         </span>
                       </div>
 
-                      <div className="divide-y divide-slate-200 border border-slate-200 rounded-xl bg-white">
+                      <div className="divide-y divide-slate-800 border border-slate-800 rounded-xl bg-slate-900/40">
                         {grp.items.map((fac) => {
                           const isCompared = comparedIds.includes(fac.id);
                           return (
                             <div
                               key={fac.id}
-                              className="p-4 space-y-3 hover:bg-slate-50/50 transition"
+                              className="p-4 space-y-3 hover:bg-slate-900/80 transition"
                             >
                               <div className="flex flex-wrap items-start justify-between gap-4">
                                 <div className="space-y-1">
@@ -866,34 +866,34 @@ export function WorkspaceTabs({
                                     >
                                       {fac.safetyBadge.label}
                                     </span>
-                                    <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-semibold tabular-nums">
+                                    <span className="px-2 py-0.5 rounded bg-blue-950/60 text-blue-300 border border-blue-800/60 text-[11px] font-semibold tabular-nums">
                                       توافق {fac.matchScore}%
                                     </span>
                                   </div>
-                                  <h4 className="text-[15px] font-semibold text-slate-900">
+                                  <h4 className="text-[15px] font-semibold text-slate-100">
                                     {fac.name}
                                   </h4>
-                                  <p className="text-[12px] text-slate-500">
+                                  <p className="text-[12px] text-slate-400">
                                     {fac.university} • محافظة {fac.gov}
                                   </p>
                                 </div>
 
                                 <div className="text-left text-[12px] tabular-nums shrink-0">
-                                  <div className="text-slate-500">
+                                  <div className="text-slate-400">
                                     حد القبول:{" "}
-                                    <strong className="text-slate-900">
+                                    <strong className="text-slate-100">
                                       {fac.shiftedCutoff.toFixed(1)}%
                                     </strong>
                                   </div>
-                                  <div className="font-bold text-[14px] text-slate-900 mt-0.5">
+                                  <div className="font-bold text-[14px] text-slate-100 mt-0.5">
                                     {fac.y1_base_fee.toLocaleString()} ج.م/سنة
                                   </div>
                                 </div>
                               </div>
 
                               {/* Explainable AI Match Reason */}
-                              <div className="bg-slate-50 border border-slate-200/80 rounded-lg px-3 py-2 text-[11px] text-slate-600 leading-relaxed tabular-nums">
-                                <strong className="text-slate-800">
+                              <div className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-[11px] text-slate-300 leading-relaxed tabular-nums">
+                                <strong className="text-slate-100">
                                   سبب الترشيح الذكي:{" "}
                                 </strong>
                                 {fac.whyMatch}
@@ -905,10 +905,10 @@ export function WorkspaceTabs({
                                   <button
                                     type="button"
                                     onClick={() => setAuditedFaculty(fac)}
-                                    className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg text-[11px] font-medium flex items-center gap-1 cursor-pointer"
+                                    className="border border-slate-700 bg-slate-800/80 hover:bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-[11px] font-medium flex items-center gap-1 cursor-pointer"
                                   >
                                     <FileText
-                                      className="w-3.5 h-3.5 text-slate-500"
+                                      className="w-3.5 h-3.5 text-slate-400"
                                       strokeWidth={1.5}
                                     />
                                     <span>تفاصيل اللائحة</span>
@@ -918,10 +918,10 @@ export function WorkspaceTabs({
                                     <button
                                       type="button"
                                       onClick={() => onSelectFutureCareer(fac)}
-                                      className="border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-[11px] font-medium flex items-center gap-1 cursor-pointer"
+                                      className="border border-slate-800 bg-slate-900 hover:bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-[11px] font-medium flex items-center gap-1 cursor-pointer"
                                     >
                                       <Briefcase
-                                        className="w-3.5 h-3.5 text-blue-600"
+                                        className="w-3.5 h-3.5 text-blue-400"
                                         strokeWidth={1.5}
                                       />
                                       <span>استكشاف المسار الوظيفي</span>
@@ -929,12 +929,12 @@ export function WorkspaceTabs({
                                   )}
                                 </div>
 
-                                <label className="flex items-center gap-1.5 text-[11px] font-medium text-slate-700 cursor-pointer select-none border border-slate-200 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100">
+                                <label className="flex items-center gap-1.5 text-[11px] font-medium text-slate-300 cursor-pointer select-none border border-slate-800 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800">
                                   <input
                                     type="checkbox"
                                     checked={isCompared}
                                     onChange={() => onToggleCompare(fac.id)}
-                                    className="rounded border-slate-300 text-blue-600"
+                                    className="rounded border-slate-700 text-blue-600 bg-slate-950 cursor-pointer"
                                   />
                                   <span>إضافة للمقارنة</span>
                                 </label>
@@ -948,18 +948,18 @@ export function WorkspaceTabs({
               </div>
             )}
 
-            <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-between">
+            <div className="bg-slate-900/60 border-t border-slate-800 px-6 py-4 flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => setWorkspaceTab("quiz")}
-                className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-xl text-[12px] font-medium cursor-pointer"
+                className="border border-slate-700 bg-slate-800/80 hover:bg-slate-800 text-slate-300 px-4 py-2 rounded-xl text-[12px] font-medium cursor-pointer"
               >
                 العودة لتقييم الميول
               </button>
               <button
                 type="button"
                 onClick={() => setWorkspaceTab("tco_table")}
-                className="bg-[#0F172A] hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 cursor-pointer"
+                className="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 cursor-pointer shadow-sm"
               >
                 <span>مصفوفة الـ 4 سنوات والتضخم (TCO)</span>
                 <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
@@ -972,29 +972,29 @@ export function WorkspaceTabs({
             SUB-TAB 3: 3. مصفوفة الـ 4 سنوات والتضخم TCO (TCO_TABLE)
            =================================================================== */}
         {workspaceTab === "tco_table" && (
-          <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
+          <div className="bg-[#0F172A] border border-slate-800 rounded-xl shadow-2xs overflow-hidden">
             {/* Top Bar: Inflation Scenario Switcher + Methodology Button */}
-            <div className="p-6 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4">
+            <div className="p-6 border-b border-slate-800 flex flex-wrap items-center justify-between gap-4">
               <div className="space-y-1">
-                <h2 className="text-[17px] font-semibold text-slate-900">
+                <h2 className="text-[17px] font-semibold text-slate-100">
                   مصفوفة التدفق المالي لـ 4 سنوات والتضخم (TCO)
                 </h2>
                 <div className="flex items-center gap-3 text-[12px]">
                   <button
                     type="button"
                     onClick={() => setIsMethodologyOpen(true)}
-                    className="text-blue-600 hover:underline font-medium cursor-pointer"
+                    className="text-blue-400 hover:underline font-medium cursor-pointer"
                   >
                     منهجية الحساب وتدقيق البيانات
                   </button>
-                  <span className="text-slate-300">|</span>
-                  <span className="text-slate-500">
+                  <span className="text-slate-700">|</span>
+                  <span className="text-slate-400">
                     أول ترشيحين مفتوحان مجاناً بالكامل
                   </span>
                 </div>
               </div>
 
-              <div className="bg-slate-100 p-1 rounded-xl grid grid-cols-3 gap-1 text-[11px] tabular-nums">
+              <div className="bg-slate-950 border border-slate-800 p-1 rounded-xl grid grid-cols-3 gap-1 text-[11px] tabular-nums">
                 {[
                   { rate: 10, label: "10% مستقر" },
                   { rate: 15, label: "15% مرجعي" },
@@ -1006,8 +1006,8 @@ export function WorkspaceTabs({
                     onClick={() => setInflationScenario(sc.rate)}
                     className={`py-1.5 px-3 rounded-lg transition cursor-pointer whitespace-nowrap ${
                       inflationScenario === sc.rate
-                        ? "bg-white text-slate-900 shadow-2xs font-semibold"
-                        : "text-slate-600 hover:text-slate-900"
+                        ? "bg-blue-600 text-white shadow-xs font-semibold"
+                        : "text-slate-400 hover:text-slate-200"
                     }`}
                   >
                     {sc.label}
@@ -1028,8 +1028,8 @@ export function WorkspaceTabs({
                   <col className="w-[6%]" />
                 </colgroup>
                 <thead>
-                  <tr className="bg-slate-50 text-slate-600 text-[11px] font-semibold border-b border-slate-200">
-                    <th className="py-3.5 px-4 min-w-[240px] sticky right-0 bg-slate-50 z-10">
+                  <tr className="bg-[#0F172A] text-slate-300 text-[11px] font-semibold border-b border-slate-800">
+                    <th className="py-3.5 px-4 min-w-[240px] sticky right-0 bg-[#0F172A] z-10 text-slate-300">
                       الكلية والجامعة
                     </th>
                     <th className="py-3.5 px-4">
@@ -1045,7 +1045,7 @@ export function WorkspaceTabs({
                     <th className="py-3.5 px-3 text-center">قارن</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 text-[12px] tabular-nums">
+                <tbody className="divide-y divide-slate-800 text-[12px] tabular-nums">
                   {unlockedFreeFaculties.map((fac, idx) => {
                     const m = computeFacultyTcoMetrics(
                       fac,
@@ -1055,23 +1055,23 @@ export function WorkspaceTabs({
                     );
                     const isCompared = comparedIds.includes(fac.id);
                     return (
-                      <tr key={fac.id} className="bg-white">
+                      <tr key={fac.id} className="bg-[#0F172A] hover:bg-slate-900/40">
                         {/* Column 1: Badge ABOVE Faculty Name (min-w-[240px] flex flex-col items-start gap-1.5) */}
-                        <td className="py-4 px-4 align-top sticky right-0 bg-white z-10">
+                        <td className="py-4 px-4 align-top sticky right-0 bg-[#0F172A] z-10">
                           <div className="min-w-[240px] flex flex-col items-start gap-1.5">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-950/60 text-emerald-300 border border-emerald-800/60 whitespace-nowrap">
                               الترشيح 0{idx + 1} • مفتوح
                             </span>
-                            <span className="font-semibold text-[13px] text-slate-900 leading-snug">
+                            <span className="font-semibold text-[13px] text-slate-100 leading-snug">
                               {fac.name}
                             </span>
-                            <span className="text-[11px] text-slate-500">
+                            <span className="text-[11px] text-slate-400">
                               {fac.university} • {fac.type}
                             </span>
                             <button
                               type="button"
                               onClick={() => setAuditedFaculty(fac)}
-                              className="text-[11px] font-medium text-blue-600 hover:underline cursor-pointer"
+                              className="text-[11px] font-medium text-blue-400 hover:underline cursor-pointer"
                             >
                               تفاصيل اللائحة
                             </button>
@@ -1079,14 +1079,14 @@ export function WorkspaceTabs({
                         </td>
 
                         <td className="py-4 px-4 align-top">
-                          <div className="font-bold text-[13px] text-slate-900 whitespace-nowrap">
+                          <div className="font-bold text-[13px] text-slate-100 whitespace-nowrap">
                             {m.total4Yr.toLocaleString()} ج.م
                           </div>
-                          <div className="text-[11px] text-slate-500 mt-0.5">
+                          <div className="text-[11px] text-slate-400 mt-0.5">
                             سنة 1 أساسي: {m.y1Base.toLocaleString()} ج.م
                           </div>
                           {/* 4px Stacked Breakdown Bar */}
-                          <div className="w-full h-1 bg-slate-100 rounded-full overflow-hidden flex mt-2">
+                          <div className="w-full h-1 bg-slate-800 rounded-full overflow-hidden flex mt-2">
                             <div
                               className="bg-blue-600 h-full"
                               style={{ width: `${m.basePct}%` }}
@@ -1102,22 +1102,22 @@ export function WorkspaceTabs({
                           </div>
                         </td>
 
-                        <td className="py-4 px-4 text-slate-700 align-top">
+                        <td className="py-4 px-4 text-slate-300 align-top">
                           +{m.adminFee.toLocaleString()} ج.م/سنة
                         </td>
 
-                        <td className="py-4 px-4 text-slate-700 align-top leading-relaxed">
-                          <div className="font-medium text-slate-800 text-[11px]">
+                        <td className="py-4 px-4 text-slate-300 align-top leading-relaxed">
+                          <div className="font-medium text-slate-200 text-[11px]">
                             {m.geoTierLabel}
                           </div>
-                          <div className="text-[11px] text-slate-500">
+                          <div className="text-[11px] text-slate-400">
                             {m.livingDesc}
                           </div>
                         </td>
 
-                        <td className="py-4 px-4 text-slate-700 align-top leading-relaxed text-[11px]">
+                        <td className="py-4 px-4 text-slate-300 align-top leading-relaxed text-[11px]">
                           <div>{fac.gpa_requirement}</div>
-                          <div className="text-blue-700 font-medium mt-1">
+                          <div className="text-blue-400 font-medium mt-1">
                             {fac.scholarship_rule}
                           </div>
                         </td>
@@ -1127,7 +1127,7 @@ export function WorkspaceTabs({
                             type="checkbox"
                             checked={isCompared}
                             onChange={() => onToggleCompare(fac.id)}
-                            className="rounded border-slate-300 text-blue-600 cursor-pointer"
+                            className="rounded border-slate-700 text-blue-600 bg-slate-950 cursor-pointer"
                           />
                         </td>
                       </tr>
@@ -1137,7 +1137,7 @@ export function WorkspaceTabs({
               </table>
 
               {/* Blurred Rows 3+ with Centered Floating Paywall Callout Card */}
-              <div className="relative border-t border-slate-200 min-w-[840px]">
+              <div className="relative border-t border-slate-800 min-w-[840px]">
                 <table className="w-full text-right border-collapse table-fixed">
                   <colgroup>
                     <col className="w-[29%]" />
@@ -1147,7 +1147,7 @@ export function WorkspaceTabs({
                     <col className="w-[14%]" />
                     <col className="w-[6%]" />
                   </colgroup>
-                  <tbody className="divide-y divide-slate-200 text-[12px] tabular-nums">
+                  <tbody className="divide-y divide-slate-800 text-[12px] tabular-nums">
                     {(isReportUnlocked
                       ? evaluation.allRanked.slice(2, 10)
                       : lockedComparisonFaculties
@@ -1166,39 +1166,39 @@ export function WorkspaceTabs({
                         <tr
                           key={fac.id}
                           className={
-                            isReportUnlocked ? "bg-white" : "bg-slate-50/40"
+                            isReportUnlocked ? "bg-[#0F172A]" : "bg-slate-900/40"
                           }
                         >
-                          <td className={`py-4 px-4 align-top sticky right-0 z-10 ${isReportUnlocked ? "bg-white" : "bg-slate-50"}`}>
+                          <td className="py-4 px-4 align-top sticky right-0 z-10 bg-[#0F172A]">
                             <div className="min-w-[240px] flex flex-col items-start gap-1.5">
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600 border border-slate-200 whitespace-nowrap">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap">
                                 الترشيح 0{idx + 3}
                               </span>
-                              <span className="font-semibold text-[13px] text-slate-900 leading-snug">
+                              <span className="font-semibold text-[13px] text-slate-100 leading-snug">
                                 {fac.name}
                               </span>
-                              <span className="text-[11px] text-slate-500">
+                              <span className="text-[11px] text-slate-400">
                                 {fac.university} • {fac.type}
                               </span>
                             </div>
                           </td>
                           <td
-                            className={`py-4 px-4 font-bold text-slate-900 align-top ${blurClass}`}
+                            className={`py-4 px-4 font-bold text-slate-100 align-top ${blurClass}`}
                           >
                             {m.total4Yr.toLocaleString()} ج.م
                           </td>
                           <td
-                            className={`py-4 px-4 text-slate-700 align-top ${blurClass}`}
+                            className={`py-4 px-4 text-slate-300 align-top ${blurClass}`}
                           >
                             +{m.adminFee.toLocaleString()} ج.م/سنة
                           </td>
                           <td
-                            className={`py-4 px-4 text-slate-700 align-top ${blurClass}`}
+                            className={`py-4 px-4 text-slate-300 align-top ${blurClass}`}
                           >
                             {m.livingDesc}
                           </td>
                           <td
-                            className={`py-4 px-4 text-slate-700 text-[11px] align-top ${blurClass}`}
+                            className={`py-4 px-4 text-slate-300 text-[11px] align-top ${blurClass}`}
                           >
                             {fac.gpa_requirement}
                           </td>
@@ -1207,7 +1207,7 @@ export function WorkspaceTabs({
                               type="checkbox"
                               checked={isCompared}
                               onChange={() => onToggleCompare(fac.id)}
-                              className="rounded border-slate-300 text-blue-600 cursor-pointer"
+                              className="rounded border-slate-700 text-blue-600 bg-slate-950 cursor-pointer"
                             />
                           </td>
                         </tr>
@@ -1217,20 +1217,20 @@ export function WorkspaceTabs({
                 </table>
 
                 {!isReportUnlocked && (
-                  <div className="absolute inset-x-0 top-10 z-20 bg-white/95 border border-slate-200 shadow-2xl rounded-xl p-6 text-center no-print">
-                    <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 flex items-center justify-center mb-3">
+                  <div className="absolute inset-x-0 top-10 z-20 bg-slate-900/95 border border-slate-800 shadow-2xl rounded-xl p-6 text-center no-print">
+                    <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 flex items-center justify-center mb-3">
                       <Lock className="w-4 h-4" strokeWidth={1.5} />
                     </div>
-                    <h3 className="text-[15px] font-semibold text-slate-900">
+                    <h3 className="text-[15px] font-semibold text-slate-100">
                       افتح مصفوفة الـ 4 سنوات الكاملة لباقي الكليات المطابقة
                     </h3>
-                    <p className="text-[12px] text-slate-500 mt-1.5 mb-4 leading-relaxed tabular-nums">
+                    <p className="text-[12px] text-slate-400 mt-1.5 mb-4 leading-relaxed tabular-nums">
                       يشمل حساب التدفق المالي الكامل بالتضخم، لوائح الـ GPA الداخلي، ومراجعة المستشار الأكاديمي مع المذكرة الصوتية.
                     </p>
                     <button
                       type="button"
                       onClick={onOpenCheckout}
-                      className="w-full bg-[#0F172A] hover:bg-slate-800 text-white py-3 px-4 rounded-xl text-[13px] font-semibold transition cursor-pointer tabular-nums"
+                      className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 px-4 rounded-xl text-[13px] font-semibold transition cursor-pointer tabular-nums shadow-md"
                     >
                       فتح التقرير المقارن الكامل واعتماد المستشار — 150 ج.م
                     </button>
@@ -1240,18 +1240,18 @@ export function WorkspaceTabs({
             </div>
 
             {/* Bottom Tab Navigation */}
-            <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-between">
+            <div className="bg-slate-900/60 border-t border-slate-800 px-6 py-4 flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => setWorkspaceTab("scenarios")}
-                className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-xl text-[12px] font-medium cursor-pointer"
+                className="border border-slate-700 bg-slate-800/80 hover:bg-slate-800 text-slate-300 px-4 py-2 rounded-xl text-[12px] font-medium cursor-pointer"
               >
                 العودة للترشيحات والتنسيق
               </button>
               <button
                 type="button"
                 onClick={() => setWorkspaceTab("compare")}
-                className="bg-[#0F172A] hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 cursor-pointer"
+                className="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 cursor-pointer shadow-sm"
               >
                 <span>مقارنة الكليات وجهاً لوجه</span>
                 <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
@@ -1264,23 +1264,23 @@ export function WorkspaceTabs({
             SUB-TAB 4: 4. المقارنة وجهاً لوجه (COMPARE)
            =================================================================== */}
         {workspaceTab === "compare" && (
-          <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden space-y-6 p-6">
+          <div className="bg-[#0F172A] border border-slate-800 rounded-xl shadow-2xs overflow-hidden space-y-6 p-6">
             {/* Explainable AI Best-Fit Verdict Banner */}
             {bestFitComparedFaculty && (
-              <div className="bg-blue-50/70 border border-blue-200 rounded-xl p-4 space-y-1.5">
+              <div className="bg-blue-950/60 border border-blue-800/60 rounded-xl p-4 space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[12px] font-bold text-blue-900">
+                  <span className="text-[12px] font-bold text-blue-300">
                     خلاصة التوجيه الذكي للمقارنة وجهاً لوجه (AI Best-Fit Verdict)
                   </span>
-                  <span className="text-[11px] font-semibold text-blue-700 bg-white px-2.5 py-0.5 rounded border border-blue-200 tabular-nums">
+                  <span className="text-[11px] font-semibold text-blue-300 bg-slate-900 px-2.5 py-0.5 rounded border border-blue-700/60 tabular-nums">
                     الأعلى كفاءة لملفك
                   </span>
                 </div>
-                <p className="text-[12px] text-slate-700 leading-relaxed tabular-nums">
+                <p className="text-[12px] text-slate-300 leading-relaxed tabular-nums">
                   بناءً على مقارنة البدائل المختارة مع مجموعك ({score.toFixed(1)}
                   %) وميزانيتك السنوية ({budget.toLocaleString()} ج.م) في محافظة{" "}
                   {gov}، يتصدر{" "}
-                  <strong className="text-slate-900">
+                  <strong className="text-white">
                     «{bestFitComparedFaculty.name} —{" "}
                     {bestFitComparedFaculty.university}»
                   </strong>{" "}
@@ -1292,29 +1292,29 @@ export function WorkspaceTabs({
             )}
 
             {/* 8-Row Side-by-Side Comparison Matrix */}
-            <div className="overflow-x-auto border border-slate-200 rounded-xl">
+            <div className="overflow-x-auto border border-slate-800 rounded-xl">
               <table className="w-full text-right border-collapse text-[12px] tabular-nums">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200">
-                    <th className="py-3.5 px-4 font-semibold text-slate-600 w-44 sticky right-0 bg-slate-50 z-10">
+                  <tr className="bg-[#0F172A] border-b border-slate-800">
+                    <th className="py-3.5 px-4 font-semibold text-slate-300 w-44 sticky right-0 bg-[#0F172A] z-10">
                       معيار المقارنة (8 محاور)
                     </th>
                     {comparedFacultiesList.map((fac) => (
                       <th
                         key={fac.id}
-                        className="py-3.5 px-4 font-bold text-slate-900 min-w-[210px]"
+                        className="py-3.5 px-4 font-bold text-slate-100 min-w-[210px]"
                       >
                         <div>{fac.name}</div>
-                        <div className="text-[11px] font-normal text-slate-500 mt-0.5">
+                        <div className="text-[11px] font-normal text-slate-400 mt-0.5">
                           {fac.university}
                         </div>
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
+                <tbody className="divide-y divide-slate-800">
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
+                    <td className="py-3 px-4 font-semibold text-slate-300 bg-[#0F172A] sticky right-0 z-10">
                       1. نوع الجامعة والتبعية
                     </td>
                     {comparedFacultiesList.map((fac) => (
@@ -1331,7 +1331,7 @@ export function WorkspaceTabs({
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
+                    <td className="py-3 px-4 font-semibold text-slate-300 bg-[#0F172A] sticky right-0 z-10">
                       2. حد القبول وهامش الأمان
                     </td>
                     {comparedFacultiesList.map((fac) => {
@@ -1340,7 +1340,7 @@ export function WorkspaceTabs({
                         (fac.cutoff_2026 + tansikShift)
                       ).toFixed(1);
                       return (
-                        <td key={fac.id} className="py-3 px-4 font-semibold">
+                        <td key={fac.id} className="py-3 px-4 font-semibold text-slate-200">
                           {(fac.cutoff_2026 + tansikShift).toFixed(1)}% (
                           {diff >= 0 ? `+${diff}%` : `${diff}%`})
                         </td>
@@ -1349,11 +1349,11 @@ export function WorkspaceTabs({
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
+                    <td className="py-3 px-4 font-semibold text-slate-300 bg-[#0F172A] sticky right-0 z-10">
                       3. مصروفات السنة الأولى
                     </td>
                     {comparedFacultiesList.map((fac) => (
-                      <td key={fac.id} className="py-3 px-4 font-semibold">
+                      <td key={fac.id} className="py-3 px-4 font-semibold text-slate-200">
                         {fac.y1_base_fee.toLocaleString()} ج.م (+
                         {fac.admin_lab_fee.toLocaleString()} ج.م معامل)
                       </td>
@@ -1361,7 +1361,7 @@ export function WorkspaceTabs({
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
+                    <td className="py-3 px-4 font-semibold text-slate-300 bg-[#0F172A] sticky right-0 z-10">
                       4. إجمالي 4 سنوات بالتضخم
                     </td>
                     {comparedFacultiesList.map((fac) => {
@@ -1374,7 +1374,7 @@ export function WorkspaceTabs({
                       return (
                         <td
                           key={fac.id}
-                          className="py-3 px-4 font-bold text-blue-700"
+                          className="py-3 px-4 font-bold text-blue-400"
                         >
                           {m.total4Yr.toLocaleString()} ج.م
                         </td>
@@ -1383,7 +1383,7 @@ export function WorkspaceTabs({
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
+                    <td className="py-3 px-4 font-semibold text-slate-300 bg-[#0F172A] sticky right-0 z-10">
                       5. الاستقرار الجغرافي
                     </td>
                     {comparedFacultiesList.map((fac) => {
@@ -1395,23 +1395,23 @@ export function WorkspaceTabs({
                       );
                       return (
                         <td key={fac.id} className="py-3 px-4 text-[11px]">
-                          <div className="font-semibold text-slate-800">
+                          <div className="font-semibold text-slate-200">
                             {m.geoTierLabel}
                           </div>
-                          <div className="text-slate-500">{m.livingDesc}</div>
+                          <div className="text-slate-400">{m.livingDesc}</div>
                         </td>
                       );
                     })}
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
+                    <td className="py-3 px-4 font-semibold text-slate-300 bg-[#0F172A] sticky right-0 z-10">
                       6. شروط الـ GPA الداخلي
                     </td>
                     {comparedFacultiesList.map((fac) => (
                       <td
                         key={fac.id}
-                        className="py-3 px-4 text-[11px] leading-relaxed"
+                        className="py-3 px-4 text-[11px] text-slate-300 leading-relaxed"
                       >
                         {fac.gpa_requirement}
                       </td>
@@ -1419,13 +1419,13 @@ export function WorkspaceTabs({
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
+                    <td className="py-3 px-4 font-semibold text-slate-300 bg-[#0F172A] sticky right-0 z-10">
                       7. منح التفوق
                     </td>
                     {comparedFacultiesList.map((fac) => (
                       <td
                         key={fac.id}
-                        className="py-3 px-4 text-[11px] leading-relaxed"
+                        className="py-3 px-4 text-[11px] text-slate-300 leading-relaxed"
                       >
                         {fac.scholarship_rule}
                       </td>
@@ -1433,7 +1433,7 @@ export function WorkspaceTabs({
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
+                    <td className="py-3 px-4 font-semibold text-slate-300 bg-[#0F172A] sticky right-0 z-10">
                       8. الآفاق الوظيفية والرواتب
                     </td>
                     {comparedFacultiesList.map((fac) => (
@@ -1441,13 +1441,13 @@ export function WorkspaceTabs({
                         key={fac.id}
                         className="py-3 px-4 text-[11px] space-y-1"
                       >
-                        <div className="font-semibold text-emerald-800">
+                        <div className="font-semibold text-emerald-400">
                           الطلب: {fac.future_career.market_demand}
                         </div>
-                        <div className="font-medium text-slate-900">
+                        <div className="font-medium text-slate-200">
                           {fac.future_career.salary_range_egp}
                         </div>
-                        <div className="text-slate-500">
+                        <div className="text-slate-400">
                           {fac.future_career.roles.slice(0, 2).join(" • ")}
                         </div>
                       </td>
@@ -1464,10 +1464,10 @@ export function WorkspaceTabs({
           FACULTY AUDIT & METHODOLOGY SLIDE-OVER DRAWERS
          ===================================================================== */}
       {auditedFaculty && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 -xs flex justify-end no-print">
-          <div className="bg-white w-full h-full shadow-2xl border-r border-slate-200 p-6 overflow-y-auto flex flex-col justify-between">
+        <div className="fixed inset-0 z-50 bg-black/75 flex justify-end no-print animate-in fade-in duration-150">
+          <div className="bg-[#0F172A] w-full max-w-lg h-full shadow-2xl border-r border-slate-800 p-6 overflow-y-auto flex flex-col justify-between">
             <div className="space-y-5">
-              <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
+              <div className="flex items-start justify-between gap-4 border-b border-slate-800 pb-4">
                 <div>
                   <span
                     className={`inline-flex px-2.5 py-0.5 rounded text-[11px] font-medium border ${getCategoryBadgeStyle(
@@ -1476,88 +1476,88 @@ export function WorkspaceTabs({
                   >
                     {auditedFaculty.type} • {auditedFaculty.gov}
                   </span>
-                  <h3 className="text-[18px] font-bold text-slate-900 mt-1.5">
+                  <h3 className="text-[18px] font-bold text-slate-100 mt-1.5">
                     {auditedFaculty.name}
                   </h3>
-                  <p className="text-[13px] text-slate-500">
+                  <p className="text-[13px] text-slate-400">
                     {auditedFaculty.university}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setAuditedFaculty(null)}
-                  className="text-slate-400 hover:text-slate-700 cursor-pointer"
+                  className="text-slate-400 hover:text-white cursor-pointer"
                 >
                   <X className="w-5 h-5" strokeWidth={1.5} />
                 </button>
               </div>
 
               <div className="grid grid-cols-2 gap-3 tabular-nums text-[12px]">
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
-                  <span className="text-slate-500 block">مؤشر القبول الاسترشادي</span>
-                  <strong className="text-[16px] text-slate-900 font-bold">
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-3.5">
+                  <span className="text-slate-400 block">مؤشر القبول الاسترشادي</span>
+                  <strong className="text-[16px] text-slate-100 font-bold">
                     {auditedFaculty.cutoff_2026.toFixed(1)}%
                   </strong>
                 </div>
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
-                  <span className="text-slate-500 block">
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-3.5">
+                  <span className="text-slate-400 block">
                     مصروفات السنة الأولى
                   </span>
-                  <strong className="text-[16px] text-blue-700 font-bold">
+                  <strong className="text-[16px] text-blue-400 font-bold">
                     {auditedFaculty.y1_base_fee.toLocaleString()} ج.م
                   </strong>
                 </div>
               </div>
 
               <div className="space-y-2 text-[12px]">
-                <h4 className="font-semibold text-slate-900">
+                <h4 className="font-semibold text-slate-100">
                   تفاصيل اللائحة الأكاديمية وشروط الـ GPA الداخلي:
                 </h4>
-                <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/60 space-y-2 leading-relaxed">
+                <div className="border border-slate-800 rounded-xl p-4 bg-slate-900/60 text-slate-300 space-y-2 leading-relaxed">
                   <div>
-                    <strong className="text-slate-900">شرط التخصص: </strong>
+                    <strong className="text-slate-100">شرط التخصص: </strong>
                     {auditedFaculty.gpa_requirement}
                   </div>
                   <div>
-                    <strong className="text-slate-900">ملاحظات اللائحة: </strong>
+                    <strong className="text-slate-100">ملاحظات اللائحة: </strong>
                     {auditedFaculty.bylaw_notes}
                   </div>
                   <div>
-                    <strong className="text-slate-900">نظام المنح: </strong>
+                    <strong className="text-slate-100">نظام المنح: </strong>
                     {auditedFaculty.scholarship_rule}
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2 text-[12px]">
-                <h4 className="font-semibold text-slate-900">
+                <h4 className="font-semibold text-slate-100">
                   المسار الوظيفي والرواتب المتوقعة بعد التخرج:
                 </h4>
-                <div className="border border-slate-200 rounded-xl p-4 bg-white space-y-2 tabular-nums">
+                <div className="border border-slate-800 rounded-xl p-4 bg-slate-900 text-slate-300 space-y-2 tabular-nums">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">الطلب في سوق العمل:</span>
-                    <strong className="text-emerald-700">
+                    <span className="text-slate-400">الطلب في سوق العمل:</span>
+                    <strong className="text-emerald-400">
                       {auditedFaculty.future_career.market_demand}
                     </strong>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">متوسط الرواتب:</span>
-                    <strong className="text-slate-900">
+                    <span className="text-slate-400">متوسط الرواتب:</span>
+                    <strong className="text-slate-100">
                       {auditedFaculty.future_career.salary_range_egp}
                     </strong>
                   </div>
-                  <div className="pt-1 text-slate-600">
+                  <div className="pt-1 text-slate-400">
                     {auditedFaculty.future_career.progression}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-200 flex items-center justify-between gap-3">
+            <div className="pt-4 border-t border-slate-800 flex items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={() => setAuditedFaculty(null)}
-                className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-4 py-2.5 rounded-xl text-[12px] font-medium cursor-pointer"
+                className="border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl text-[12px] font-medium cursor-pointer"
               >
                 إغلاق
               </button>
@@ -1567,7 +1567,7 @@ export function WorkspaceTabs({
                   setAuditedFaculty(null);
                   onOpenCheckout();
                 }}
-                className="bg-[#0F172A] hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-[12px] font-medium cursor-pointer tabular-nums"
+                className="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-[12px] font-medium cursor-pointer tabular-nums shadow-md"
               >
                 إصدار التقرير المعتمد الكامل — 150 ج.م
               </button>
@@ -1577,33 +1577,33 @@ export function WorkspaceTabs({
       )}
 
       {isMethodologyOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 -xs flex items-center justify-center p-4 no-print">
-          <div className="bg-white border border-slate-200 rounded-xl w-full p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+        <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4 no-print animate-in fade-in duration-150">
+          <div className="bg-[#0F172A] border border-slate-800 rounded-xl w-full max-w-lg p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2">
-                <Scale className="w-4 h-4 text-blue-600" strokeWidth={1.5} />
-                <h3 className="text-[16px] font-semibold text-slate-900">
+                <Scale className="w-4 h-4 text-blue-400" strokeWidth={1.5} />
+                <h3 className="text-[16px] font-semibold text-slate-100">
                   منهجية الحساب وتدقيق البيانات في ChooseU
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsMethodologyOpen(false)}
-                className="text-slate-400 hover:text-slate-700 cursor-pointer"
+                className="text-slate-400 hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" strokeWidth={1.5} />
               </button>
             </div>
 
-            <div className="space-y-3 text-[12px] text-slate-600 leading-relaxed tabular-nums">
+            <div className="space-y-3 text-[12px] text-slate-300 leading-relaxed tabular-nums">
               <p>
-                <strong className="text-slate-900 block mb-0.5">
+                <strong className="text-slate-100 block mb-0.5">
                   1. معادلة الترتيب الموزون (Weighted Relevance Score):
                 </strong>
                 تُرتب الكليات وفق معادلة هندسية تجمع بين تقارب حد القبول مع مجموع الطالب (40%)، التوافق مع تقييم الميول المهنية (35%)، ملاءمة الميزانية (15%)، والقرب الجغرافي (10%).
               </p>
               <p>
-                <strong className="text-slate-900 block mb-0.5">
+                <strong className="text-slate-100 block mb-0.5">
                   2. حساب التكلفة التراكمية لـ 4 سنوات (Compound TCO):
                 </strong>
                 تُحسب التكلفة الكلية بإضافة الرسوم المعملية والإدارية السنوية ومعدل الزيادة المركبة للمصروفات (10% مستقر، 15% مرجعي، 22% تحوط أقصى) إلى جانب تكلفة الانتقال المحلي أو السكن الطلابي.
@@ -1614,7 +1614,7 @@ export function WorkspaceTabs({
               <button
                 type="button"
                 onClick={() => setIsMethodologyOpen(false)}
-                className="bg-[#0F172A] text-white px-5 py-2 rounded-xl text-[12px] font-medium cursor-pointer"
+                className="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl text-[12px] font-medium cursor-pointer shadow-md"
               >
                 إغلاق النافذة
               </button>

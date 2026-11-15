@@ -31,14 +31,11 @@ import {
   CreditCard,
   Loader2,
   MapPin,
-  Pause,
-  Play,
   Printer,
   Scale,
   Search,
   Send,
   TrendingUp,
-  Volume2,
   Wallet,
   X,
 } from "lucide-react";
@@ -1104,7 +1101,6 @@ export function TrackOrderView({
     initialOrder?.order_code
   );
   const [notFound, setNotFound] = useState<boolean>(false);
-  const [isPlayingVoice, setIsPlayingVoice] = useState<boolean>(false);
 
   // Sync state during render when initialOrder prop changes
   if (initialOrder && initialOrder.order_code !== prevOrderCode) {
@@ -1372,48 +1368,6 @@ export function TrackOrderView({
                 <span className="px-3 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold">
                   نسخة أصلية معتمدة (Approved)
                 </span>
-              </div>
-
-              {/* Voice Note Player */}
-              <div className="border border-slate-200 rounded-xl p-4 bg-slate-50 flex flex-wrap items-center justify-between gap-4 no-print">
-                <div className="flex items-center gap-3">
-                  <Volume2
-                    className="w-5 h-5 text-blue-600"
-                    strokeWidth={1.5}
-                  />
-                  <div>
-                    <div className="text-[13px] font-semibold text-slate-900">
-                      المذكرة الصوتية المخصصة لولي الأمر والطالب
-                    </div>
-                    <p className="text-[11px] text-slate-500">
-                      تسجيل صوتي من المستشار الأكاديمي يشرح أولويات الرغبات والجدول المالي
-                    </p>
-                  </div>
-                </div>
-                {orderResult.voice_note_url ? (
-                  <audio
-                    controls
-                    src={orderResult.voice_note_url}
-                    className="h-9 w-full sm:w-72"
-                  />
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setIsPlayingVoice((p) => !p)}
-                    className="bg-[#0F172A] text-white px-4 py-2 rounded-xl text-[12px] font-medium flex items-center gap-1.5 cursor-pointer"
-                  >
-                    {isPlayingVoice ? (
-                      <Pause className="w-3.5 h-3.5" strokeWidth={1.5} />
-                    ) : (
-                      <Play className="w-3.5 h-3.5" strokeWidth={1.5} />
-                    )}
-                    <span>
-                      {isPlayingVoice
-                        ? "إيقاف المذكرة الصوتية"
-                        : "تشغيل المذكرة الصوتية المعتمدة"}
-                    </span>
-                  </button>
-                )}
               </div>
 
               {/* Advisor Custom Written Notes */}
