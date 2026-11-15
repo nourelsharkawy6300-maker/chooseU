@@ -127,7 +127,7 @@ export function LandingView({
                   onClick={() => setStream(st.id)}
                   className={`py-1.5 px-2 rounded-lg text-[12px] whitespace-nowrap transition cursor-pointer ${
                     stream === st.id
-                      ? "bg-[#0F172A] text-white font-semibold"
+                      ? "bg-slate-900 text-white font-semibold"
                       : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
@@ -183,7 +183,7 @@ export function LandingView({
               if (setWorkspaceTab) setWorkspaceTab("scenarios");
               setActiveView("workspace");
             }}
-            className="w-full bg-[#0F172A] hover:bg-slate-800 text-white py-2.5 px-4 rounded-xl text-[13px] font-medium flex items-center justify-center gap-2 transition cursor-pointer h-[42px]"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition cursor-pointer h-[42px] shadow-sm"
           >
             <span>ابدأ التحليل المالي والأكاديمي فوراً</span>
             <ArrowLeft className="w-4 h-4 shrink-0" strokeWidth={1.5} />
@@ -303,23 +303,23 @@ export function LandingView({
           </button>
         </div>
 
-        <div className="bg-[#0F172A] text-white border border-slate-800 rounded-xl p-6 sm:p-8 flex flex-col justify-between space-y-6">
+        <div className="bg-white border-2 border-blue-600 rounded-xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-sm">
           <div className="space-y-3">
-            <span className="text-[11px] font-semibold text-blue-300 bg-blue-500/20 border border-blue-400/30 px-2.5 py-1 rounded">
+            <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded">
               الخدمة الاستشارية الكاملة للأسر
             </span>
             <div className="flex items-baseline justify-between">
-              <h3 className="text-[20px] font-bold text-white">
+              <h3 className="text-[20px] font-bold text-slate-900">
                 التقرير الاستشاري المعتمد + المذكرة الصوتية
               </h3>
-              <span className="text-[20px] font-bold text-blue-400 tabular-nums">
+              <span className="text-[20px] font-bold text-blue-600 tabular-nums">
                 150 ج.م
               </span>
             </div>
-            <p className="text-[13px] text-slate-300">
+            <p className="text-[13px] text-slate-600">
               وثيقة تنفيذية معتمدة تفتح كافة البدائل وتوفر مراجعة بشرية ومذكرة صوتية تلخيصية لولي الأمر.
             </p>
-            <ul className="space-y-2.5 pt-2 text-[13px] text-slate-200">
+            <ul className="space-y-2.5 pt-2 text-[13px] text-slate-700">
               {[
                 "فتح جميع الكليات والبدائل الاستراتيجية في جدول الـ 4 سنوات بدون تمويه",
                 "جدول التدفقات المالية التفصيلي تحت 3 سيناريوهات تضخم + تكلفة السكن",
@@ -329,7 +329,7 @@ export function LandingView({
               ].map((feat) => (
                 <li key={feat} className="flex items-center gap-2.5">
                   <Check
-                    className="w-4 h-4 text-blue-400 shrink-0"
+                    className="w-4 h-4 text-blue-600 shrink-0"
                     strokeWidth={1.5}
                   />
                   <span>{feat}</span>
@@ -342,14 +342,14 @@ export function LandingView({
             <button
               type="button"
               onClick={onOpenCheckout}
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 px-4 rounded-xl text-[13px] font-semibold transition cursor-pointer tabular-nums"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl text-[13px] font-semibold transition cursor-pointer tabular-nums shadow-sm"
             >
               إصدار التقرير المعتمد — 150 ج.م
             </button>
             <button
               type="button"
               onClick={() => setActiveView("sample_report")}
-              className="w-full border border-slate-700 bg-slate-800/80 hover:bg-slate-800 text-slate-200 py-3 px-4 rounded-xl text-[13px] font-medium transition cursor-pointer"
+              className="w-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 py-3 px-4 rounded-xl text-[13px] font-medium transition cursor-pointer"
             >
               معاينة عينة التقرير أولاً
             </button>
@@ -480,35 +480,35 @@ export function FutureMeView({
         </div>
 
         {/* Salary & Academic Entry Requirements Card */}
-        <div className="bg-[#0F172A] text-white rounded-xl p-6 flex flex-col justify-between space-y-5">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs flex flex-col justify-between space-y-5">
           <div className="space-y-4">
-            <span className="text-[11px] font-semibold text-blue-300 bg-blue-500/20 border border-blue-400/30 px-2.5 py-1 rounded inline-block">
+            <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded inline-block">
               العائد الوظيفي المتوقع في مصر
             </span>
             <div>
-              <div className="text-[12px] text-slate-400">
+              <div className="text-[12px] text-slate-500">
                 متوسط نطاق الرواتب الشهرية
               </div>
-              <div className="text-[18px] font-bold text-white mt-1 tabular-nums">
+              <div className="text-[18px] font-bold text-slate-900 mt-1 tabular-nums">
                 {career.salary_range_egp}
               </div>
             </div>
 
-            <div className="pt-3 border-t border-slate-800 space-y-2 text-[12px] text-slate-300 tabular-nums">
+            <div className="pt-3 border-t border-slate-200 space-y-2 text-[12px] text-slate-700 tabular-nums">
               <div className="flex justify-between">
-                <span className="text-slate-400">مؤشر القبول الاسترشادي:</span>
-                <strong className="text-white">
+                <span className="text-slate-500">مؤشر القبول الاسترشادي:</span>
+                <strong className="text-slate-900">
                   {activeFaculty.cutoff_2026.toFixed(1)}%
                 </strong>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">مصروفات السنة الأولى:</span>
-                <strong className="text-blue-400">
+                <span className="text-slate-500">مصروفات السنة الأولى:</span>
+                <strong className="text-blue-700">
                   {activeFaculty.y1_base_fee.toLocaleString()} ج.م
                 </strong>
               </div>
-              <div className="pt-2 text-[11px] text-slate-300 leading-relaxed">
-                <strong className="text-white block mb-0.5">
+              <div className="pt-2 text-[11px] text-slate-600 leading-relaxed">
+                <strong className="text-slate-900 block mb-0.5">
                   شرط التخصص الداخلي:
                 </strong>
                 {activeFaculty.gpa_requirement}
@@ -520,14 +520,14 @@ export function FutureMeView({
             <button
               type="button"
               onClick={() => setActiveView("workspace")}
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2.5 px-4 rounded-xl text-[12px] font-semibold transition cursor-pointer"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-xl text-[12px] font-semibold transition cursor-pointer shadow-sm"
             >
               مقارنة هذه الكلية في محرك التوجيه
             </button>
             <button
               type="button"
               onClick={onOpenCheckout}
-              className="w-full border border-slate-700 bg-slate-800/80 hover:bg-slate-800 text-slate-200 py-2 px-4 rounded-xl text-[12px] font-medium transition cursor-pointer tabular-nums"
+              className="w-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 py-2 px-4 rounded-xl text-[12px] font-medium transition cursor-pointer tabular-nums"
             >
               إصدار التقرير الكامل — 150 ج.م
             </button>
@@ -872,7 +872,7 @@ export function SampleReportView({
           <button
             type="button"
             onClick={onOpenCheckout}
-            className="bg-[#0F172A] hover:bg-slate-800 text-white px-4 py-2 rounded-xl text-[12px] font-semibold cursor-pointer tabular-nums"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-[12px] font-semibold cursor-pointer tabular-nums shadow-sm"
           >
             اطلب تقريرك المخصص الآن (150 ج.م)
           </button>
@@ -1179,7 +1179,7 @@ export function TrackOrderView({
             type="button"
             disabled={isLoading}
             onClick={handleSearchOrder}
-            className="bg-[#0F172A] hover:bg-slate-800 text-white px-6 py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-2 transition cursor-pointer shrink-0"
+            className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-2 transition cursor-pointer shrink-0"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.5} />
@@ -1320,7 +1320,7 @@ export function TrackOrderView({
                     )}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="bg-[#0F172A] hover:bg-slate-800 text-white px-4 py-2 rounded-xl text-[12px] font-medium flex items-center gap-2 transition"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-[12px] font-medium flex items-center gap-2 transition shadow-sm"
                   >
                     <Send className="w-3.5 h-3.5" strokeWidth={1.5} />
                     <span>متابعة التفعيل المباشر عبر واتساب</span>
@@ -1340,7 +1340,7 @@ export function TrackOrderView({
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="bg-[#0F172A] hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 transition cursor-pointer"
+                  className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 transition cursor-pointer"
                 >
                   <Printer className="w-4 h-4" strokeWidth={1.5} />
                   <span>طباعة وتحميل التقرير المعتمد النهائي (PDF)</span>
@@ -1567,7 +1567,7 @@ export function CheckoutModal({
     : "https://wa.me/201066594552";
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 -xs flex items-center justify-center p-4 overflow-y-auto no-print">
+    <div className="fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4 overflow-y-auto no-print">
       <div className="bg-white border border-slate-200 rounded-xl max-w-xl w-full mx-auto p-6 shadow-2xl space-y-5 my-auto">
         <div className="flex items-center justify-between border-b border-slate-200 pb-4">
           <div>
@@ -1714,7 +1714,7 @@ export function CheckoutModal({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-[#0F172A] hover:bg-slate-800 text-white py-3 px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition cursor-pointer"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition cursor-pointer shadow-sm"
             >
               {isSubmitting ? (
                 <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.5} />
@@ -1747,7 +1747,7 @@ export function CheckoutModal({
               href={whatsappSummaryUrl}
               target="_blank"
               rel="noreferrer"
-              className="w-full bg-[#0F172A] hover:bg-slate-800 text-white py-2.5 px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition shadow-sm"
             >
               <Send className="w-4 h-4" strokeWidth={1.5} />
               <span>إرسال ملخص الطلب عبر WhatsApp لتسريع الاعتماد</span>

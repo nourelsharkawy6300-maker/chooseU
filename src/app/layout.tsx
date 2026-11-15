@@ -18,9 +18,8 @@ export default function RootLayout({
     <html
       lang="ar"
       dir="rtl"
-      className="dark"
     >
-      <body className="bg-[#0F172A] text-slate-100 font-sans antialiased selection:bg-blue-600/30 selection:text-blue-200 min-h-screen">
+      <body className="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-blue-600/20 selection:text-blue-900 min-h-screen">
         <StudentProvider>
           <AppShellClient>{children}</AppShellClient>
         </StudentProvider>

@@ -282,22 +282,22 @@ export default function AdvisorAdminPortalPage() {
     return (
       <div
         dir="rtl"
-        className="bg-[#0F172A] text-slate-900 flex flex-col justify-center items-center p-4"
+        className="bg-slate-50 text-slate-900 flex flex-col justify-center items-center p-4 min-h-screen"
       >
-        <div className="w-full bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden">
-          <div className="px-6 py-5 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
+        <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden">
+          <div className="px-6 py-5 bg-white text-slate-900 flex items-center justify-between border-b border-slate-200">
             <div className="flex items-center gap-3">
               <ChooseULogoMark className="w-9 h-9" />
               <div>
                 <h1 className="text-[16px] font-bold">
                   بوابة المستشارين الأكاديميين
                 </h1>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-slate-500">
                   ChooseU Security & Operations Portal
                 </p>
               </div>
             </div>
-            <KeyRound className="w-5 h-5 text-blue-400" strokeWidth={1.5} />
+            <KeyRound className="w-5 h-5 text-blue-600" strokeWidth={1.5} />
           </div>
 
           <form onSubmit={handlePasscodeSubmit} className="p-6 space-y-5">
@@ -318,11 +318,11 @@ export default function AdvisorAdminPortalPage() {
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
                 placeholder="أدخل رمز المرور..."
-                className="w-full border border-slate-200 focus:border-slate-900 rounded-xl px-3.5 py-2.5 text-[13px] dir-ltr text-left focus:outline-none disabled:bg-slate-100"
+                className="w-full border border-slate-300 focus:border-blue-600 rounded-xl px-3.5 py-2.5 text-[13px] dir-ltr text-left focus:outline-none disabled:bg-slate-100"
               />
-              <p className="text-[11px] text-slate-400 mt-1.5 tabular-nums">
+              <p className="text-[11px] text-slate-500 mt-1.5 tabular-nums">
                 رمز المرور الافتراضي للمراجعة:{" "}
-                <code className="font-mono font-semibold text-slate-600">
+                <code className="font-mono font-semibold text-slate-700">
                   admin2026
                 </code>
               </p>
@@ -340,7 +340,7 @@ export default function AdvisorAdminPortalPage() {
               <button
                 type="submit"
                 disabled={lockoutSeconds > 0}
-                className="bg-[#0F172A] hover:bg-slate-800 disabled:opacity-50 text-white px-5 py-2.5 rounded-xl text-[13px] font-semibold flex items-center gap-2 transition cursor-pointer"
+                className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-5 py-2.5 rounded-xl text-[13px] font-semibold flex items-center gap-2 transition cursor-pointer shadow-sm"
               >
                 <Lock className="w-4 h-4" strokeWidth={1.5} />
                 <span>دخول لوحة العمليات</span>
@@ -353,48 +353,48 @@ export default function AdvisorAdminPortalPage() {
   }
 
   // ===========================================================================
-  // 2. FULL-SCREEN DARK-SIDEBAR ADMIN LAYOUT
+  // 2. FULL-SCREEN LIGHT-SIDEBAR ADMIN LAYOUT
   // ===========================================================================
   return (
-    <div dir="rtl" className="bg-slate-100 text-slate-900 flex flex-col lg:flex-row">
-      {/* Dark Operations Sidebar */}
-      <aside className="w-full lg:w-72 bg-[#0F172A] text-white p-6 flex flex-col justify-between shrink-0">
+    <div dir="rtl" className="bg-slate-50 text-slate-900 flex flex-col lg:flex-row min-h-screen">
+      {/* Light Operations Sidebar */}
+      <aside className="w-full lg:w-72 bg-white text-slate-900 border-l border-slate-200 p-6 flex flex-col justify-between shrink-0 shadow-2xs">
         <div className="space-y-6">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-4">
             <div className="flex items-center gap-3">
               <ChooseULogoMark className="w-8 h-8" />
               <div>
-                <div className="font-bold text-[15px]">ChooseU Staff</div>
-                <div className="text-[11px] text-slate-400">
+                <div className="font-bold text-[15px] text-slate-900">ChooseU Staff</div>
+                <div className="text-[11px] text-slate-500">
                   بوابة المستشارين الأكاديميين
                 </div>
               </div>
             </div>
-            <span className="text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-mono bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded font-semibold">
               LIVE
             </span>
           </div>
 
           <div className="space-y-3 text-[12px]">
-            <div className="text-slate-400 font-semibold text-[11px]">
+            <div className="text-slate-500 font-semibold text-[11px]">
               حالة الربط السحابي
             </div>
-            <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 space-y-1.5">
-              <div className="flex items-center gap-2 text-emerald-400 font-medium">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-1.5">
+              <div className="flex items-center gap-2 text-emerald-700 font-semibold">
                 <Database className="w-4 h-4" strokeWidth={1.5} />
                 <span>Supabase REST Connected</span>
               </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed font-mono dir-ltr text-left">
+              <p className="text-[11px] text-slate-500 leading-relaxed font-mono dir-ltr text-left">
                 eu-west-1 • consultation_orders
               </p>
             </div>
           </div>
         </div>
 
-        <div className="pt-6 border-t border-slate-800 space-y-2.5 mt-6">
+        <div className="pt-6 border-t border-slate-200 space-y-2.5 mt-6">
           <Link
             href="/"
-            className="w-full border border-slate-700 bg-slate-800/60 hover:bg-slate-800 text-slate-200 py-2.5 px-4 rounded-xl text-[12px] font-medium flex items-center justify-center gap-2 transition"
+            className="w-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 py-2.5 px-4 rounded-xl text-[12px] font-medium flex items-center justify-center gap-2 transition"
           >
             <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
             <span>العودة لمنصة الطلاب (/)</span>
@@ -403,7 +403,7 @@ export default function AdvisorAdminPortalPage() {
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-200 py-2 px-4 rounded-xl text-[12px] font-medium flex items-center justify-center gap-2 transition cursor-pointer"
+            className="w-full border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 py-2 px-4 rounded-xl text-[12px] font-medium flex items-center justify-center gap-2 transition cursor-pointer"
           >
             <LogOut className="w-4 h-4" strokeWidth={1.5} />
             <span>تسجيل خروج آمن</span>
@@ -523,7 +523,7 @@ export default function AdvisorAdminPortalPage() {
                     onClick={() => setStatusFilter(f)}
                     className={`px-3 py-1 rounded-lg text-[11px] font-semibold cursor-pointer transition ${
                       statusFilter === f
-                        ? "bg-[#0F172A] text-white"
+                        ? "bg-slate-900 text-white"
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                   >
@@ -767,7 +767,7 @@ export default function AdvisorAdminPortalPage() {
                   type="button"
                   disabled={isApproving}
                   onClick={handleApproveSelectedOrder}
-                  className="w-full bg-[#0F172A] hover:bg-slate-800 text-white py-3 px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition cursor-pointer"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition cursor-pointer shadow-sm"
                 >
                   {isApproving ? (
                     <Loader2

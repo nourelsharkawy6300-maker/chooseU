@@ -60,7 +60,7 @@ export function PersonaRadarHexagon({
               key={lvl}
               points={pts}
               fill="none"
-              stroke="#334155"
+              stroke="#cbd5e1"
               strokeWidth="1"
               strokeDasharray={lvl < 1.0 ? "2 2" : undefined}
             />
@@ -75,7 +75,7 @@ export function PersonaRadarHexagon({
               y1={center}
               x2={outer.x}
               y2={outer.y}
-              stroke="#475569"
+              stroke="#e2e8f0"
               strokeWidth="1"
             />
           );
@@ -95,32 +95,32 @@ export function PersonaRadarHexagon({
               cx={pt.x}
               cy={pt.y}
               r={3.5}
-              fill="#0F172A"
+              fill="#ffffff"
               stroke={cluster.color}
               strokeWidth="2"
             />
           );
         })}
       </svg>
-      <div className="w-full grid grid-cols-2 sm:grid-cols-3 gap-1.5 mt-3 pt-3 border-t border-slate-800 text-[11px]">
+      <div className="w-full grid grid-cols-2 sm:grid-cols-3 gap-1.5 mt-3 pt-3 border-t border-slate-200 text-[11px]">
         {clusterKeys.map((k) => {
           const cluster = CLUSTERS[k];
           const val = affinities[k] || 0;
           return (
             <div
               key={k}
-              className="flex items-center justify-between p-1.5 rounded-md bg-slate-900 border border-slate-800"
+              className="flex items-center justify-between p-1.5 rounded-md bg-slate-50 border border-slate-200"
             >
               <div className="flex items-center gap-1.5 truncate">
                 <span
                   className="w-2 h-2 rounded-full shrink-0"
                   style={{ backgroundColor: cluster.color }}
                 />
-                <span className="truncate text-slate-300 font-medium">
+                <span className="truncate text-slate-700 font-medium">
                   {cluster.title.split(" ")[1] || cluster.title}
                 </span>
               </div>
-              <span className="font-bold text-white tabular-nums">{val}%</span>
+              <span className="font-bold text-slate-900 tabular-nums">{val}%</span>
             </div>
           );
         })}
