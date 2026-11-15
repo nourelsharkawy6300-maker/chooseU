@@ -37,7 +37,7 @@ const NAVIGATION_ITEMS: NavItem[] = [
     icon: Compass,
   },
   {
-    label: "حاسبة المصروفات ونفقات المعيشة (TCO)",
+    label: "حاسبة التكلفة",
     sublabel: "حساب تكلفة السنوات الأربع والتضخم",
     href: "/tco-matrix",
     icon: Calculator,
@@ -172,7 +172,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
           >
             <span className="flex items-center gap-2">
               <ShieldCheck className="h-3.5 w-3.5 text-blue-400" />
-              بوابة المراجعين (Staff Admin)
+              دخول الإدارة
             </span>
             <span dir="ltr" className="font-mono text-[10px] text-slate-400">/admin</span>
           </Link>
@@ -243,14 +243,14 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               className="inline-flex items-center gap-1.5 rounded-md border border-slate-700 bg-slate-800/80 px-3 py-1.5 text-xs font-medium text-slate-200 transition-colors hover:bg-slate-800 hover:text-white cursor-pointer"
             >
               <SlidersHorizontal className="h-3.5 w-3.5 text-slate-400" />
-              <span>تعديل المعايير</span>
+              <span>بياناتي</span>
             </button>
             <Link
               href="/sample-report"
               className="hidden sm:inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-blue-500"
             >
               <FileCheck2 className="h-3.5 w-3.5" />
-              <span>التقرير الاستشاري</span>
+              <span>تقريري</span>
             </Link>
           </div>
         </header>
@@ -311,7 +311,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                   className="flex items-center gap-2 rounded-lg bg-slate-900 border border-slate-800 px-3 py-2 text-xs text-slate-300"
                 >
                   <ShieldCheck className="h-4 w-4 text-blue-400" />
-                  <span>بوابة المراجعين (Staff Admin)</span>
+                  <span>دخول الإدارة</span>
                 </Link>
               </div>
             </div>

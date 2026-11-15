@@ -73,7 +73,7 @@ export function CommandPalette({
     { key: "alternatives", title: "ترتيب الرغبات والمسارات البديلة", category: "الاستكشاف", icon: Layers },
     { key: "careers", title: "دليل الوظائف وسوق العمل (Future Me)", category: "سوق العمل", icon: Briefcase },
     { key: "profile", title: "بيانات الطالب والملف الأكاديمي", category: "الملف الشخصي", icon: User },
-    { key: "admin", title: "بوابة المراجعين والمستشارين (Admin)", category: "الإدارة", icon: ShieldCheck },
+    { key: "admin", title: "دخول الإدارة", category: "الإدارة", icon: ShieldCheck },
   ];
 
   const filteredViews = viewOptions.filter(
@@ -122,7 +122,7 @@ export function CommandPalette({
           {/* Quick Views */}
           <div>
             <div className="px-3 py-1.5 text-xs font-semibold text-slate-400">
-              صفحات المنصة والأدوات الذكية
+              أقسام المنصة
             </div>
             <div className="space-y-1">
               {filteredViews.slice(0, 7).map((item) => {

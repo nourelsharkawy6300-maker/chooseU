@@ -396,14 +396,13 @@ export function FourStationJourney({
               <Compass className="w-4 h-4 text-blue-400 stroke-[1.5]" />
             </div>
             <div>
-              <div className="text-[10px] font-mono text-slate-400">CHOOSEU JOURNEY • رحلة التوجيه</div>
               <div className="text-[13px] font-bold text-white">
                 المحطة {station} من 4:{" "}
                 <span className="text-blue-400">
-                  {station === 1 && "اكتشف (AI Assessment & Profile)"}
-                  {station === 2 && "طابق (Major Match & Comparison)"}
-                  {station === 3 && "حاكِ (What-If & Future Me)"}
-                  {station === 4 && "قرّر (AI Companion & Report)"}
+                  {station === 1 && "اكتشف"}
+                  {station === 2 && "طابق"}
+                  {station === 3 && "حاكِ"}
+                  {station === 4 && "قرّر"}
                 </span>
               </div>
             </div>
@@ -784,10 +783,10 @@ export function FourStationJourney({
                   <span>المحطة الثانية • التوصيات والمقارنة</span>
                 </div>
                 <h2 className="text-xl font-bold text-white">
-                  المحطة الثانية: التوصيات الذكية واستكشاف الكليات والمقارنة
+                  المحطة الثانية: ترشيحات الكليات والمقارنة
                 </h2>
                 <p className="text-[12px] text-slate-400">
-                  كليات مصنفة حسب أمان قبولك، مع زر التفسير الذكي (Explainable AI - Why?) لمطالعة أسباب ترشيح كل خيار.
+                  كليات مصنفة حسب أمان قبولك، مع زر أسباب الترشيح لمطالعة تفاصيل كل خيار.
                 </p>
               </div>
 
@@ -1272,7 +1271,6 @@ export function FourStationJourney({
                       {activeRoadmapYear === 3 && "التدريب الصيفي والشهادات الدولية"}
                       {activeRoadmapYear === 4 && "مشروع التخرج والتوظيف المباشر"}
                     </span>
-                    <span className="text-[10px] font-mono text-slate-500">YEAR 0{activeRoadmapYear}</span>
                   </div>
 
                   <p className="text-slate-300 leading-relaxed text-[11px]">

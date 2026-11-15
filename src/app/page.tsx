@@ -22,7 +22,7 @@ const MODULES = [
     badge: "المسار الأكاديمي",
   },
   {
-    title: "حاسبة المصروفات ونفقات المعيشة (TCO)",
+    title: "حاسبة التكلفة",
     desc: "حساب تكلفة 4 سنوات دراسية شاملة التضخم السنوي، نفقات السكن الجامعي، والانتقالات.",
     href: "/tco-matrix",
     icon: Calculator,
@@ -68,10 +68,6 @@ export default function HomePage() {
       {/* Editorial Hero Header */}
       <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-[#0F172A] p-8 sm:p-12 text-right">
         <div className="max-w-3xl space-y-5">
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-400">
-            <span>منظومة التوجيه الجامعي والتدقيق المالي لطلاب الثانوية والشهادات المعادلة</span>
-          </div>
-
           <h1 className="text-3xl sm:text-5xl font-black text-white leading-[1.35]">
             قرارك الأكاديمي والمالي
             <br />
@@ -90,7 +86,7 @@ export default function HomePage() {
               href="/workspace"
               className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/25 cursor-pointer"
             >
-              <span>دخول مساحة العمل التحليلية</span>
+              <span>ابدأ التنسيق</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
 
@@ -106,11 +102,6 @@ export default function HomePage() {
 
       {/* Grid of Platform Modules */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-white">وحدات المنصة المتكاملة</h2>
-          <span className="text-xs text-slate-400">6 بوابات متخصصة</span>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {MODULES.map((m) => {
             const Icon = m.icon;

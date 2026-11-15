@@ -128,7 +128,7 @@ export function DashboardView({
           <div className="flex items-center gap-2 text-[11px] text-slate-600">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 stroke-[1.5]" />
             <span className="font-medium">
-              اكتمال المؤشرات الذكية:{" "}
+              اكتمال ملف التنسيق:{" "}
               <span className="font-bold text-slate-900 tabular-nums">85%</span>
             </span>
             <span className="text-slate-400">
@@ -149,7 +149,7 @@ export function DashboardView({
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 className="text-sm font-bold text-slate-900">
-                  بصمة الميول والأبعاد الأكاديمية (6-Axis DNA)
+                  توزيع الميول والأبعاد الأكاديمية
                 </h3>
                 <p className="text-[11px] text-slate-500">
                   تحليل التوافق النفسي والمهني التلقائي
@@ -261,7 +261,7 @@ export function DashboardView({
                 <div className="flex items-center gap-2">
                   <GraduationCap className="w-4 h-4 text-indigo-600 stroke-[1.5]" />
                   <span className="font-medium text-slate-800">
-                    محرك الحلم والبدائل الذكية
+                    محرك البدائل الأكاديمية
                   </span>
                 </div>
                 <ChevronLeft className="w-4 h-4 text-slate-400 stroke-[1.5]" />
@@ -323,7 +323,7 @@ export function DashboardView({
                   {/* Top Badges */}
                   <div className="flex items-center justify-between gap-1.5">
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-bold">
-                      #{idx + 1} تطابق ذكي
+                      #{idx + 1} الأنسب لملفك
                     </span>
                     <span
                       className={`text-[10px] font-bold px-2 py-0.5 rounded border ${

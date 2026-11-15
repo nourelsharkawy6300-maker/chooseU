@@ -247,7 +247,7 @@ export function AlternativesEngineView({
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-indigo-600 stroke-[1.5]" />
             <h3 className="text-sm font-bold text-slate-900">
-              البدائل الذكية المعتمدة لنفس المستقبل المهني
+              البدائل المعتمدة لنفس المسار المهني
             </h3>
           </div>
           <p className="text-[11px] text-slate-500">
