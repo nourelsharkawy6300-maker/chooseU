@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   Compass,
   Calculator,
@@ -132,22 +133,33 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`group flex items-start gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                className={`group relative flex items-start gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200 ${
                   isActive
-                    ? "bg-blue-50 text-blue-700 border border-blue-200 font-semibold"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent"
+                    ? "text-blue-900 font-semibold"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >
+                {isActive && (
+                  <motion.div
+                    layoutId="desktop-active-nav"
+                    className="absolute inset-0 rounded-lg bg-blue-50 border border-blue-200"
+                    transition={{
+                      type: "spring",
+                      stiffness: 350,
+                      damping: 30,
+                    }}
+                  />
+                )}
                 <IconComponent
-                  className={`mt-0.5 h-4 w-4 shrink-0 transition-colors ${
+                  className={`relative z-10 mt-0.5 h-4 w-4 shrink-0 transition-colors duration-200 ${
                     isActive ? "text-blue-600" : "text-slate-400 group-hover:text-blue-600"
                   }`}
                 />
-                <div className="min-w-0 flex-1">
-                  <p className={`truncate font-medium ${isActive ? "text-blue-900" : "text-slate-700 group-hover:text-slate-900"}`}>
+                <div className="relative z-10 min-w-0 flex-1">
+                  <p className={`truncate font-medium transition-colors duration-200 ${isActive ? "text-blue-900" : "text-slate-700 group-hover:text-slate-900"}`}>
                     {item.label}
                   </p>
-                  <p className={`truncate text-xs ${isActive ? "text-blue-600" : "text-slate-500"}`}>
+                  <p className={`truncate text-xs transition-colors duration-200 ${isActive ? "text-blue-600" : "text-slate-500"}`}>
                     {item.sublabel}
                   </p>
                 </div>
@@ -288,16 +300,31 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                         key={item.href}
                         href={item.href}
                         onClick={() => setIsMobileNavOpen(false)}
-                        className={`flex items-start gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                        className={`group relative flex items-start gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200 ${
                           isActive
-                            ? "bg-blue-50 text-blue-700 border border-blue-200 font-semibold"
+                            ? "text-blue-900 font-semibold"
                             : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                         }`}
                       >
-                        <IconComponent className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
-                        <div className="min-w-0 flex-1">
+                        {isActive && (
+                          <motion.div
+                            layoutId="mobile-active-nav"
+                            className="absolute inset-0 rounded-lg bg-blue-50 border border-blue-200"
+                            transition={{
+                              type: "spring",
+                              stiffness: 350,
+                              damping: 30,
+                            }}
+                          />
+                        )}
+                        <IconComponent
+                          className={`relative z-10 mt-0.5 h-4 w-4 shrink-0 transition-colors duration-200 ${
+                            isActive ? "text-blue-600" : "text-slate-400"
+                          }`}
+                        />
+                        <div className="relative z-10 min-w-0 flex-1">
                           <p className="truncate font-medium">{item.label}</p>
-                          <p className="truncate text-xs text-slate-500">{item.sublabel}</p>
+                          <p className={`truncate text-xs ${isActive ? "text-blue-600" : "text-slate-500"}`}>{item.sublabel}</p>
                         </div>
                       </Link>
                     );
