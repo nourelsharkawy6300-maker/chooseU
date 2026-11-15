@@ -9,14 +9,10 @@ import {
   Calculator,
   Layers,
   Scale,
-  Sparkles,
   Briefcase,
-  CalendarCheck,
   User,
   ShieldCheck,
-  CheckCircle2,
   Building2,
-  GraduationCap,
 } from "lucide-react";
 import { EnterpriseViewKey, Faculty } from "@/types/chooseu";
 import { FACULTIES_DATABASE } from "@/data/faculties-db";
@@ -66,21 +62,18 @@ export function CommandPalette({
     category: string;
     icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
   }[] = [
-    { key: "journey", title: "رحلة الـ 4 محطات (4-Station Stepper)", category: "التوجيه", icon: Compass },
-    { key: "landing", title: "بوابة البداية وأنيميشن Route (Scroll Portal Hero)", category: "الرئيسية", icon: Sparkles },
-    { key: "dashboard", title: "لوحة التحكم الأكاديمية (Executive Dashboard)", category: "التحليل الذكي", icon: Compass },
-    { key: "assessment", title: "مختبر التقييم الأكاديمي والتقرير المعتمد (Assessment Lab)", category: "التحليل الذكي", icon: Sparkles },
-    { key: "tansik-simulator", title: "محاكي درجات التنسيق والحدود (Tansik Simulator)", category: "التحليل الذكي", icon: SlidersHorizontal },
-    { key: "calculator", title: "حاسبة التكلفة الحقيقية لـ 4 سنوات (4-Year TCO)", category: "التحليل الذكي", icon: Calculator },
-    { key: "explore", title: "دليل استكشاف الكليات والجامعات (Faculty Explorer)", category: "الاستكشاف", icon: Building2 },
-    { key: "compare", title: "مواجهة الكليات وجهاً لوجه (Head-to-Head VS Arena)", category: "الاستكشاف", icon: Scale },
-    { key: "alternatives", title: "محرك الحلم والبديل الواقعي (Dream vs. Reality)", category: "الاستكشاف", icon: Layers },
-    { key: "careers", title: "مرصد الوظائف وسوق العمل (Job Market Observatory)", category: "سوق العمل", icon: Briefcase },
-    { key: "timeline", title: "جدول مراحل التنسيق وحقيبة المستندات (Timeline)", category: "التخطيط", icon: CalendarCheck },
-    { key: "profile", title: "الملف الأكاديمي وتقرير ولي الأمر (Student Vault)", category: "الملف الشخصي", icon: User },
-    { key: "auth", title: "بوابة الدخول وإنشاء الحساب (Auth Portal)", category: "البوابة", icon: GraduationCap },
-    { key: "onboarding", title: "معالج الإعداد والتهيئة السريع (Onboarding Wizard)", category: "البوابة", icon: CheckCircle2 },
-    { key: "admin", title: "بوابة المستشارين والتحكم الإداري (Admin Governance)", category: "الإدارة", icon: ShieldCheck },
+    { key: "journey", title: "خطوات التنسيق واختبار الميول (4-Station Journey)", category: "التوجيه", icon: Compass },
+    { key: "landing", title: "الصفحة الرئيسية (Home)", category: "الرئيسية", icon: Building2 },
+    { key: "dashboard", title: "لوحة التحكم الأكاديمية (Dashboard)", category: "التحليل الأكاديمي", icon: Compass },
+    { key: "assessment", title: "اختبار الميول والتقييم الأكاديمي (Assessment)", category: "التحليل الأكاديمي", icon: Compass },
+    { key: "tansik-simulator", title: "محاكاة درجات التنسيق والحدود الدنيا", category: "التنسيق", icon: SlidersHorizontal },
+    { key: "calculator", title: "حاسبة التكلفة الشاملة لسنوات الدراسة (TCO)", category: "التخطيط المالي", icon: Calculator },
+    { key: "explore", title: "دليل استكشاف الكليات والجامعات", category: "الاستكشاف", icon: Building2 },
+    { key: "compare", title: "مقارنة الكليات والبرامج الأكاديمية", category: "الاستكشاف", icon: Scale },
+    { key: "alternatives", title: "ترتيب الرغبات والمسارات البديلة", category: "الاستكشاف", icon: Layers },
+    { key: "careers", title: "دليل الوظائف وسوق العمل (Future Me)", category: "سوق العمل", icon: Briefcase },
+    { key: "profile", title: "بيانات الطالب والملف الأكاديمي", category: "الملف الشخصي", icon: User },
+    { key: "admin", title: "بوابة المراجعين والمستشارين (Admin)", category: "الإدارة", icon: ShieldCheck },
   ];
 
   const filteredViews = viewOptions.filter(

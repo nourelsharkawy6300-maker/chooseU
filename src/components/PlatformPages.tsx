@@ -391,7 +391,7 @@ export function FutureMeView({
   const career = activeFaculty.future_career;
 
   return (
-    <div className="px-4 lg:px-8 py-8 space-y-6">
+    <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8 space-y-6">
       {/* Header & Faculty Selector Bar */}
       <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs flex flex-wrap items-center justify-between gap-4">
         <div className="space-y-1">
@@ -499,7 +499,7 @@ export function FutureMeView({
 
             <div className="pt-3 border-t border-slate-800 space-y-2 text-[12px] text-slate-300 tabular-nums">
               <div className="flex justify-between">
-                <span className="text-slate-400">حد القبول المرجعي 2026:</span>
+                <span className="text-slate-400">مؤشر القبول الاسترشادي:</span>
                 <strong className="text-white">
                   {activeFaculty.cutoff_2026.toFixed(1)}%
                 </strong>
@@ -637,7 +637,7 @@ export function DirectoryView({
   }, [searchQuery, streamFilter, categoryFilter]);
 
   return (
-    <div className="px-4 lg:px-8 py-8 space-y-6">
+    <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8 space-y-6">
       {/* Search & Filters Header */}
       <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
@@ -756,7 +756,7 @@ export function DirectoryView({
 
                 <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5 text-[12px] tabular-nums">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">حد القبول 2026:</span>
+                    <span className="text-slate-500">مؤشر القبول الاسترشادي:</span>
                     <strong className="text-slate-900">
                       {fac.cutoff_2026.toFixed(1)}%
                     </strong>
@@ -844,46 +844,21 @@ export function SampleReportView({
   evaluation,
   onOpenCheckout,
 }: SampleReportViewProps) {
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [progressSec, setProgressSec] = useState<number>(0);
-  const totalSec = 248; // 04:08
-
-  useEffect(() => {
-    if (!isPlaying) return;
-    const timer = setInterval(() => {
-      setProgressSec((prev) => {
-        if (prev >= totalSec) {
-          setIsPlaying(false);
-          return 0;
-        }
-        return prev + 1;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [isPlaying]);
-
-  const formatTime = (sec: number) => {
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    const sStr = s < 10 ? "0" + s : String(s);
-    return "0" + m + ":" + sStr;
-  };
-
   const sampleFaculties =
     evaluation.allRanked.length >= 4
       ? evaluation.allRanked.slice(0, 6)
       : FACULTIES_DATABASE.slice(0, 6);
 
   return (
-    <div className="px-4 lg:px-8 py-8 space-y-6">
+    <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8 space-y-6">
       {/* Top Preview Action Bar */}
       <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4 shadow-2xs no-print">
         <div>
           <h1 className="text-[18px] font-bold text-slate-900">
-            عينة التقرير المعتمد والمذكرة الصوتية
+            عينة التقرير الاستشاري المعتمد
           </h1>
           <p className="text-[12px] text-slate-500 mt-0.5">
-            نموذج حي يوضح هيكل الوثيقة التنفيذية والمذكرة الصوتية التي تستلمها الأسرة بعد المراجعة البشرية.
+            نموذج استرشادي يوضح هيكل الوثيقة التنفيذية وقائمة الرغبات التي تستلمها الأسرة بعد المراجعة الأكاديمية.
           </p>
         </div>
 
@@ -904,59 +879,6 @@ export function SampleReportView({
           >
             اطلب تقريرك المخصص الآن (150 ج.م)
           </button>
-        </div>
-      </div>
-
-      {/* Executive Audio Summary Player (04:08) */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs flex flex-wrap items-center justify-between gap-4 no-print">
-        <div className="flex items-center gap-3.5">
-          <button
-            type="button"
-            onClick={() => setIsPlaying((p) => !p)}
-            className="w-11 h-11 rounded-xl bg-[#0F172A] hover:bg-slate-800 text-white flex items-center justify-center transition cursor-pointer shrink-0"
-          >
-            {isPlaying ? (
-              <Pause className="w-4 h-4" strokeWidth={1.5} />
-            ) : (
-              <Play className="w-4 h-4 mr-0.5" strokeWidth={1.5} />
-            )}
-          </button>
-          <div>
-            <div className="flex items-center gap-2">
-              <Volume2 className="w-4 h-4 text-blue-600" strokeWidth={1.5} />
-              <span className="text-[14px] font-semibold text-slate-900">
-                المذكرة الصوتية الاستشارية لولي الأمر (عينة صوتية — 04:08)
-              </span>
-            </div>
-            <p className="text-[12px] text-slate-500 mt-0.5">
-              توجيه صوتي مبسط يشرح ترتيب الرغبات، شروط الـ GPA في السنة الأولى، ومقارنة تكلفة السكن والانتقال.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 w-full sm:w-72 tabular-nums">
-          <span className="text-[11px] font-mono text-slate-600">
-            {formatTime(progressSec)}
-          </span>
-          <div className="flex-1 flex items-center gap-1 h-8 px-2.5 bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
-            {[
-              40, 70, 50, 85, 60, 95, 45, 75, 80, 55, 70, 65, 90, 50, 75, 60,
-              85, 65, 45, 60,
-            ].map((barH, idx) => {
-              const threshold = ((idx + 1) / 20) * totalSec;
-              const active = progressSec >= threshold;
-              return (
-                <div
-                  key={idx}
-                  className={`flex-1 rounded-full transition-all duration-200 ${
-                    active ? "bg-blue-600" : "bg-slate-300"
-                  }`}
-                  style={{ height: `${barH}%` }}
-                />
-              );
-            })}
-          </div>
-          <span className="text-[11px] font-mono text-slate-500">04:08</span>
         </div>
       </div>
 
@@ -1048,7 +970,7 @@ export function SampleReportView({
                         0{i + 1}. {f.name} ({f.university})
                       </span>
                       <span className="text-slate-500 font-semibold">
-                        حد 2026: {f.cutoff_2026.toFixed(1)}%
+                        مؤشر القبول الاسترشادي: {f.cutoff_2026.toFixed(1)}%
                       </span>
                     </li>
                   ))}
@@ -1398,7 +1320,7 @@ export function TrackOrderView({
                   </button>
                   <a
                     href={`https://wa.me/201066594552?text=${encodeURIComponent(
-                      `مرحباً ChooseU، قمت بتحويل رسوم التقرير المعتمد (150 ج.م). رقم الطلب: ${orderResult.order_code} - اسم الطالب: ${orderResult.student_name} - رقم مرجع InstaPay: ${orderResult.instapay_ref}`
+                      `مرحباً ChooseU، قمت بتحويل رسوم التقرير المعتمد (150 ج.م). رقم الطلب: ${orderResult.order_code} - اسم الطالب: ${orderResult.student_name} - رقم العملية في إنستاباي: ${orderResult.instapay_ref}`
                     )}`}
                     target="_blank"
                     rel="noreferrer"
@@ -1683,7 +1605,7 @@ export function CheckoutModal({
         "• اسم الطالب: " + createdOrder.student_name,
         "• الشعبة والمجموع: " + streamLabel + " (" + score.toFixed(1) + "%)",
         "• الميزانية والمحافظة: " + budget.toLocaleString() + " ج.م — " + gov,
-        "• رقم مرجع InstaPay: " + createdOrder.instapay_ref,
+        "• رقم العملية في إنستاباي: " + createdOrder.instapay_ref,
       ].join("\n")
     : "";
   const whatsappSummaryUrl = createdOrder
@@ -1692,7 +1614,7 @@ export function CheckoutModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 -xs flex items-center justify-center p-4 overflow-y-auto no-print">
-      <div className="bg-white border border-slate-200 rounded-xl w-full p-6 shadow-2xl space-y-5 my-auto">
+      <div className="bg-white border border-slate-200 rounded-xl max-w-xl w-full mx-auto p-6 shadow-2xl space-y-5 my-auto">
         <div className="flex items-center justify-between border-b border-slate-200 pb-4">
           <div>
             <h3 className="text-[17px] font-bold text-slate-900">
@@ -1808,7 +1730,7 @@ export function CheckoutModal({
 
               <div>
                 <label className="block text-[12px] font-medium text-slate-700 mb-1">
-                  رقم واتساب للتواصل واستلام المذكرة الصوتية
+                  رقم واتساب للتواصل واستلام التقرير الاستشاري
                 </label>
                 <input
                   type="tel"
@@ -1822,7 +1744,7 @@ export function CheckoutModal({
 
               <div>
                 <label className="block text-[12px] font-medium text-slate-700 mb-1">
-                  رقم مرجع تحويل InstaPay (Reference ID)
+                  رقم العملية في إنستاباي (InstaPay Reference ID)
                 </label>
                 <input
                   type="text"

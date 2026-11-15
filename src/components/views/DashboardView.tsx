@@ -21,8 +21,8 @@ import {
   Faculty,
   EnterpriseViewKey,
 } from "@/types/chooseu";
-import { CLUSTERS } from "@/app/page";
-import { PersonaRadarHexagon } from "@/app/page";
+import { CLUSTERS } from "@/data/clusters";
+import { PersonaRadarHexagon } from "@/components/PersonaRadarHexagon";
 
 interface DashboardViewProps {
   studentName: string;

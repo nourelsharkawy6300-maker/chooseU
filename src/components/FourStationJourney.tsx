@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo } from "react";
 import {
-  Sparkles,
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
@@ -320,10 +319,8 @@ export function FourStationJourney({
       const answeredCount = Object.keys(next).length;
       if (answeredCount >= 4) {
         setHasCompletedAssessment(true);
-        // Auto-transition smoothly to profile view within Station 1
-        setTimeout(() => {
-          setStation1SubView("profile");
-        }, 350);
+        // Immediate deterministic view transition
+        setStation1SubView("profile");
       }
       return next;
     });
@@ -352,35 +349,38 @@ export function FourStationJourney({
       timestamp: "الآن",
     };
 
-    setChatMessages((prev) => [...prev, newMsg]);
+    const streamTitle =
+      stream === "Math"
+        ? "علمي رياضة"
+        : stream === "Science"
+        ? "علمي علوم"
+        : stream === "stem"
+        ? "STEM"
+        : "أدبي";
+
+    let reply = `بناءً على ملفك الأكاديمي (مجموع ${score}% بشعبة ${streamTitle}) وميولك في ${TRACK_DETAILS[dominantTrack]?.title}: `;
+
+    if (userText.includes("ساعات معتمدة") || userText.includes("أهلي")) {
+      reply += `البرامج الأهلية والساعات المعتمدة توفر لك نفس الاعتماد الأكاديمي بحدود قبول أقل، مع ميزة الأعداد الأقل وتحديث اللوائح (مثل إمكانية التخرج في 4 سنوات لبعض كليات الهندسة)، وتكلفتها السنوية ضمن حدود ميزانيتك المقدرة بـ ${budget.toLocaleString()} ج.م.`;
+    } else if (userText.includes("ترتيب") || userText.includes("رغبات")) {
+      reply += `ننصحك ببدء بطاقة الرغبات بـ 15 رغبة طموحة تليها 35 رغبة واقعية متوازنة تناسب مجموعك، ثم 25 رغبة كشبكة أمان في نطاقك الجغرافي (${governorate}).`;
+    } else if (userText.includes("سفر") || userText.includes("دول") || userText.includes("مرتب")) {
+      reply += `المسارات التقنية والهندسية توفر فرص عمل واعدة في السوق المحلي والإقليمي، بمتوسط رواتب أولية تتراوح بين 15,000 و 30,000 ج.م شهرياً مع إمكانية التدرج للعمل مع شركات إقليمية ودولية.`;
+    } else {
+      reply += `اختيارك لكلية تقع في نطاقك الجغرافي (نطاق أ) يوفر عليك ما يقارب 30,000 إلى 40,000 ج.م سنوياً من تكلفة السكن الجامعي والاغتراب، مما يتيح لك استثمار هذا الفائض في التدريب والشهادات المهنية المعتمدة.`;
+    }
+
+    setChatMessages((prev) => [
+      ...prev,
+      newMsg,
+      {
+        id: `ai-${Date.now()}`,
+        sender: "ai",
+        text: reply,
+        timestamp: "الآن",
+      },
+    ]);
     setInputQuestion("");
-
-    // Contextual AI Answer
-    setTimeout(() => {
-      let reply = `بناءً على ملفك الأكاديمي (مجموع ${score}% بشعبة ${
-        stream === "Math" ? "علمي رياضة" : stream === "Science" ? "علمي علوم" : "أدبي"
-      }) وميولك في ${TRACK_DETAILS[dominantTrack]?.title}: `;
-
-      if (userText.includes("ساعات معتمدة") || userText.includes("أهلي")) {
-        reply += `البرامج الأهلية والساعات المعتمدة توفر لك نفس الاعتماد الأكاديمي بدرجات تنسيق أقل بنحو 2% إلى 4%، مع ميزة الأعداد الأقل والمناهج المحدثة، وتكلفتها مناسبة لميزانيتك المقدرة بـ ${budget.toLocaleString()} ج.م سنوياً.`;
-      } else if (userText.includes("ترتيب") || userText.includes("رغبات")) {
-        reply += `ننصحك ببدء بطاقة الرغبات بـ 15 رغبة طموحة تليها 35 رغبة واقعية متوازنة تناسب مجموعك، ثم 25 رغبة كشبكة أمان في نطاقك الجغرافي (${governorate}).`;
-      } else if (userText.includes("سفر") || userText.includes("دول")) {
-        reply += `كليات الحاسبات والذكاء الاصطناعي والهندسة توفر أعلى معدل للتوظيف الدولي والعمل عن بُعد، حيث تتراوح رواتب البداية للخريجين بين 1,800$ و 3,500$ شهرياً في الأسواق الخارجية.`;
-      } else {
-        reply += `اختيارك لكلية تقع في نطاقك الجغرافي يوفر عليك ما يقارب 35,000 ج.م سنوياً من مصاريف الاغتراب والسكن، مما يتيح لك استثمار هذا الفائض في الكورسات التخصصية والشهادات الدولية.`;
-      }
-
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          id: `ai-${Date.now()}`,
-          sender: "ai",
-          text: reply,
-          timestamp: "الآن",
-        },
-      ]);
-    }, 450);
   };
 
   return (
@@ -900,7 +900,7 @@ export function FourStationJourney({
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-base font-bold text-white">
-                      حلبة المقارنة المباشرة ({comparedFaculties.length} كليات)
+                      مقارنة الكليات والبرامج المختارة ({comparedFaculties.length} كليات)
                     </h3>
                     <p className="text-[11px] text-slate-400">
                       مقارنة جنباً إلى جنب في التنسيق، المصروفات، واعتمادات الجودة.
@@ -937,7 +937,7 @@ export function FourStationJourney({
                         ))}
                       </tr>
                       <tr>
-                        <td className="py-2.5 px-3 text-slate-400">الحد الأدنى للتنسيق</td>
+                        <td className="py-2.5 px-3 text-slate-400">مؤشر القبول الاسترشادي</td>
                         {comparedFaculties.map((f) => (
                           <td key={f.id} className="py-2.5 px-3 font-mono font-bold text-blue-400 tabular-nums">
                             {f.cutoff_2026}%
@@ -1169,11 +1169,11 @@ export function FourStationJourney({
                         <div className="text-[10px] text-slate-500">شهرياً</div>
                       </div>
                       <div className="bg-slate-950 p-3 rounded-lg border border-slate-800">
-                        <div className="text-[10px] text-slate-400">مسار دولي / Remote</div>
+                        <div className="text-[10px] text-slate-400">مسار إقليمي / شركات دولية</div>
                         <div className="text-sm font-mono font-bold text-emerald-400 mt-1">
-                          $2,200 - $4,800
+                          25,000 - 45,000 ج.م
                         </div>
-                        <div className="text-[10px] text-slate-500">شهرياً</div>
+                        <div className="text-[10px] text-slate-500">شهرياً (متوسط تقديري)</div>
                       </div>
                     </div>
                   </div>
@@ -1199,7 +1199,7 @@ export function FourStationJourney({
                 <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                   <div className="flex items-center gap-2">
                     <Award className="w-4 h-4 text-blue-400 stroke-[1.5]" />
-                    <h3 className="text-sm font-bold text-white">خارطة السنوات الـ 4</h3>
+                    <h3 className="text-sm font-bold text-white">خارطة السنوات الأكاديمية</h3>
                   </div>
                   <div className="flex gap-1 text-[10px] font-mono">
                     {[1, 2, 3, 4].map((yr) => (
@@ -1243,8 +1243,8 @@ export function FourStationJourney({
                   </p>
 
                   <div className="border-t border-slate-800/80 pt-2 text-[10px] text-slate-400">
-                    معدل الأمان الوظيفي:{" "}
-                    <span className="text-emerald-400 font-bold">96% نسبة توظيف خلال 6 أشهر</span>
+                    مؤشر الطلب بسوق العمل:{" "}
+                    <span className="text-emerald-400 font-bold">مرتفع (متوسط طلب متزايد على الكوادر المؤهلة)</span>
                   </div>
                 </div>
 
@@ -1253,7 +1253,7 @@ export function FourStationJourney({
                   onClick={() => setStation(4)}
                   className="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold text-[12px] transition-colors cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <span>الانتقال للمحطة 4: رفيق القرار والتقرير النهائي</span>
+                  <span>الانتقال للمحطة 4: الاستشارة الأكاديمية والتقرير النهائي</span>
                   <ArrowLeft className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -1262,21 +1262,18 @@ export function FourStationJourney({
         )}
 
         {/* ================================================================== */}
-        {/* STATION 4: DECIDE (قرّر)                                            */}
+        {/* STATION 4: DECIDE (المحطة الرابعة: الاستشارة والقرار النهائي)           */}
         {/* ================================================================== */}
         {station === 4 && (
           <div className="space-y-6">
             {/* Header */}
             <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-blue-950/80 text-blue-400 border border-blue-800/80 text-[11px] font-mono">
-                  <span>STATION 04 // DECIDE</span>
-                </div>
                 <h2 className="text-xl font-bold text-white">
-                  المحطة الرابعة: المساعد الذكي وتقرير القرار النهائي المعتمد
+                  المحطة الرابعة: الاستشارة الأكاديمية وتقرير القرار النهائي المعتمد
                 </h2>
                 <p className="text-[12px] text-slate-400">
-                  استشر رفيقك الأكاديمي حول أي تفاصيل متبقية، ثم أصدر وثيقة القرار النهائي الرسمية لبطاقة رغباتك.
+                  استعرض التوجيهات الأكاديمية لترتيب رغباتك، ثم أصدر وثيقة القرار النهائي الرسمية لبطاقة رغباتك.
                 </p>
               </div>
 
@@ -1291,21 +1288,20 @@ export function FourStationJourney({
               </button>
             </div>
 
-            {/* AI Companion Interactive Chat Interface */}
+            {/* Academic Advisor Interactive Q&A Interface */}
             <div className="bg-slate-900 border border-slate-800 rounded-xl flex flex-col h-[520px] shadow-sm">
-              {/* Chat Header */}
+              {/* Header */}
               <div className="p-4 border-b border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/40 flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-blue-400" />
+                    <Compass className="w-4 h-4 text-blue-400" />
                   </div>
                   <div>
                     <h3 className="text-[13px] font-bold text-white">
-                      المساعد الأكاديمي الذكي (AI Companion)
+                      المستشار الأكاديمي التوجيهي
                     </h3>
-                    <div className="text-[10px] text-slate-400 flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span>متصل ومدرك لبيانات ملفك الأكاديمي</span>
+                    <div className="text-[10px] text-slate-400">
+                      إرشادات وترتيبات مبنية على مجموعك وشعبتك
                     </div>
                   </div>
                 </div>
@@ -1426,7 +1422,7 @@ export function FourStationJourney({
                   لماذا رشحنا لك {explainFaculty.name}؟
                 </h3>
                 <p className="text-[12px] text-slate-400">
-                  {explainFaculty.university} • الحد الأدنى للتنسيق: {explainFaculty.cutoff_2026}%
+                  {explainFaculty.university} • مؤشر القبول الاسترشادي: {explainFaculty.cutoff_2026}%
                 </p>
               </div>
               <button
@@ -1442,16 +1438,16 @@ export function FourStationJourney({
               {/* Factor 1: Score & Margin */}
               <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
                 <div className="flex items-center justify-between font-bold text-slate-200">
-                  <span>1. معيار المجموع والتنسيق (Score Margin)</span>
+                  <span>1. معيار المجموع والقبول الاسترشادي (Score Margin)</span>
                   <span className="font-mono text-emerald-400">
                     {explainFaculty.margin >= 0 ? `+${explainFaculty.margin}%` : `${explainFaculty.margin}%`}
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-400">
-                  مجموعك الحالي ({score}%) مقارنة بتنسيق الكلية ({explainFaculty.cutoff_2026}%) يمنحك{" "}
+                  مجموعك الحالي ({score}%) مقارنة بمؤشر القبول الاسترشادي ({explainFaculty.cutoff_2026}%):{" "}
                   {explainFaculty.margin >= 1.5
-                    ? "نسبة قبول مضمونة تفوق 95%."
-                    : "فرصة واقعية قوية ضمن النطاق الأول للتوزيع."}
+                    ? "فرصة قبول قوية تتجاوز المعدل المعتاد."
+                    : "فرصة واقعية متوازنة ضمن النطاق الجغرافي الأول."}
                 </p>
               </div>
 

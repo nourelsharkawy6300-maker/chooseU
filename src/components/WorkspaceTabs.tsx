@@ -1477,7 +1477,7 @@ export function WorkspaceTabs({
 
               <div className="grid grid-cols-2 gap-3 tabular-nums text-[12px]">
                 <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
-                  <span className="text-slate-500 block">حد القبول 2026</span>
+                  <span className="text-slate-500 block">مؤشر القبول الاسترشادي</span>
                   <strong className="text-[16px] text-slate-900 font-bold">
                     {auditedFaculty.cutoff_2026.toFixed(1)}%
                   </strong>

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { ConsultationOrderRow } from "@/types/chooseu";
 import { DataService, SecurityValidator } from "@/lib/security-db";
-import { ChooseULogoMark } from "@/components/NavbarAndFooter";
+import { ChooseULogoMark } from "@/components/ChooseULogoMark";
 import {
   ArrowRight,
   CheckCircle2,

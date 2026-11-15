@@ -1,4 +1,4 @@
-export type StreamType = "Science" | "Math" | "Arts";
+export type StreamType = "Science" | "Math" | "Arts" | "stem";
 
 export type InterestCluster =
   | "Medical_Bio"
@@ -40,6 +40,8 @@ export type UniversityCategory =
   | "حكومي انتظام"
   | "برامج خاصة وساعات معتمدة"
   | "جامعات أهلية"
+  | "جامعات أهلية منبثقة"
+  | "جامعات أهلية دولية"
   | "جامعات خاصة وتكنولوجية";
 
 export type TrackKey =
@@ -91,6 +93,8 @@ export interface Faculty {
   gpa_requirement: string;
   scholarship_rule: string;
   aptitude_test: boolean;
+  duration_years?: number;
+  credit_hour_bylaw?: boolean;
   tracks: TrackKey[];
   future_career: FutureCareerProfile;
 }
@@ -114,6 +118,8 @@ export interface RankedFaculty extends Faculty {
   shiftedCutoff: number;
   margin: number;
   matchScore: number;
+  geoZone?: string;
+  stemNote?: string;
   groupKey: "target" | "safe" | "fallback";
   safetyBadge: {
     label: string;

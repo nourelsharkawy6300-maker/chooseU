@@ -183,9 +183,9 @@ export function AlternativesEngineView({
       {/* 1. Header */}
       <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-indigo-50 border border-indigo-200 text-indigo-700 text-[11px] font-bold mb-1">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-bold mb-1">
             <Layers className="w-3.5 h-3.5 stroke-[1.5]" />
-            <span>محرك الحلم والبديل (Dream vs Reality Matrix)</span>
+            <span>الكليات والمسارات البديلة</span>
           </div>
           <h1 className="text-xl font-bold text-slate-900 tracking-tight">
             نفس المستقبل المهني، بمسارات قبول أوسع

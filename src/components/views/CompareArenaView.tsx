@@ -59,10 +59,10 @@ export function CompareArenaView({
         <div>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-bold mb-1">
             <Scale className="w-3.5 h-3.5 stroke-[1.5]" />
-            <span>منصة المقارنة المباشرة (Head-to-Head VS Arena)</span>
+            <span>مقارنة الكليات والبرامج الأكاديمية</span>
           </div>
           <h1 className="text-xl font-bold text-slate-900 tracking-tight">
-            مقارنة الكليات وجهاً لوجه
+            مقارنة الكليات والبرامج
           </h1>
           <p className="text-[12px] text-slate-500 mt-0.5">
             قارن بين 2 إلى 4 كليات عبر 6 أبعاد حاسمة: الحد الأدنى، التكلفة، اللائحة، القدرات، والمسار المهني

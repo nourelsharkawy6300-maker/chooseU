@@ -129,15 +129,21 @@ export function computeFacultyTcoMetrics(
     livingDesc = "سكن طلابي وإعاشة وانتقالات (~32,000 ج.م/سنة)";
   }
 
+  // Duration in academic years: Support 4-year credit hour bylaw or degree specification
+  const years = f.credit_hour_bylaw
+    ? 4
+    : f.duration_years || (f.name.includes("هندسة") ? 5 : f.name.includes("طب") ? 5 : 4);
+
   const rate = Math.max(0, inflationRatePct) / 100;
-  // Regular public university tuition has minimal administrative adjustment (~3% yr); private/national/credit compounds by inflationRatePct
-  const compoundFactor = isRegularPublic
-    ? 4.12
-    : 1 + (1 + rate) + Math.pow(1 + rate, 2) + Math.pow(1 + rate, 3);
+  // Compute tuition compounding over the actual program duration (4 or 5 years)
+  let compoundFactor = 0;
+  for (let yr = 0; yr < years; yr++) {
+    compoundFactor += isRegularPublic ? 1 + yr * 0.03 : Math.pow(1 + rate, yr);
+  }
 
   const tuition4Yr = Math.round(y1Base * compoundFactor);
-  const admin4Yr = Math.round(adminFee * 4.15);
-  const living4Yr = Math.round(annualLiving * (1 + rate * 0.6) * 4);
+  const admin4Yr = Math.round(adminFee * (isRegularPublic ? years * 1.05 : years * 1.15));
+  const living4Yr = Math.round(annualLiving * (1 + rate * 0.5) * years);
   const total4Yr = tuition4Yr + admin4Yr + living4Yr;
 
   const basePct = Math.max(8, Math.round((tuition4Yr / total4Yr) * 100));
@@ -174,6 +180,10 @@ const ARTS_COMPATIBLE_TRACKS = new Set<TrackKey>([
 ]);
 
 function isFacultyEligibleForStream(f: Faculty, stream: StreamType): boolean {
+  if (stream === "stem") {
+    // STEM students are eligible for both Science and Math colleges
+    return f.stream === "Science" || f.stream === "Math" || f.stream === "Both";
+  }
   if (f.stream === stream) return true;
   if (f.stream === "Both") {
     if (stream === "Arts") {
@@ -257,15 +267,20 @@ export function evaluateAndRankFaculties(params: {
       const feeRatio = f.y1_base_fee / Math.max(1, budget);
       const budgetFit = Math.max(30, Math.round((1 - feeRatio * 0.45) * 100));
 
-      // 4. GeoProximity (Weight: 0.10) -> Local governorate bonus
+      // 4. Enforce Geographic Distribution (نطاق أ، نطاق ب، نطاق ج)
       const isLocal = f.gov === gov;
-      const geoProximity = isLocal ? 100 : 50;
+      const isNeighbor =
+        !isLocal &&
+        ADJACENT_DELTA_CAIRO_GOVS.has(gov) &&
+        ADJACENT_DELTA_CAIRO_GOVS.has(f.gov);
+      const geoProximity = isLocal ? 100 : isNeighbor ? 65 : 30;
+      const geoZone = isLocal ? "نطاق أ" : isNeighbor ? "نطاق ب" : "نطاق ج";
 
-      // Exact Weighted Formula: MatchScore = (0.40 * ScoreProximity) + (0.35 * QuizAffinity) + (0.15 * BudgetFit) + (0.10 * GeoProximity)
+      // Honest mathematical calculation (0-100%) without artificial lower clamp
       const matchScore = Math.min(
-        99,
+        100,
         Math.max(
-          71,
+          0,
           Math.round(
             0.4 * scoreProximity +
               0.35 * quizAffinity +
@@ -274,6 +289,11 @@ export function evaluateAndRankFaculties(params: {
           )
         )
       );
+
+      const stemNote =
+        stream === "stem"
+          ? "يخضع قبول مدارس STEM لقاعدة النسبة المرنة (المقاعد المخصصة مقارنة بعدد المتقدمين)، ولا يقاس بالحد الأدنى للثانوية العامة."
+          : undefined;
 
       let groupKey: "target" | "safe" | "fallback";
       let safetyBadge: { label: string; style: string };
@@ -316,6 +336,8 @@ export function evaluateAndRankFaculties(params: {
         shiftedCutoff,
         margin,
         matchScore,
+        geoZone,
+        stemNote,
         groupKey,
         safetyBadge,
         whyMatch,
@@ -333,95 +355,27 @@ export function evaluateAndRankFaculties(params: {
 }
 
 // ============================================================================
-// 5. CONTEXT-AWARE ARABIC ADVISOR COPILOT ENGINE
+// 5. DETERMINISTIC ACADEMIC SUMMARY HELPER
 // ============================================================================
 
-export function generateCopilotResponse(
-  question: string,
-  ctx: {
-    studentName: string;
-    stream: StreamType;
-    score: number;
-    budget: number;
-    gov: string;
-    evaluation: EvaluationResult;
-    topTrackTitle: string;
-    livingMode: "commute" | "dorm";
-    inflationScenario: number;
-  }
+export function generateAcademicSummary(
+  top1: Faculty | undefined,
+  score: number,
+  stream: StreamType,
+  gov: string
 ): string {
-  const q = question.trim().toLowerCase();
-  const namePrefix = ctx.studentName.trim()
-    ? `يا ${ctx.studentName.trim().split(" ")[0]}، `
-    : "";
-  const top1 = ctx.evaluation.allRanked[0];
-  const top2 = ctx.evaluation.allRanked[1];
-
-  if (!top1) {
-    return `${namePrefix}بناءً على مجموعك الحالي (${ctx.score.toFixed(
-      1
-    )}%) وسقف الميزانية (${ctx.budget.toLocaleString()} ج.م)، لا توجد كليات مطابقة حالياً. أنصحك برفع سقف الميزانية إلى ${ctx.evaluation.minNeededBudget.toLocaleString()} ج.م أو تفعيل كافة القطاعات الجامعية لفتح البدائل الاستراتيجية المناسبة لمجموعك.`;
-  }
-
-  const top1Tco = computeFacultyTcoMetrics(
-    top1,
-    ctx.gov,
-    ctx.livingMode,
-    ctx.inflationScenario
-  );
-
-  // 1. GPA & Internal Specialization Risk Questions
-  if (
-    q.includes("gpa") ||
-    q.includes("معدل") ||
-    q.includes("تخصص") ||
-    q.includes("تشعيب") ||
-    q.includes("شرط") ||
-    q.includes("لائحة")
-  ) {
-    return `${namePrefix}بالنسبة لشروط التخصص الداخلي في أعلى ترشيحاتك (${top1.name} — ${top1.university}):\n• الشرط الأكاديمي: ${top1.gpa_requirement}.\n• ملاحظة اللائحة: ${top1.bylaw_notes}\n• نصيحة المستشار: ركز في الفصل الدراسي الأول على مواد التأسيس والرياضيات/العلوم الأساسية لتأمين معدل تراكمي فوق 3.0 والحصول على أولوية التشعيب والمنح.`;
-  }
-
-  // 2. What-If Budget / Tuition / Housing / TCO Questions
-  if (
-    q.includes("مصاريف") ||
-    q.includes("تكلف") ||
-    q.includes("ميزاني") ||
-    q.includes("سكن") ||
-    q.includes("تضخم") ||
-    q.includes("فلوس") ||
-    q.includes("لو")
-  ) {
-    const secondComparison = top2
-      ? `\n• المقارنة مع الترشيح الثاني (${top2.name} — ${top2.university}): مصروفاته الأساسية ${top2.y1_base_fee.toLocaleString()} ج.م/سنة.`
-      : "";
-    return `${namePrefix}التدقيق المالي لترشيحك الأول (${top1.name} — ${top1.university}) تحت سيناريو تضخم ${ctx.inflationScenario}%:\n• مصروفات السنة الأولى الأساسية: ${top1.y1_base_fee.toLocaleString()} ج.م (+${top1.admin_lab_fee.toLocaleString()} ج.م رسوم معملية).\n• تكلفة الإقامة والانتقال (${ctx.gov}): ${top1Tco.livingDesc}.\n• إجمالي التكلفة التراكمية لـ 4 سنوات شاملة المعيشة: ${top1Tco.total4Yr.toLocaleString()} ج.م.${secondComparison}`;
-  }
-
-  // 3. Future Career, Salaries & Market Demand Questions
-  if (
-    q.includes("مستقبل") ||
-    q.includes("وظيف") ||
-    q.includes("شغل") ||
-    q.includes("مرتب") ||
-    q.includes("راتب") ||
-    q.includes("سوق")
-  ) {
-    return `${namePrefix}تحليل المسار الوظيفي لـ «${top1.name}» (${ctx.topTrackTitle}):\n• الطلب في سوق العمل: ${top1.future_career.market_demand}.\n• متوسط الرواتب المتوقع في مصر: ${top1.future_career.salary_range_egp}.\n• أبرز المسميات الوظيفية: ${top1.future_career.roles.join("، ")}.\n• التدرج الوظيفي: ${top1.future_career.progression}.`;
-  }
-
-  // 4. Default Comprehensive Recommendation Summary
-  return `${namePrefix}بناءً على مجموعك (${ctx.score.toFixed(
+  if (!top1) return "لا توجد كليات مطابقة حالياً للمعايير المحددة.";
+  const streamName =
+    stream === "Math"
+      ? "علمي رياضة"
+      : stream === "Science"
+      ? "علمي علوم"
+      : stream === "stem"
+      ? "STEM"
+      : "أدبي";
+  return `الترشيح الأبرز لملفك الأكاديمي (${score.toFixed(
     1
-  )}%) وميولك المتصدرة في «${ctx.topTrackTitle}»، إليك ملخص التوجيه الاستراتيجي (${formatFacultyCount(
-    ctx.evaluation.allRanked.length
-  )}):\n1. الترشيح الأول (${top1.matchScore}% توافق): ${top1.name} — ${top1.university} (${top1.type} • حد قبول ${top1.shiftedCutoff.toFixed(
-    1
-  )}% • مصروفات ${top1.y1_base_fee.toLocaleString()} ج.م/سنة).\n${
-    top2
-      ? `2. الترشيح الثاني (${top2.matchScore}% توافق): ${top2.name} — ${top2.university} (${top2.type} • حد قبول ${top2.shiftedCutoff.toFixed(
-          1
-        )}% • مصروفات ${top2.y1_base_fee.toLocaleString()} ج.م/سنة).\n`
-      : ""
-  }3. نصيحة التنسيق: ضع كليات النطاق المستهدف في صدارة رغباتك، وأمّن اختياراتك ببديل من النطاق الآمن أو البرامج الخاصة داخل محافظة ${ctx.gov} لتوفير تكلفة السكن والاغتراب.`;
+  )}% — ${streamName} — ${gov}): ${top1.name} — ${top1.university} (${
+    top1.type
+  }) بمصروفات أساسية ${top1.y1_base_fee.toLocaleString()} ج.م.`;
 }
