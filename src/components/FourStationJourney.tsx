@@ -410,12 +410,12 @@ export function FourStationJourney({
           </div>
 
           {/* Stepper Buttons (1, 2, 3, 4) */}
-          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 text-[12px]">
+          <div className="w-full sm:w-auto grid grid-cols-4 sm:flex sm:items-center gap-1 sm:gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 text-[11px] sm:text-[12px]">
             {[
-              { id: 1 as const, title: "01 الاكتشاف", icon: Compass },
-              { id: 2 as const, title: "02 المطابقة", icon: Layers },
-              { id: 3 as const, title: "03 المحاكاة", icon: SlidersHorizontal },
-              { id: 4 as const, title: "04 القرار", icon: MessageSquare },
+              { id: 1 as const, title: "01 الاكتشاف", short: "اكتشف", icon: Compass },
+              { id: 2 as const, title: "02 المطابقة", short: "طابق", icon: Layers },
+              { id: 3 as const, title: "03 المحاكاة", short: "حاكِ", icon: SlidersHorizontal },
+              { id: 4 as const, title: "04 القرار", short: "قرّر", icon: MessageSquare },
             ].map((st) => {
               const isActive = station === st.id;
               const isPassed = station > st.id;
@@ -426,20 +426,25 @@ export function FourStationJourney({
                   key={st.id}
                   type="button"
                   onClick={() => setStation(st.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer ${
+                  className={`flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer text-center ${
                     isActive
                       ? "bg-blue-600 text-white font-bold shadow-xs"
                       : isPassed
-                      ? "text-emerald-700 hover:bg-white"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-white"
+                      ? "text-emerald-700 bg-white/70 hover:bg-white"
+                      : "text-slate-400 hover:text-slate-600 hover:bg-white/40"
                   }`}
                 >
                   {isPassed ? (
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2]" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2] shrink-0" />
                   ) : (
-                    <IconComp className="w-3.5 h-3.5 stroke-[1.5]" />
+                    <IconComp
+                      className={`w-3.5 h-3.5 shrink-0 ${
+                        isActive ? "text-white stroke-[2]" : "text-slate-400 stroke-[1.5]"
+                      }`}
+                    />
                   )}
-                  <span>{st.title}</span>
+                  <span className="hidden sm:inline">{st.title}</span>
+                  <span className="sm:hidden">{st.short}</span>
                 </button>
               );
             })}
