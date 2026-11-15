@@ -13,6 +13,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useStudent } from "@/context/StudentContext";
+import { formatStream } from "@/types/chooseu";
 import {
   MaskRevealHeading,
   SpotlightCard,
@@ -69,8 +70,7 @@ const MODULES = [
 export default function HomePage() {
   const router = useRouter();
   const { studentName, scorePercentage, stream } = useStudent();
-  const streamAr =
-    stream === "Science" ? "علمي علوم" : stream === "Math" ? "علمي رياضة" : "أدبي";
+  const streamAr = formatStream(stream);
 
   return (
     <div className="space-y-10">
@@ -119,23 +119,36 @@ export default function HomePage() {
       {/* Grid of Platform Modules Wrapped in Interactive Spotlight Cards */}
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {MODULES.map((m) => (
-            <Link key={m.href} href={m.href} className="block group">
-              <SpotlightCard className="p-5 h-full transition-all group-hover:border-[#377ef0]/40 shadow-2xs">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="space-y-1.5 min-w-0 flex-1">
-                    <h3 className="text-[15px] font-bold text-[#1c1736] group-hover:text-[#377ef0] transition-colors">
-                      {m.title}
-                    </h3>
-                    <p className="text-xs text-[#48425f] leading-relaxed line-clamp-2">
-                      {m.desc}
-                    </p>
+          {MODULES.map((m) => {
+            const Icon = m.icon;
+            return (
+              <Link key={m.href} href={m.href} className="block group">
+                <SpotlightCard className="p-5 h-full transition-all group-hover:border-[#377ef0]/40 shadow-2xs flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-200/60 flex items-center justify-center text-[#377ef0] group-hover:bg-[#377ef0] group-hover:text-white transition-colors">
+                        <Icon className="h-4 w-4 stroke-[1.75]" />
+                      </div>
+                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                        {m.badge}
+                      </span>
+                    </div>
+                    <div className="space-y-1.5 min-w-0">
+                      <h3 className="text-[15px] font-bold text-[#1c1736] group-hover:text-[#377ef0] transition-colors">
+                        {m.title}
+                      </h3>
+                      <p className="text-xs text-[#48425f] leading-relaxed line-clamp-2">
+                        {m.desc}
+                      </p>
+                    </div>
                   </div>
-                  <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-[#377ef0] group-hover:-translate-x-1 transition-all shrink-0" />
-                </div>
-              </SpotlightCard>
-            </Link>
-          ))}
+                  <div className="flex items-center justify-end pt-3">
+                    <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-[#377ef0] group-hover:-translate-x-1 transition-all shrink-0" />
+                  </div>
+                </SpotlightCard>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

@@ -212,6 +212,15 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
 }
 
+/* Utility: Hide scrollbars across all modern browsers */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Institutional Clean A4 Print Stylesheet */
 @media print {
   @page {

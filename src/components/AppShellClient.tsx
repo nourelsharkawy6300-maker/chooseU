@@ -576,6 +576,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
             { label: "الجامعات", href: "/universities", icon: Building2 },
             { label: "سوق العمل", href: "/future-me", icon: Milestone },
             { label: "التقرير A4", href: "/sample-report", icon: FileCheck2 },
+            { label: "متابعة الطلب", href: "/track-order", icon: Receipt },
           ].map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;

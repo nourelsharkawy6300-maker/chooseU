@@ -25,9 +25,10 @@ export default function TcoMatrixPage() {
     setLivingMode,
     inflationScenario,
     setInflationScenario,
+    comparedIds,
+    toggleComparedId,
   } = useStudent();
 
-  const [analysisMode, setAnalysisMode] = useState<"trial" | "tansik">("tansik");
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceSubTab>("tco_table");
   const [answersByStream, setAnswersByStream] = useState<Record<StreamType, Record<number, TrackKey>>>({
     Science: {},
@@ -37,7 +38,6 @@ export default function TcoMatrixPage() {
   });
   const [tansikShift, setTansikShift] = useState<number>(0);
   const [sectorFilter, setSectorFilter] = useState<string>("all");
-  const [comparedIds, setComparedIds] = useState<string[]>([]);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [whatsappPhone, setWhatsappPhone] = useState("");
 
@@ -57,12 +57,6 @@ export default function TcoMatrixPage() {
     });
   }, [stream, scorePercentage, annualBudgetEgp, governorate, tansikShift, sectorFilter, psych.trackCounts]);
 
-  const handleToggleCompare = (id: string) => {
-    setComparedIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : prev.length < 4 ? [...prev, id] : prev
-    );
-  };
-
   return (
     <div className="w-full">
       <WorkspaceTabs
@@ -70,8 +64,6 @@ export default function TcoMatrixPage() {
         setStudentName={setStudentName}
         stream={stream}
         setStream={setStream}
-        analysisMode={analysisMode}
-        setAnalysisMode={setAnalysisMode}
         score={scorePercentage}
         setScore={setScorePercentage}
         budget={annualBudgetEgp}
@@ -91,7 +83,7 @@ export default function TcoMatrixPage() {
         inflationScenario={inflationScenario}
         setInflationScenario={setInflationScenario}
         comparedIds={comparedIds}
-        onToggleCompare={handleToggleCompare}
+        onToggleCompare={toggleComparedId}
         evaluation={evaluation}
         sortedAffinities={psych.sortedAffinities}
         topTrack={psych.topTrack}

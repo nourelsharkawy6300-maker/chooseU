@@ -28,6 +28,7 @@ import {
   LivingMode,
   Faculty,
   RankedFaculty,
+  formatStream,
 } from "@/types/chooseu";
 import { FACULTIES_DATABASE, EGYPT_GOVERNORATES, TRACK_DETAILS } from "@/data/faculties-db";
 
@@ -169,12 +170,7 @@ export function FourStationJourney({
 
   // Station 1 Internal View: "assessment" | "profile"
   const [station1SubView, setStation1SubView] = useState<"assessment" | "profile">("assessment");
-  const [assessmentAnswers, setAssessmentAnswers] = useState<Record<number, TrackKey>>({
-    1: "AI",
-    2: "SE",
-    3: "Cyber",
-    4: "AI",
-  });
+  const [assessmentAnswers, setAssessmentAnswers] = useState<Record<number, TrackKey>>({});
   const [hasCompletedAssessment, setHasCompletedAssessment] = useState(false);
 
   // Student Profile State from Global StudentContext (FIX 1: Un-Break State)
@@ -191,6 +187,9 @@ export function FourStationJourney({
     setGovernorate,
     livingMode,
     setLivingMode,
+    comparedIds: comparedFacultyIds,
+    setComparedIds: setComparedFacultyIds,
+    toggleComparedId: handleToggleCompare,
   } = useStudent();
 
   // Local string states for non-hostile input typing (FIX 2: Destroy Hostile Input Clamping)
@@ -211,10 +210,6 @@ export function FourStationJourney({
 
   // Station 2 State (Match)
   const [explainFaculty, setExplainFaculty] = useState<RankedFaculty | null>(null);
-  const [comparedFacultyIds, setComparedFacultyIds] = useState<string[]>([
-    "menofia-ai-public",
-    "menofia-cs-public",
-  ]);
   const [selectedClusterFilter, setSelectedClusterFilter] = useState<string>("all");
 
   // Station 3 State (Simulate)
@@ -227,9 +222,9 @@ export function FourStationJourney({
     {
       id: "msg-1",
       sender: "ai",
-      text: `أهلاً بك يا ${studentName}! أنا رفيقك الأكاديمي المباشر في منصة ChooseU. راجعت بياناتك (شعبة ${
-        stream === "Science" ? "علمي علوم" : stream === "Math" ? "علمي رياضة" : "أدبي"
-      } بمجموع ${score}% من محافظة ${governorate}). كيف أساعدك في اتخاذ قرارك النهائي اليوم؟`,
+      text: `أهلاً بك يا ${studentName}! أنا رفيقك الأكاديمي المباشر في منصة ChooseU. راجعت بياناتك (شعبة ${formatStream(
+        stream
+      )} بمجموع ${score}% من محافظة ${governorate}). كيف أساعدك في اتخاذ قرارك النهائي اليوم؟`,
       timestamp: "12:00 م",
     },
   ]);
@@ -372,18 +367,6 @@ export function FourStationJourney({
     });
   };
 
-  const handleToggleCompare = (fId: string) => {
-    setComparedFacultyIds((prev) => {
-      if (prev.includes(fId)) {
-        return prev.filter((id) => id !== fId);
-      }
-      if (prev.length >= 3) {
-        return [prev[1], prev[2], fId];
-      }
-      return [...prev, fId];
-    });
-  };
-
   const handleSendMessage = () => {
     if (!inputQuestion.trim()) return;
 
@@ -395,14 +378,7 @@ export function FourStationJourney({
       timestamp: "الآن",
     };
 
-    const streamTitle =
-      stream === "Math"
-        ? "علمي رياضة"
-        : stream === "Science"
-        ? "علمي علوم"
-        : stream === "stem"
-        ? "STEM"
-        : "أدبي";
+    const streamTitle = formatStream(stream);
 
     let reply = `بناءً على ملفك الأكاديمي (مجموع ${score}% بشعبة ${streamTitle}) وميولك في ${TRACK_DETAILS[dominantTrack]?.title}: `;
 
@@ -482,7 +458,7 @@ export function FourStationJourney({
                   key={st.id}
                   type="button"
                   onClick={() => setStation(st.id)}
-                  className={`relative flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer text-center z-10 ${
+                  className={`relative flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer text-center z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                     isActive
                       ? "text-white font-bold"
                       : isPassed
@@ -952,7 +928,7 @@ export function FourStationJourney({
             </div>
 
             {/* Quick Sector Filter Pills */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
               <span className="text-slate-600 text-xs shrink-0 font-medium">تصنيف الكليات:</span>
               {[
                 { id: "all", label: "الكل" },
@@ -1059,11 +1035,11 @@ export function FourStationJourney({
                           onClick={() => handleToggleCompare(fac.id)}
                           className={`flex-1 py-1.5 rounded-lg border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer text-center font-medium ${
                             isCompared
-                              ? "bg-blue-50 border-blue-300 text-blue-700"
+                              ? "bg-rose-50 border-rose-300 text-rose-700 font-semibold"
                               : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                           }`}
                         >
-                          {isCompared ? "✓ محفوظة في مسودة الرغبات" : "+ حفظ في مسودة الرغبات"}
+                          {isCompared ? "إزالة من مسودة الرغبات" : "+ حفظ في مسودة الرغبات"}
                         </button>
 
                         {onOpenFacultyDrawer && (
@@ -1373,7 +1349,7 @@ export function FourStationJourney({
                       <div className="bg-white p-3 rounded-lg border border-slate-200">
                         <div className="text-xs text-slate-600 font-medium">مسار إقليمي / شركات دولية</div>
                         <div className="text-sm font-bold text-emerald-700 mt-1">
-                          <span dir="ltr" className="font-mono tabular-nums">25,000 - 45,000</span> ج.م
+                          <span dir="ltr" className="font-mono tabular-nums">80,000 - 150,000</span> ج.م
                         </div>
                         <div className="text-xs text-slate-600 font-medium">شهرياً (متوسط تقديري)</div>
                       </div>
@@ -1386,7 +1362,7 @@ export function FourStationJourney({
                       أهم المهارات المطلوبة للتوظيف الفوري:
                     </span>
                     <div className="flex flex-wrap gap-1.5 text-xs">
-                      {["Python & PyTorch", "Cloud Architecture (AWS)", "Docker & Kubernetes", "Clean Code & Algorithms"].map((sk, sIdx) => (
+                      {["التدريب الميداني الصيفي", "مشروع التخرج العملي", "المشاركة في أنشطة اتحاد الطلاب", "إتقان لغة أجنبية ثانية"].map((sk, sIdx) => (
                         <span key={sIdx} className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700 font-medium">
                           {sk}
                         </span>
@@ -1426,23 +1402,23 @@ export function FourStationJourney({
                   {[
                     {
                       year: 1,
-                      title: "التأسيس الأكاديمي وبناء المعدل",
-                      desc: "التركيز الكامل على مقررات الرياضيات والبرمجة التأسيسية لتحقيق GPA لا يقل عن 3.4 لحجز التخصص المرغوب في السنة الثانية.",
+                      title: "التأسيس الأكاديمي وبناء المعدل التراكمي",
+                      desc: "التركيز الكامل على المقررات التأسيسية لتحقيق GPA مرتفع لحجز التخصص والشعبة المرغوبة وتأمين مرتبة الشرف.",
                     },
                     {
                       year: 2,
-                      title: "التخصص الدقيق والمشاريع",
-                      desc: "المشاركة في أول هاكاثون وبناء 3 مشاريع عملية حقيقية على GitHub، مع الانضمام للأنشطة الطلابية التقنية.",
+                      title: "التخصص الدقيق والمشاركة الطلابية",
+                      desc: "المشاركة الفعالة في الأنشطة الطلابية والتدريب العملي المبدئي، مع إتقان المهارات التخصصية واللغة الأجنبية الثانية.",
                     },
                     {
                       year: 3,
-                      title: "التدريب الصيفي والشهادات الدولية",
-                      desc: "قضاء تدريب صيفي مدفوع (Internship) في إحدى الشركات التقنية المعتمدة، واجتياز شهادة دولية مثل AWS Solutions Architect.",
+                      title: "التدريب الميداني والشهادات المهنية",
+                      desc: "قضاء تدريب صيفي معتمد (Internship) في جهة عمل حقيقية، واجتياز الشهادات المهنية المعتمدة في مجالك.",
                     },
                     {
                       year: 4,
-                      title: "مشروع التخرج والتوظيف المباشر",
-                      desc: "تنفيذ مشروع تخرج له جدوى تجارية تطبيقية، حضور معارض التوظيف، وتوقيع أول عقد عمل قبل استلام شهادة التخرج.",
+                      title: "مشروع التخرج والجاهزية لسوق العمل",
+                      desc: "تنفيذ مشروع تخرج تطبيقي متميز، بناء سيرة ذاتية احترافية، وبدء التواصل مع جهات التوظيف قبل استلام الشهادة.",
                     },
                   ].map((node) => {
                     const isActive = activeRoadmapYear === node.year;
@@ -1560,7 +1536,7 @@ export function FourStationJourney({
                 </div>
 
                 <div className="text-xs text-slate-600 font-medium hidden sm:block">
-                  بياناتك: <span dir="ltr" className="font-mono tabular-nums"><AnimatedCounter value={score} />%</span> • <span>{stream === "Math" ? "علمي رياضة" : stream === "Science" ? "علمي علوم" : stream === "stem" ? "STEM" : "أدبي"}</span> • {governorate}
+                  بياناتك: <span dir="ltr" className="font-mono tabular-nums"><AnimatedCounter value={score} />%</span> • <span>{formatStream(stream)}</span> • {governorate}
                 </div>
               </div>
 
@@ -1592,7 +1568,7 @@ export function FourStationJourney({
               </div>
 
               {/* Quick Prompt Suggestions */}
-              <div className="p-2.5 bg-slate-50 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto text-xs">
+              <div className="p-2.5 bg-slate-50 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs">
                 <span className="text-slate-600 text-xs shrink-0 font-medium">مقترحات:</span>
                 {[
                   "ما هو الترتيب الاستراتيجي للـ 75 رغبة؟",
@@ -1799,7 +1775,7 @@ export function FourStationJourney({
               <div>
                 <span className="text-slate-600 text-xs font-medium block">الشعبة والمجموع:</span>
                 <span className="font-bold text-blue-700">
-                  <span dir="ltr" className="font-mono tabular-nums">{score}%</span> ({stream === "Math" ? "علمي رياضة" : stream === "Science" ? "علمي علوم" : "أدبي"})
+                  <span dir="ltr" className="font-mono tabular-nums">{score}%</span> ({formatStream(stream)})
                 </span>
               </div>
               <div>

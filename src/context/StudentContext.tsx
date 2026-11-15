@@ -11,6 +11,7 @@ export interface StudentProfile {
   governorate: string;
   livingMode: LivingMode;
   inflationScenario: number;
+  comparedIds: string[];
 }
 
 export interface StudentContextType extends StudentProfile {
@@ -21,6 +22,8 @@ export interface StudentContextType extends StudentProfile {
   setGovernorate: (gov: string) => void;
   setLivingMode: (mode: LivingMode) => void;
   setInflationScenario: (scenario: number) => void;
+  setComparedIds: (ids: string[]) => void;
+  toggleComparedId: (id: string) => void;
   updateStudent: (patch: Partial<StudentProfile>) => void;
   resetStudent: () => void;
 }
@@ -35,6 +38,7 @@ const DEFAULT_PROFILE: StudentProfile = {
   governorate: "القاهرة",
   livingMode: "commute",
   inflationScenario: 12,
+  comparedIds: [],
 };
 
 const StudentContext = createContext<StudentContextType | undefined>(undefined);
@@ -81,6 +85,17 @@ export function StudentProvider({ children }: { children: React.ReactNode }) {
       setGovernorate: (governorate: string) => setProfile((p) => ({ ...p, governorate })),
       setLivingMode: (livingMode: LivingMode) => setProfile((p) => ({ ...p, livingMode })),
       setInflationScenario: (inflationScenario: number) => setProfile((p) => ({ ...p, inflationScenario })),
+      setComparedIds: (comparedIds: string[]) => setProfile((p) => ({ ...p, comparedIds })),
+      toggleComparedId: (id: string) =>
+        setProfile((p) => {
+          const prev = p.comparedIds || [];
+          const next = prev.includes(id)
+            ? prev.filter((x) => x !== id)
+            : prev.length < 4
+            ? [...prev, id]
+            : prev;
+          return { ...p, comparedIds: next };
+        }),
       updateStudent: (patch: Partial<StudentProfile>) => setProfile((p) => ({ ...p, ...patch })),
       resetStudent: () => setProfile(DEFAULT_PROFILE),
     }),

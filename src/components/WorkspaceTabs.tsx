@@ -40,8 +40,6 @@ interface WorkspaceTabsProps {
   setStudentName: (v: string) => void;
   stream: StreamType;
   setStream: (v: StreamType) => void;
-  analysisMode: "trial" | "tansik";
-  setAnalysisMode: (v: "trial" | "tansik") => void;
   score: number;
   setScore: (v: number) => void;
   budget: number;
@@ -99,8 +97,6 @@ export function WorkspaceTabs({
   setStudentName,
   stream,
   setStream,
-  analysisMode,
-  setAnalysisMode,
   score,
   setScore,
   budget,
@@ -282,37 +278,6 @@ export function WorkspaceTabs({
                 <span className="relative z-10">{st.label}</span>
               </button>
             ))}
-          </div>
-        </div>
-
-        {/* 2-Way Analysis Mode Segmented Control */}
-        <div>
-          <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
-            وضع التحليل
-          </label>
-          <div className="bg-slate-100 p-1 rounded-xl grid grid-cols-2 gap-1 border border-slate-200">
-            <button
-              type="button"
-              onClick={() => setAnalysisMode("trial")}
-              className={`py-1.5 px-3 rounded-lg text-[12px] transition cursor-pointer ${
-                analysisMode === "trial"
-                  ? "bg-white text-slate-900 shadow-2xs font-semibold"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              درجات تجريبية
-            </button>
-            <button
-              type="button"
-              onClick={() => setAnalysisMode("tansik")}
-              className={`py-1.5 px-3 rounded-lg text-[12px] transition cursor-pointer ${
-                analysisMode === "tansik"
-                  ? "bg-white text-slate-900 shadow-2xs font-semibold"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              التنسيق الرسمي
-            </button>
           </div>
         </div>
 
@@ -810,14 +775,6 @@ export function WorkspaceTabs({
                   >
                     ماذا لو التنسيق رفع 1.5%؟
                   </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setBudget(Math.min(250000, budget + 10000))}
-                    className="py-2 px-3 rounded-xl transition cursor-pointer font-semibold border bg-blue-50 text-blue-800 border-blue-200 hover:bg-blue-100"
-                  >
-                    ماذا لو زودنا الميزانية 10 آلاف؟
-                  </button>
                 </div>
               </div>
 
@@ -996,14 +953,18 @@ export function WorkspaceTabs({
                             </button>
                           )}
 
-                          <label className="flex items-center gap-1.5 text-xs font-medium text-slate-700 cursor-pointer select-none border border-slate-300 px-2.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]">
+                          <label className={`flex items-center gap-1.5 text-xs font-medium cursor-pointer select-none border px-2.5 py-1.5 rounded-lg transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] ${
+                            isCompared
+                              ? "bg-rose-50 border-rose-300 text-rose-700 font-semibold"
+                              : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50"
+                          }`}>
                             <input
                               type="checkbox"
                               checked={isCompared}
                               onChange={() => onToggleCompare(fac.id)}
                               className="rounded border-slate-300 text-blue-600"
                             />
-                            <span>حفظ في مسودة الرغبات</span>
+                            <span>{isCompared ? "إلغاء الحفظ من المسودة" : "حفظ في مسودة الرغبات"}</span>
                           </label>
                         </div>
                       </div>

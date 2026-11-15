@@ -10,6 +10,7 @@ import {
   StreamType,
   TrackKey,
   WorkspaceSubTab,
+  formatStream,
 } from "../types/chooseu";
 import {
   EGYPT_GOVERNORATES,
@@ -803,11 +804,11 @@ export function DirectoryView({
                     onClick={() => onToggleCompare(fac.id)}
                     className={`px-3 py-1.5 rounded-lg text-[12px] font-medium border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer shrink-0 ${
                       isCompared
-                        ? "bg-blue-600 text-white border-blue-600 font-semibold"
+                        ? "bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100 font-semibold"
                         : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"
                     }`}
                   >
-                    {isCompared ? "محفوظ في مسودة الرغبات" : "حفظ في مسودة الرغبات"}
+                    {isCompared ? "إزالة من مسودة الرغبات" : "حفظ في مسودة الرغبات"}
                   </button>
                 </div>
               </div>
@@ -899,7 +900,7 @@ export function SampleReportView({
           <div className="border-b-2 border-slate-900 pb-5 flex flex-wrap items-start justify-between gap-4">
             <div>
               <div className="text-xs font-semibold text-blue-600">
-                ChooseU Executive Academic & Financial Audit
+                وثيقة التقييم الأكاديمي والمالي الشامل — ChooseU Advisory
               </div>
               <h2 className="text-[20px] font-bold text-slate-900 mt-1 leading-[1.45]">
                 التقرير الاستشاري المعتمد لتنسيق الجامعات والتدفق المالي لـ 4 سنوات
@@ -930,11 +931,7 @@ export function SampleReportView({
             <div>
               <span className="text-slate-500 block">الشعبة والمجموع</span>
               <strong className="text-slate-900 font-semibold">
-                {stream === "Science"
-                  ? "علمي علوم"
-                  : stream === "Math"
-                  ? "علمي رياضة"
-                  : "أدبي"}{" "}
+                {formatStream(stream)}{" "}
                 ({score.toFixed(1)}%)
               </strong>
             </div>
@@ -1552,12 +1549,7 @@ export function CheckoutModal({
     onOrderCreated(order);
   };
 
-  const streamLabel =
-    stream === "Science"
-      ? "علمي علوم"
-      : stream === "Math"
-      ? "علمي رياضة"
-      : "أدبي";
+  const streamLabel = formatStream(stream);
 
   const whatsappMsgBody = createdOrder
     ? [

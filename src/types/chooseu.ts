@@ -1,5 +1,19 @@
 export type StreamType = "Science" | "Math" | "Arts" | "stem";
 
+export function formatStream(stream: StreamType | string): string {
+  switch (stream) {
+    case "Science":
+      return "علمي علوم";
+    case "Math":
+      return "علمي رياضة";
+    case "stem":
+      return "STEM (متفوقين)";
+    case "Arts":
+    default:
+      return "أدبي";
+  }
+}
+
 export type InterestCluster =
   | "Medical_Bio"
   | "Eng_Tech"

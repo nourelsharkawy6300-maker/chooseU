@@ -204,7 +204,7 @@ export function MagneticButton({
       style={{ x: springX, y: springY }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-[13px] transition-colors cursor-pointer select-none overflow-hidden group ${baseStyle} ${className}`}
+      className={`relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-[13px] transition-colors cursor-pointer select-none overflow-hidden group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#377ef0] focus-visible:ring-offset-2 ${baseStyle} ${className}`}
       {...props}
     >
       <span className="relative z-10 flex items-center gap-2">
