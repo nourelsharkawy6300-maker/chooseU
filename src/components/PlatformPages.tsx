@@ -643,23 +643,12 @@ export function DirectoryView({
               دليل الجامعات والمنح والمصروفات 2026
             </h1>
             <p className="text-[13px] text-slate-500 mt-1">
-              استعرض وقارن شروط القبول، الرسوم السنوية، منح التفوق، وشروط الـ GPA الداخلي في الجامعات المصرية.
+              استعرض وقارن شروط القبول، الرسوم السنوية، منح التفوق، وشروط المعدل التراكمي في الجامعات المصرية.
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            {comparedIds.length >= 2 && onOpenCompareTab && (
-              <button
-                type="button"
-                onClick={onOpenCompareTab}
-                className="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 rounded-xl text-[12px] font-semibold cursor-pointer tabular-nums"
-              >
-                فتح المقارنة وجهاً لوجه ({comparedIds.length})
-              </button>
-            )}
-            <span className="text-[12px] font-semibold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-xl tabular-nums">
-              {formatFacultyCount(filteredFaculties.length)}
-            </span>
-          </div>
+          <span className="text-[12px] font-semibold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-xl tabular-nums">
+            {formatFacultyCount(filteredFaculties.length)}
+          </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
@@ -719,95 +708,91 @@ export function DirectoryView({
         </div>
       </div>
 
-      {/* University Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filteredFaculties.map((fac) => {
-          const isCompared = comparedIds.includes(fac.id);
-          return (
-            <div
-              key={fac.id}
-              className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between space-y-4 shadow-2xs hover:border-slate-300 transition"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between gap-2">
+      {/* Shortlist Counter Above the List */}
+      <div className="flex items-center justify-between px-1">
+        <div className="text-[13px] font-semibold text-slate-800 flex items-center gap-1">
+          <span>قائمة الرغبات المختارة (</span>
+          <span dir="ltr" className="font-mono tabular-nums font-bold text-blue-700">
+            {comparedIds.length}
+          </span>
+          <span>)</span>
+        </div>
+        {comparedIds.length >= 2 && onOpenCompareTab && (
+          <button
+            type="button"
+            onClick={onOpenCompareTab}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-xl text-[12px] font-semibold cursor-pointer transition shadow-sm"
+          >
+            فتح المقارنة
+          </button>
+        )}
+      </div>
+
+      {/* Numbered University Index List */}
+      {filteredFaculties.length === 0 ? (
+        <div className="bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-500 text-[13px]">
+          لا توجد كليات تطابق معايير البحث الحالية.
+        </div>
+      ) : (
+        <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-200 overflow-hidden shadow-2xs">
+          {filteredFaculties.map((fac, idx) => {
+            const isCompared = comparedIds.includes(fac.id);
+            const numStr = String(idx + 1).padStart(2, "0");
+            return (
+              <div
+                key={fac.id}
+                className="p-3.5 sm:px-5 sm:py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/80 transition"
+              >
+                <div className="flex items-center gap-3.5 min-w-0 flex-1">
                   <span
-                    className={`px-2.5 py-0.5 rounded text-[11px] font-medium border ${getCategoryBadgeStyle(
+                    dir="ltr"
+                    className="font-mono tabular-nums text-slate-400 text-[12px] font-semibold w-6 shrink-0 text-center"
+                  >
+                    {numStr}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-slate-900 text-[14px] leading-snug">
+                      {fac.name}
+                    </div>
+                    <div className="text-[12px] text-slate-500 mt-0.5">
+                      {fac.university} • محافظة {fac.gov}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-5 shrink-0 pr-9 sm:pr-0">
+                  <span
+                    className={`px-2.5 py-0.5 rounded-md text-[11px] font-medium border shrink-0 ${getCategoryBadgeStyle(
                       fac.type
                     )}`}
                   >
                     {fac.type}
                   </span>
-                  <span className="text-[11px] font-medium text-slate-500">
-                    محافظة {fac.gov}
-                  </span>
-                </div>
 
-                <div>
-                  <h3 className="text-[15px] font-semibold text-slate-900 leading-snug">
-                    {fac.name}
-                  </h3>
-                  <p className="text-[12px] text-slate-500 mt-0.5">
-                    {fac.university}
-                  </p>
-                </div>
+                  <div className="text-left shrink-0 tabular-nums min-w-[90px]">
+                    <span className="font-bold text-[13px] text-slate-900">
+                      {fac.y1_base_fee.toLocaleString()}
+                    </span>
+                    <span className="text-[11px] text-slate-500 mr-1">ج.م/سنة</span>
+                  </div>
 
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5 text-[12px] tabular-nums">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">مؤشر القبول الاسترشادي:</span>
-                    <strong className="text-slate-900">
-                      {fac.cutoff_2026.toFixed(1)}%
-                    </strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">مصروفات السنة 1:</span>
-                    <strong className="text-blue-700">
-                      {fac.y1_base_fee.toLocaleString()} ج.م (+
-                      {fac.admin_lab_fee.toLocaleString()} ج.م معامل)
-                    </strong>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5 text-[11px] text-slate-600 leading-relaxed">
-                  <div>
-                    <strong className="text-slate-800">شرط التخصص: </strong>
-                    {fac.gpa_requirement}
-                  </div>
-                  <div>
-                    <strong className="text-blue-700">نظام المنح: </strong>
-                    {fac.scholarship_rule}
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => onToggleCompare(fac.id)}
+                    className={`px-3 py-1.5 rounded-lg text-[12px] font-medium border transition cursor-pointer shrink-0 ${
+                      isCompared
+                        ? "bg-blue-600 text-white border-blue-600"
+                        : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"
+                    }`}
+                  >
+                    {isCompared ? "في القائمة" : "إضافة للرغبات"}
+                  </button>
                 </div>
               </div>
-
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={() => onSelectFutureCareer(fac)}
-                  className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-xl text-[11px] font-medium flex items-center gap-1 cursor-pointer"
-                >
-                  <Briefcase
-                    className="w-3.5 h-3.5 text-blue-600"
-                    strokeWidth={1.5}
-                  />
-                  <span>استكشاف المسار الوظيفي</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => onToggleCompare(fac.id)}
-                  className={`px-3 py-1.5 rounded-xl text-[11px] font-medium border transition cursor-pointer ${
-                    isCompared
-                      ? "bg-blue-600 text-white border-blue-600"
-                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
-                  }`}
-                >
-                  {isCompared ? "مضاف للمقارنة" : "إضافة للمقارنة"}
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
