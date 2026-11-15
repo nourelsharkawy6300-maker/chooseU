@@ -461,7 +461,7 @@ export function FourStationJourney({
                 <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-blue-950/80 text-blue-400 border border-blue-800/80 text-[11px] font-medium">
                   <span>المحطة الأولى • تقييم الميول</span>
                 </div>
-                <h2 className="text-xl font-bold text-white">
+                <h2 className="text-xl font-bold text-white leading-[1.45]">
                   المحطة الأولى: تقييم الميول وتوثيق الملف الأكاديمي
                 </h2>
                 <p className="text-[12px] text-slate-400">
@@ -505,8 +505,8 @@ export function FourStationJourney({
                       key={q.id}
                       className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3 shadow-xs"
                     >
-                      <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
-                        <span>السؤال 0{idx + 1} / 04</span>
+                      <div className="flex items-center justify-between text-[11px] text-slate-400">
+                        <span>السؤال <span dir="ltr" className="font-mono tabular-nums">0{idx + 1} / 04</span></span>
                         {assessmentAnswers[q.id] && (
                           <span className="text-emerald-400 flex items-center gap-1">
                             <CheckCircle2 className="w-3 h-3 stroke-[2]" />
@@ -705,13 +705,13 @@ export function FourStationJourney({
                           key={preset}
                           type="button"
                           onClick={() => setBudget(preset)}
-                          className={`px-1.5 py-0.5 rounded text-[10px] font-mono border transition-colors cursor-pointer ${
+                          className={`px-1.5 py-0.5 rounded text-[10px] border transition-colors cursor-pointer ${
                             budget === preset
                               ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
                               : "bg-slate-950 text-slate-400 border-slate-800 hover:text-white"
                           }`}
                         >
-                          <span dir="ltr">{(preset / 1000).toFixed(0)}k</span> ج.م
+                          <span dir="ltr" className="font-mono tabular-nums">{(preset / 1000).toFixed(0)}k</span> ج.م
                         </button>
                       ))}
                     </div>
@@ -782,7 +782,7 @@ export function FourStationJourney({
                 <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-blue-950/80 text-blue-400 border border-blue-800/80 text-[11px] font-medium">
                   <span>المحطة الثانية • التوصيات والمقارنة</span>
                 </div>
-                <h2 className="text-xl font-bold text-white">
+                <h2 className="text-xl font-bold text-white leading-[1.45]">
                   المحطة الثانية: ترشيحات الكليات والمقارنة
                 </h2>
                 <p className="text-[12px] text-slate-400">
@@ -858,8 +858,8 @@ export function FourStationJourney({
                         >
                           {fac.safetyBadge.label}
                         </span>
-                        <span className="text-[11px] font-mono font-bold text-blue-400">
-                          توافق {fac.matchScore}%
+                        <span className="text-[11px] font-bold text-blue-400">
+                          توافق <span dir="ltr" className="font-mono tabular-nums">{fac.matchScore}%</span>
                         </span>
                       </div>
 
@@ -875,7 +875,7 @@ export function FourStationJourney({
                       <div className="grid grid-cols-2 gap-2 bg-slate-950 p-2.5 rounded-lg border border-slate-800/80 text-[11px]">
                         <div>
                           <span className="text-slate-500 text-[10px] block">الحد الأدنى للتنسيق:</span>
-                          <span className="font-mono font-bold text-slate-200 tabular-nums">
+                          <span dir="ltr" className="font-mono font-bold text-slate-200 tabular-nums">
                             {fac.shiftedCutoff}%
                           </span>
                           <span
@@ -883,13 +883,19 @@ export function FourStationJourney({
                               fac.margin >= 0 ? "text-emerald-400" : "text-amber-400"
                             }`}
                           >
-                            ({fac.margin >= 0 ? `+${fac.margin}%` : `${fac.margin}%`})
+                            (<span dir="ltr" className="font-mono tabular-nums">{fac.margin >= 0 ? `+${fac.margin}%` : `${fac.margin}%`}</span>)
                           </span>
                         </div>
                         <div>
                           <span className="text-slate-500 text-[10px] block">المصروفات السنوية:</span>
-                          <span className="font-mono font-bold text-slate-200 tabular-nums">
-                            {fac.y1_base_fee === 0 ? "مجاني حكومي" : `${fac.y1_base_fee.toLocaleString()} ج.م`}
+                          <span className="font-bold text-slate-200">
+                            {fac.y1_base_fee === 0 ? (
+                              "مجاني حكومي"
+                            ) : (
+                              <>
+                                <span dir="ltr" className="font-mono tabular-nums">{fac.y1_base_fee.toLocaleString()}</span> ج.م
+                              </>
+                            )}
                           </span>
                         </div>
                       </div>
@@ -990,8 +996,14 @@ export function FourStationJourney({
                       <tr>
                         <td className="py-2.5 px-3 text-slate-400">المصروفات السنوية</td>
                         {comparedFaculties.map((f) => (
-                          <td key={f.id} className="py-2.5 px-3 font-mono font-bold text-emerald-400 tabular-nums">
-                            {f.y1_base_fee === 0 ? "مجاني" : `${f.y1_base_fee.toLocaleString()} ج.م`}
+                          <td key={f.id} className="py-2.5 px-3 font-bold text-emerald-400">
+                            {f.y1_base_fee === 0 ? (
+                              "مجاني"
+                            ) : (
+                              <>
+                                <span dir="ltr" className="font-mono tabular-nums">{f.y1_base_fee.toLocaleString()}</span> ج.م
+                              </>
+                            )}
                           </td>
                         ))}
                       </tr>
@@ -1000,8 +1012,8 @@ export function FourStationJourney({
                         {comparedFaculties.map((f) => {
                           const tcoEst = f.y1_base_fee * 4 + 20000;
                           return (
-                            <td key={f.id} className="py-2.5 px-3 font-mono text-slate-300 tabular-nums">
-                              {tcoEst.toLocaleString()} ج.م
+                            <td key={f.id} className="py-2.5 px-3 text-slate-300">
+                              <span dir="ltr" className="font-mono tabular-nums">{tcoEst.toLocaleString()}</span> ج.م
                             </td>
                           );
                         })}
@@ -1033,7 +1045,7 @@ export function FourStationJourney({
                 <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-blue-950/80 text-blue-400 border border-blue-800/80 text-[11px] font-medium">
                   <span>المحطة الثالثة • المحاكاة وخارطة الطريق</span>
                 </div>
-                <h2 className="text-xl font-bold text-white">
+                <h2 className="text-xl font-bold text-white leading-[1.45]">
                   المحطة الثالثة: لوحة المحاكاة الموحدة، مستقبلي، وخارطة الطريق
                 </h2>
                 <p className="text-[12px] text-slate-400">
@@ -1071,7 +1083,7 @@ export function FourStationJourney({
                     محاكي سيناريوهات التنسيق والحد الأدنى (What-If Simulator)
                   </h3>
                 </div>
-                <div className="text-[11px] text-slate-400 font-mono">
+                <div className="text-[11px] text-slate-400">
                   تأثير التغير على خياراتك اللحظية
                 </div>
               </div>
@@ -1082,7 +1094,7 @@ export function FourStationJourney({
                   <div className="flex items-center justify-between text-[12px]">
                     <span className="text-slate-300 font-medium">افتراض تغير درجات التنسيق العام:</span>
                     <span
-                      className={`font-mono font-bold tabular-nums ${
+                      className={`font-bold ${
                         tansikShift > 0
                           ? "text-amber-400"
                           : tansikShift < 0
@@ -1090,7 +1102,7 @@ export function FourStationJourney({
                           : "text-slate-300"
                       }`}
                     >
-                      {tansikShift > 0 ? `+${tansikShift}% (ارتفاع)` : `${tansikShift}% (انخفاض)`}
+                      <span dir="ltr" className="font-mono tabular-nums">{tansikShift > 0 ? `+${tansikShift}%` : `${tansikShift}%`}</span> {tansikShift > 0 ? "(ارتفاع)" : "(انخفاض)"}
                     </span>
                   </div>
                   <input
@@ -1102,10 +1114,10 @@ export function FourStationJourney({
                     onChange={(e) => setTansikShift(parseFloat(e.target.value))}
                     className="w-full accent-blue-600 cursor-pointer"
                   />
-                  <div className="flex justify-between text-[10px] text-slate-500 font-mono">
-                    <span>انخفاض التنسيق (-2%)</span>
-                    <span>تنسيق 2025 (ثابت)</span>
-                    <span>ارتفاع التنسيق (+2%)</span>
+                  <div className="flex justify-between text-[10px] text-slate-500">
+                    <span>انخفاض التنسيق (<span dir="ltr" className="font-mono tabular-nums">-2%</span>)</span>
+                    <span>تنسيق <span dir="ltr" className="font-mono tabular-nums">2025</span> (ثابت)</span>
+                    <span>ارتفاع التنسيق (<span dir="ltr" className="font-mono tabular-nums">+2%</span>)</span>
                   </div>
                 </div>
 
@@ -1113,8 +1125,8 @@ export function FourStationJourney({
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-[12px]">
                     <span className="text-slate-300 font-medium">إضافة درجات تظلم أو اختبار قدرات:</span>
-                    <span className="font-mono font-bold text-blue-400 tabular-nums">
-                      {scoreTweak > 0 ? `+${scoreTweak}%` : "0.0%"} (المجموع الفعلي: {(score + scoreTweak).toFixed(1)}%)
+                    <span className="font-bold text-blue-400">
+                      <span dir="ltr" className="font-mono tabular-nums">{scoreTweak > 0 ? `+${scoreTweak}%` : "0.0%"}</span> (المجموع الفعلي: <span dir="ltr" className="font-mono tabular-nums">{(score + scoreTweak).toFixed(1)}%</span>)
                     </span>
                   </div>
                   <input
@@ -1126,10 +1138,10 @@ export function FourStationJourney({
                     onChange={(e) => setScoreTweak(parseFloat(e.target.value))}
                     className="w-full accent-emerald-500 cursor-pointer"
                   />
-                  <div className="flex justify-between text-[10px] text-slate-500 font-mono">
+                  <div className="flex justify-between text-[10px] text-slate-500">
                     <span>بدون تعديل</span>
-                    <span>+1.0%</span>
-                    <span>+2.5% درجات تظلم</span>
+                    <span><span dir="ltr" className="font-mono tabular-nums">+1.0%</span></span>
+                    <span><span dir="ltr" className="font-mono tabular-nums">+2.5%</span> درجات تظلم</span>
                   </div>
                 </div>
               </div>
@@ -1199,22 +1211,22 @@ export function FourStationJourney({
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center">
                       <div className="bg-slate-950 p-3 rounded-lg border border-slate-800">
                         <div className="text-[10px] text-slate-400">حديث تخرج (0-2 سنة)</div>
-                        <div className="text-sm font-mono font-bold text-slate-100 mt-1">
-                          20k - 35k ج.م
+                        <div className="text-sm font-bold text-slate-100 mt-1">
+                          <span dir="ltr" className="font-mono tabular-nums">20k - 35k</span> ج.م
                         </div>
                         <div className="text-[10px] text-slate-500">شهرياً</div>
                       </div>
                       <div className="bg-slate-950 p-3 rounded-lg border border-slate-800">
                         <div className="text-[10px] text-slate-400">متوسط خبرة (3-5 سنوات)</div>
-                        <div className="text-sm font-mono font-bold text-blue-400 mt-1">
-                          50k - 90k ج.م
+                        <div className="text-sm font-bold text-blue-400 mt-1">
+                          <span dir="ltr" className="font-mono tabular-nums">50k - 90k</span> ج.م
                         </div>
                         <div className="text-[10px] text-slate-500">شهرياً</div>
                       </div>
                       <div className="bg-slate-950 p-3 rounded-lg border border-slate-800">
                         <div className="text-[10px] text-slate-400">مسار إقليمي / شركات دولية</div>
-                        <div className="text-sm font-mono font-bold text-emerald-400 mt-1">
-                          25,000 - 45,000 ج.م
+                        <div className="text-sm font-bold text-emerald-400 mt-1">
+                          <span dir="ltr" className="font-mono tabular-nums">25,000 - 45,000</span> ج.م
                         </div>
                         <div className="text-[10px] text-slate-500">شهرياً (متوسط تقديري)</div>
                       </div>
@@ -1311,7 +1323,7 @@ export function FourStationJourney({
             {/* Header */}
             <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
-                <h2 className="text-xl font-bold text-white">
+                <h2 className="text-xl font-bold text-white leading-[1.45]">
                   المحطة الرابعة: الاستشارة الأكاديمية وتقرير القرار النهائي المعتمد
                 </h2>
                 <p className="text-[12px] text-slate-400">
@@ -1348,8 +1360,8 @@ export function FourStationJourney({
                   </div>
                 </div>
 
-                <div className="text-[11px] text-slate-400 font-mono hidden sm:block">
-                  CONTEXT: {score}% • {stream} • {governorate}
+                <div className="text-[11px] text-slate-400 hidden sm:block">
+                  CONTEXT: <span dir="ltr" className="font-mono tabular-nums">{score}%</span> • <span dir="ltr" className="font-mono">{stream}</span> • {governorate}
                 </div>
               </div>
 
@@ -1481,7 +1493,7 @@ export function FourStationJourney({
               <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
                 <div className="flex items-center justify-between font-bold text-slate-200">
                   <span>1. معيار المجموع والقبول الاسترشادي (Score Margin)</span>
-                  <span className="font-mono text-emerald-400">
+                  <span dir="ltr" className="font-mono text-emerald-400 tabular-nums">
                     {explainFaculty.margin >= 0 ? `+${explainFaculty.margin}%` : `${explainFaculty.margin}%`}
                   </span>
                 </div>
@@ -1497,7 +1509,7 @@ export function FourStationJourney({
               <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
                 <div className="flex items-center justify-between font-bold text-slate-200">
                   <span>2. تطابق الميول والسمات (Psychometric Trait)</span>
-                  <span className="font-mono text-blue-400">تطابق 94%</span>
+                  <span className="text-blue-400">تطابق <span dir="ltr" className="font-mono tabular-nums">94%</span></span>
                 </div>
                 <p className="text-[11px] text-slate-400">
                   إجاباتك في اختبار الميول أظهرت تفضيلاً استثنائياً لحل المشكلات البرمجية ومسار{" "}
@@ -1509,8 +1521,14 @@ export function FourStationJourney({
               <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
                 <div className="flex items-center justify-between font-bold text-slate-200">
                   <span>3. الجدوى المالية وسقف الميزانية</span>
-                  <span className="font-mono text-slate-300">
-                    {explainFaculty.y1_base_fee === 0 ? "حكومي مجاني" : `${explainFaculty.y1_base_fee.toLocaleString()} ج.م`}
+                  <span className="text-slate-300 font-bold">
+                    {explainFaculty.y1_base_fee === 0 ? (
+                      "حكومي مجاني"
+                    ) : (
+                      <>
+                        <span dir="ltr" className="font-mono tabular-nums">{explainFaculty.y1_base_fee.toLocaleString()}</span> ج.م
+                      </>
+                    )}
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-400">
@@ -1522,7 +1540,7 @@ export function FourStationJourney({
               <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
                 <div className="flex items-center justify-between font-bold text-slate-200">
                   <span>4. التوزيع الجغرافي والاغتراب</span>
-                  <span className="font-mono text-slate-300">{explainFaculty.gov}</span>
+                  <span className="text-slate-300">{explainFaculty.gov}</span>
                 </div>
                 <p className="text-[11px] text-slate-400">
                   {explainFaculty.gov === governorate
@@ -1555,7 +1573,7 @@ export function FourStationJourney({
                 <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800/80 text-[11px] font-medium">
                   <span>وثيقة القرار النهائي المعتمدة • تنسيق 2026</span>
                 </div>
-                <h2 className="text-xl font-bold text-white mt-1">
+                <h2 className="text-xl font-bold text-white mt-1 leading-[1.45]">
                   وثيقة القرار النهائي لبطاقة الرغبات والمسار الجامعي
                 </h2>
                 <p className="text-[11px] text-slate-400">
@@ -1580,8 +1598,8 @@ export function FourStationJourney({
               </div>
               <div>
                 <span className="text-slate-500 text-[10px] block">الشعبة والمجموع:</span>
-                <span className="font-mono font-bold text-blue-400 tabular-nums">
-                  {score}% ({stream === "Math" ? "علمي رياضة" : stream === "Science" ? "علمي علوم" : "أدبي"})
+                <span className="font-bold text-blue-400">
+                  <span dir="ltr" className="font-mono tabular-nums">{score}%</span> ({stream === "Math" ? "علمي رياضة" : stream === "Science" ? "علمي علوم" : "أدبي"})
                 </span>
               </div>
               <div>
@@ -1603,7 +1621,9 @@ export function FourStationJourney({
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[12px]">
                 <div className="bg-purple-950/40 border border-purple-800/60 p-3.5 rounded-xl space-y-1">
-                  <div className="text-[10px] font-mono text-purple-400">01 - 15 (15 رغبة)</div>
+                  <div className="text-[10px] text-purple-400">
+                    <span dir="ltr" className="font-mono tabular-nums">01 - 15</span> (<span dir="ltr" className="font-mono tabular-nums">15</span> رغبة)
+                  </div>
                   <div className="font-bold text-white">خيارات طموحة ومسارات مميزة</div>
                   <p className="text-[11px] text-slate-300">
                     كليات وبرامج ساعات معتمدة متقدمة تتطلب مجموعاً مساوياً أو أعلى بقليل لتأمين فرصة في حال انخفاض الحد الأدنى.
@@ -1611,7 +1631,9 @@ export function FourStationJourney({
                 </div>
 
                 <div className="bg-blue-950/40 border border-blue-800/60 p-3.5 rounded-xl space-y-1">
-                  <div className="text-[10px] font-mono text-blue-400">16 - 50 (35 رغبة)</div>
+                  <div className="text-[10px] text-blue-400">
+                    <span dir="ltr" className="font-mono tabular-nums">16 - 50</span> (<span dir="ltr" className="font-mono tabular-nums">35</span> رغبة)
+                  </div>
                   <div className="font-bold text-white">خيارات واقعية متوازنة</div>
                   <p className="text-[11px] text-slate-300">
                     الكليات التي تطابق مجموعك تماماً بنطاقك الجغرافي والنطاق الإقليمي المجاور، وهي الخيارات المرجحة بنسبة 85%+.
@@ -1619,7 +1641,9 @@ export function FourStationJourney({
                 </div>
 
                 <div className="bg-emerald-950/40 border border-emerald-800/60 p-3.5 rounded-xl space-y-1">
-                  <div className="text-[10px] font-mono text-emerald-400">51 - 75 (25 رغبة)</div>
+                  <div className="text-[10px] text-emerald-400">
+                    <span dir="ltr" className="font-mono tabular-nums">51 - 75</span> (<span dir="ltr" className="font-mono tabular-nums">25</span> رغبة)
+                  </div>
                   <div className="font-bold text-white">شبكة الأمان والضمان الأكيد</div>
                   <p className="text-[11px] text-slate-300">
                     كليات مضمونة 100% يقل تنسيقها عن مجموعك بـ 2% فأكثر لضمان عدم استنفاد الرغبات تحت أي ظرف.
@@ -1650,10 +1674,16 @@ export function FourStationJourney({
                         </span>
                       </div>
                     </div>
-                    <div className="text-left font-mono">
-                      <span className="text-blue-400 font-bold tabular-nums">{f.cutoff_2026}%</span>
+                    <div className="text-left">
+                      <span dir="ltr" className="font-mono text-blue-400 font-bold tabular-nums">{f.cutoff_2026}%</span>
                       <span className="text-[10px] text-slate-500 block">
-                        {f.y1_base_fee === 0 ? "مجاني" : `${f.y1_base_fee.toLocaleString()} ج.م`}
+                        {f.y1_base_fee === 0 ? (
+                          "مجاني"
+                        ) : (
+                          <>
+                            <span dir="ltr" className="font-mono tabular-nums">{f.y1_base_fee.toLocaleString()}</span> ج.م
+                          </>
+                        )}
                       </span>
                     </div>
                   </div>

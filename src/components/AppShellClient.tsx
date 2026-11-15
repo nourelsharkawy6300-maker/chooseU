@@ -444,13 +444,13 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                       key={preset}
                       type="button"
                       onClick={() => setAnnualBudgetEgp(preset)}
-                      className={`px-2 py-0.5 rounded text-[11px] font-mono border transition-colors cursor-pointer ${
+                      className={`px-2 py-0.5 rounded text-[11px] border transition-colors cursor-pointer ${
                         annualBudgetEgp === preset
                           ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
                           : "bg-slate-950 text-slate-400 border-slate-800 hover:text-white"
                       }`}
                     >
-                      <span dir="ltr">{(preset / 1000).toFixed(0)}k</span> ج.م
+                      <span dir="ltr" className="font-mono tabular-nums">{(preset / 1000).toFixed(0)}k</span> ج.م
                     </button>
                   ))}
                 </div>

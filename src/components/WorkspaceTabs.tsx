@@ -358,13 +358,13 @@ export function WorkspaceTabs({
                 key={preset}
                 type="button"
                 onClick={() => setBudget(preset)}
-                className={`px-2 py-0.5 rounded text-[11px] font-mono border transition-colors cursor-pointer ${
+                className={`px-2 py-0.5 rounded text-[11px] border transition-colors cursor-pointer ${
                   budget === preset
                     ? "bg-blue-50 text-blue-700 border-blue-300 font-bold"
                     : "bg-slate-900 text-slate-400 border-slate-800 hover:bg-slate-800"
                 }`}
               >
-                <span dir="ltr">{(preset / 1000).toFixed(0)}k</span> ج.م
+                <span dir="ltr" className="font-mono tabular-nums">{(preset / 1000).toFixed(0)}k</span> ج.م
               </button>
             ))}
           </div>

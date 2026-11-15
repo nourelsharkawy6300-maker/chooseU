@@ -851,7 +851,7 @@ export function SampleReportView({
       {/* Top Preview Action Bar */}
       <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4 shadow-2xs no-print">
         <div>
-          <h1 className="text-[18px] font-bold text-slate-900">
+          <h1 className="text-[18px] font-bold text-slate-900 leading-[1.45]">
             عينة التقرير الاستشاري المعتمد
           </h1>
           <p className="text-[12px] text-slate-500 mt-0.5">
@@ -894,7 +894,7 @@ export function SampleReportView({
               <div className="text-[11px] font-semibold text-blue-600">
                 ChooseU Executive Academic & Financial Audit
               </div>
-              <h2 className="text-[20px] font-bold text-slate-900 mt-1">
+              <h2 className="text-[20px] font-bold text-slate-900 mt-1 leading-[1.45]">
                 التقرير الاستشاري المعتمد لتنسيق الجامعات والتدفق المالي لـ 4 سنوات
               </h2>
               <p className="text-[12px] text-slate-500 mt-1 tabular-nums">

@@ -68,7 +68,7 @@ export default function HomePage() {
       {/* Editorial Hero Header */}
       <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-[#0F172A] p-8 sm:p-12 text-right">
         <div className="max-w-3xl space-y-5">
-          <h1 className="text-3xl sm:text-5xl font-black text-white leading-[1.35]">
+          <h1 className="text-3xl sm:text-5xl font-black text-white leading-[1.45]">
             قرارك الأكاديمي والمالي
             <br />
             <span className="text-blue-400">
