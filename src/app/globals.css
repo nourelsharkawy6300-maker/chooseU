@@ -20,6 +20,11 @@ body {
   color: #f8fafc;
   -webkit-font-smoothing: antialiased;
   min-height: 100%;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.45;
 }
 
 code,
@@ -32,4 +37,66 @@ pre,
 table td,
 table th {
   font-variant-numeric: tabular-nums;
+}
+
+/* Institutional Clean A4 Print Stylesheet */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 15mm 15mm 15mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    height: auto !important;
+    overflow: visible !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+  }
+
+  aside,
+  header,
+  nav,
+  .no-print,
+  #app-mobile-nav,
+  button:not(.print-include) {
+    display: none !important;
+  }
+
+  #chooseu-main-canvas {
+    overflow: visible !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .print-only-sheet,
+  .print-report-container {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 210mm !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  table,
+  tr,
+  td,
+  th,
+  .print-avoid-break {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 }

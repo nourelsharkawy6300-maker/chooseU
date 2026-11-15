@@ -121,7 +121,7 @@ export function CommandPalette({
         <div className="max-h-[60vh] overflow-y-auto p-2 space-y-4">
           {/* Quick Views */}
           <div>
-            <div className="px-3 py-1.5 text-[10px] font-bold text-slate-600 uppercase tracking-wider">
+            <div className="px-3 py-1.5 text-xs font-semibold text-slate-400">
               صفحات المنصة والأدوات الذكية
             </div>
             <div className="space-y-1">
@@ -157,7 +157,7 @@ export function CommandPalette({
           {/* Quick Faculties */}
           {filteredFaculties.length > 0 && (
             <div className="pt-2 border-t border-slate-100">
-              <div className="px-3 py-1.5 text-[10px] font-bold text-slate-600 uppercase tracking-wider">
+              <div className="px-3 py-1.5 text-xs font-semibold text-slate-400">
                 الكليات والبرامج المعتمدة
               </div>
               <div className="space-y-1">

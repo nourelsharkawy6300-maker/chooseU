@@ -72,7 +72,7 @@ export default function HomePage() {
             <span>منظومة التوجيه الجامعي والتدقيق المالي لطلاب الثانوية والشهادات المعادلة</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-black text-white leading-[1.35]">
             قرارك الأكاديمي والمالي
             <br />
             <span className="text-blue-400">
@@ -88,7 +88,7 @@ export default function HomePage() {
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <Link
               href="/workspace"
-              className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-indigo-500 hover:shadow-lg hover:shadow-indigo-500/25 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/25 cursor-pointer"
             >
               <span>دخول مساحة العمل التحليلية</span>
               <ArrowRight className="h-4 w-4" />
@@ -122,14 +122,14 @@ export default function HomePage() {
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-800 text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-800 text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                       <Icon className="h-5 w-5" />
                     </div>
                     <span className="rounded-md border border-slate-700 bg-slate-800/60 px-2 py-0.5 text-[11px] font-medium text-slate-300">
                       {m.badge}
                     </span>
                   </div>
-                  <h3 className="text-base font-bold text-white group-hover:text-indigo-300 transition-colors">
+                  <h3 className="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
                     {m.title}
                   </h3>
                   <p className="text-xs text-slate-400 leading-relaxed">
@@ -137,7 +137,7 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-indigo-400 font-semibold group-hover:translate-x-[-2px] transition-transform">
+                <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-blue-400 font-semibold group-hover:translate-x-[-2px] transition-transform">
                   <span>فتح الوحدة</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </div>

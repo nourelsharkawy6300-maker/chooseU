@@ -351,6 +351,23 @@ export function WorkspaceTabs({
             }}
             className="enterprise-slider"
           />
+          <div className="flex items-center gap-1.5 pt-1">
+            <span className="text-[11px] text-slate-500">سقف تقريبي:</span>
+            {[50000, 100000, 150000, 200000].map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                onClick={() => setBudget(preset)}
+                className={`px-2 py-0.5 rounded text-[11px] font-mono border transition-colors cursor-pointer ${
+                  budget === preset
+                    ? "bg-blue-50 text-blue-700 border-blue-300 font-bold"
+                    : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                <span dir="ltr">{(preset / 1000).toFixed(0)}k</span> ج.م
+              </button>
+            ))}
+          </div>
           <p className="text-[12px] text-slate-500">
             سقف المصروفات الدراسية السنوية المتاحة للأسرة قبل احتساب الانتقال أو الإقامة.
           </p>
@@ -427,7 +444,7 @@ export function WorkspaceTabs({
          ===================================================================== */}
       <div className="lg:col-span-8 space-y-5">
         {/* Guided Step Banner for Parent & Student */}
-        <div className="bg-gradient-to-r from-blue-50/90 to-indigo-50/60 border border-blue-200/80 rounded-xl p-4 sm:p-5 flex items-start gap-3.5 shadow-2xs">
+        <div className="bg-gradient-to-r from-blue-50/90 to-blue-50/40 border border-blue-200/80 rounded-xl p-4 sm:p-5 flex items-start gap-3.5 shadow-2xs">
           <div className="w-8 h-8 rounded-xl bg-[#0F172A] text-white flex items-center justify-center font-bold text-[13px] shrink-0 mt-0.5 tabular-nums">
             {workspaceTab === "quiz" ? "1" : workspaceTab === "scenarios" ? "2" : workspaceTab === "tco_table" ? "3" : "4"}
           </div>
@@ -1012,7 +1029,7 @@ export function WorkspaceTabs({
                 </colgroup>
                 <thead>
                   <tr className="bg-slate-50 text-slate-600 text-[11px] font-semibold border-b border-slate-200">
-                    <th className="py-3.5 px-4 min-w-[240px]">
+                    <th className="py-3.5 px-4 min-w-[240px] sticky right-0 bg-slate-50 z-10">
                       الكلية والجامعة
                     </th>
                     <th className="py-3.5 px-4">
@@ -1040,7 +1057,7 @@ export function WorkspaceTabs({
                     return (
                       <tr key={fac.id} className="bg-white">
                         {/* Column 1: Badge ABOVE Faculty Name (min-w-[240px] flex flex-col items-start gap-1.5) */}
-                        <td className="py-4 px-4 align-top">
+                        <td className="py-4 px-4 align-top sticky right-0 bg-white z-10">
                           <div className="min-w-[240px] flex flex-col items-start gap-1.5">
                             <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">
                               الترشيح 0{idx + 1} • مفتوح
@@ -1152,7 +1169,7 @@ export function WorkspaceTabs({
                             isReportUnlocked ? "bg-white" : "bg-slate-50/40"
                           }
                         >
-                          <td className="py-4 px-4 align-top">
+                          <td className={`py-4 px-4 align-top sticky right-0 z-10 ${isReportUnlocked ? "bg-white" : "bg-slate-50"}`}>
                             <div className="min-w-[240px] flex flex-col items-start gap-1.5">
                               <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600 border border-slate-200 whitespace-nowrap">
                                 الترشيح 0{idx + 3}
@@ -1279,7 +1296,7 @@ export function WorkspaceTabs({
               <table className="w-full text-right border-collapse text-[12px] tabular-nums">
                 <thead>
                   <tr className="bg-slate-50 border-b border-slate-200">
-                    <th className="py-3.5 px-4 font-semibold text-slate-600 w-44">
+                    <th className="py-3.5 px-4 font-semibold text-slate-600 w-44 sticky right-0 bg-slate-50 z-10">
                       معيار المقارنة (8 محاور)
                     </th>
                     {comparedFacultiesList.map((fac) => (
@@ -1297,7 +1314,7 @@ export function WorkspaceTabs({
                 </thead>
                 <tbody className="divide-y divide-slate-200">
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50/60">
+                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
                       1. نوع الجامعة والتبعية
                     </td>
                     {comparedFacultiesList.map((fac) => (
@@ -1314,7 +1331,7 @@ export function WorkspaceTabs({
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50/60">
+                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
                       2. حد القبول وهامش الأمان
                     </td>
                     {comparedFacultiesList.map((fac) => {
@@ -1332,7 +1349,7 @@ export function WorkspaceTabs({
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50/60">
+                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
                       3. مصروفات السنة الأولى
                     </td>
                     {comparedFacultiesList.map((fac) => (
@@ -1344,7 +1361,7 @@ export function WorkspaceTabs({
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50/60">
+                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
                       4. إجمالي 4 سنوات بالتضخم
                     </td>
                     {comparedFacultiesList.map((fac) => {
@@ -1366,7 +1383,7 @@ export function WorkspaceTabs({
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50/60">
+                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
                       5. الاستقرار الجغرافي
                     </td>
                     {comparedFacultiesList.map((fac) => {
@@ -1388,7 +1405,7 @@ export function WorkspaceTabs({
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50/60">
+                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
                       6. شروط الـ GPA الداخلي
                     </td>
                     {comparedFacultiesList.map((fac) => (
@@ -1402,7 +1419,7 @@ export function WorkspaceTabs({
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50/60">
+                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
                       7. منح التفوق
                     </td>
                     {comparedFacultiesList.map((fac) => (
@@ -1416,7 +1433,7 @@ export function WorkspaceTabs({
                   </tr>
 
                   <tr>
-                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50/60">
+                    <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
                       8. الآفاق الوظيفية والرواتب
                     </td>
                     {comparedFacultiesList.map((fac) => (

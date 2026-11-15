@@ -104,7 +104,7 @@ export function LandingView({
               مدقق وفق الحدود الدنيا لتنسيق القبول ولوائح الجامعات المصرية 2026
             </span>
           </div>
-          <h1 className="text-[26px] sm:text-[34px] font-bold text-slate-900 leading-tight tracking-tight">
+          <h1 className="text-[26px] sm:text-[34px] font-bold text-slate-900 leading-[1.45]">
             قرارك الجامعي مبني على تدقيق مالي وأكاديمي لـ 4 سنوات، وليس مجرد توقعات تنسيق.
           </h1>
           <p className="text-[14px] sm:text-[15px] text-slate-600 leading-relaxed">
@@ -197,7 +197,7 @@ export function LandingView({
       {/* 4-Card Architecture Grid */}
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-[18px] font-semibold text-slate-900 tracking-tight">
+          <h2 className="text-[18px] font-semibold text-slate-900 leading-[1.45]">
             معمارية التدقيق الأكاديمي والمالي في ChooseU
           </h2>
           <span className="text-[12px] text-slate-500">
@@ -397,7 +397,7 @@ export function FutureMeView({
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Briefcase className="w-5 h-5 text-blue-600" strokeWidth={1.5} />
-            <h1 className="text-[20px] font-bold text-slate-900 tracking-tight">
+            <h1 className="text-[20px] font-bold text-slate-900 leading-[1.45]">
               المسار الوظيفي ومستقبلي (Future Me & Career Roadmap)
             </h1>
           </div>
@@ -642,7 +642,7 @@ export function DirectoryView({
       <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
           <div>
-            <h1 className="text-[20px] font-bold text-slate-900 tracking-tight">
+            <h1 className="text-[20px] font-bold text-slate-900 leading-[1.45]">
               دليل الجامعات والمنح والمصروفات 2026
             </h1>
             <p className="text-[13px] text-slate-500 mt-1">
@@ -882,11 +882,11 @@ export function SampleReportView({
         </div>
       </div>
 
-      {/* A4 Print-Ready Sample Document */}
-      <div className="relative bg-white border border-slate-200 rounded-xl shadow-sm p-6 sm:p-10 space-y-8 overflow-hidden print-only-sheet">
+      {/* A4 Print-Ready Sample Document Container */}
+      <div className="relative max-w-[210mm] mx-auto bg-white text-slate-950 shadow-2xl rounded-sm p-8 sm:p-12 space-y-8 print-only-sheet">
         {/* Diagonal Watermark */}
         <div className="pointer-events-none select-none absolute inset-0 flex items-center justify-center z-0 overflow-hidden no-print">
-          <span className="text-[28px] sm:text-[38px] font-bold text-slate-900/[0.04] -rotate-12 whitespace-nowrap tracking-wider">
+          <span className="text-[28px] sm:text-[36px] font-bold text-slate-900/[0.04] -rotate-12 whitespace-nowrap">
             نسخة معاينة استرشادية — ChooseU Advisory
           </span>
         </div>
@@ -894,7 +894,7 @@ export function SampleReportView({
         <div className="relative z-10 space-y-8">
           <div className="border-b-2 border-slate-900 pb-5 flex flex-wrap items-start justify-between gap-4">
             <div>
-              <div className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider">
+              <div className="text-[11px] font-semibold text-blue-600">
                 ChooseU Executive Academic & Financial Audit
               </div>
               <h2 className="text-[20px] font-bold text-slate-900 mt-1">
@@ -1163,7 +1163,7 @@ export function TrackOrderView({
       {/* Search Box */}
       <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs space-y-5 no-print">
         <div>
-          <h1 className="text-[20px] font-bold text-slate-900 tracking-tight">
+          <h1 className="text-[20px] font-bold text-slate-900 leading-[1.45]">
             متابعة حالة الطلب واستلام التقرير المعتمد
           </h1>
           <p className="text-[13px] text-slate-500 mt-1">
