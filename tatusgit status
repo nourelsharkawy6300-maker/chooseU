@@ -1,0 +1,14 @@
+[33mcommit 965dc970be31fefdd8889076be0c0f69d74c58eb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Nour <nourelsharkawy@qaada.com>
+Date:   Sun Nov 15 08:54:49 2026 +0200
+
+    World-class pass: typography, context bar, mobile nav, print styles
+
+ src/app/globals.css                   |  67 [32m+++++++++[m
+ src/app/page.tsx                      |  10 [32m+[m[31m-[m
+ src/components/AppShellClient.tsx     | 247 [32m++++++++++++++++++++++++++++++[m[31m----[m
+ src/components/CommandPalette.tsx     |   4 [32m+[m[31m-[m
+ src/components/FourStationJourney.tsx |  98 [32m++++++++++[m[31m----[m
+ src/components/PlatformPages.tsx      |  18 [32m+[m[31m--[m
+ src/components/WorkspaceTabs.tsx      |  43 [32m++++[m[31m--[m
+ 7 files changed, 407 insertions(+), 80 deletions(-)
