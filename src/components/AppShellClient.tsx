@@ -84,14 +84,29 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
     setAnnualBudgetEgp,
   } = useStudent();
 
+  const [modalScoreStr, setModalScoreStr] = useState<string>(scorePercentage.toString());
+  const [modalBudgetStr, setModalBudgetStr] = useState<string>(annualBudgetEgp.toString());
+  const [prevScore, setPrevScore] = useState(scorePercentage);
+  const [prevBudget, setPrevBudget] = useState(annualBudgetEgp);
+
+  if (scorePercentage !== prevScore) {
+    setPrevScore(scorePercentage);
+    setModalScoreStr(scorePercentage.toString());
+  }
+
+  if (annualBudgetEgp !== prevBudget) {
+    setPrevBudget(annualBudgetEgp);
+    setModalBudgetStr(annualBudgetEgp.toString());
+  }
+
   const streamDisplay =
     stream === "Science"
-      ? "علمي علوم (Science)"
+      ? "علمي علوم"
       : stream === "Math"
-      ? "علمي رياضة (Math)"
+      ? "علمي رياضة"
       : stream === "stem"
-      ? "مدارس STEM (النسبة المرنة)"
-      : "أدبي (Arts)";
+      ? "مدارس STEM"
+      : "أدبي";
 
   if (isAdmin) {
     return (
@@ -116,7 +131,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               <span className="block text-base font-bold tracking-tight text-slate-900">
                 ChooseU
               </span>
-              <span className="block text-[11px] text-slate-500">
+              <span className="block text-xs text-slate-600 font-medium">
                 دليلك الأكاديمي والمالي
               </span>
             </div>
@@ -124,7 +139,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-5 space-y-1">
-          <div className="px-3 pb-2 text-[11px] font-medium text-slate-500">
+          <div className="px-3 pb-2 text-xs font-semibold text-slate-700">
             أقسام المنصة
           </div>
           {NAVIGATION_ITEMS.map((item) => {
@@ -175,7 +190,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               بيانات التنسيق والمصروفات محدثة
             </span>
-            <span className="text-[11px] text-slate-500">
+            <span className="text-xs text-slate-600 font-medium">
               <span dir="ltr" className="font-mono tabular-nums">2026/2027</span>
             </span>
           </div>
@@ -187,7 +202,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               <ShieldCheck className="h-3.5 w-3.5 text-blue-600" />
               دخول الإدارة
             </span>
-            <span dir="ltr" className="font-mono text-[10px] text-slate-500">/admin</span>
+            <span dir="ltr" className="font-mono text-xs text-slate-600">/admin</span>
           </Link>
         </div>
       </aside>
@@ -241,9 +256,9 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                 className="flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 hover:border-slate-300 px-3 py-1.5 text-xs transition-colors cursor-pointer"
               >
                 <Wallet className="h-3.5 w-3.5 text-amber-600 shrink-0" />
-                <span className="text-slate-500 hidden md:inline">الميزانية السنوية:</span>
+                <span className="text-slate-600 hidden md:inline font-medium">الميزانية السنوية:</span>
                 <span className="font-semibold text-slate-900 whitespace-nowrap">
-                  <AnimatedCounter value={annualBudgetEgp} suffix=" EGP" />
+                  <AnimatedCounter value={annualBudgetEgp} suffix=" ج.م" />
                 </span>
               </button>
             </div>
@@ -445,11 +460,24 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                       min={50}
                       max={100}
                       step={0.1}
-                      value={scorePercentage}
-                      onChange={(e) => setScorePercentage(parseFloat(e.target.value) || 50)}
-                      className="w-20 rounded border border-slate-300 bg-white px-2 py-1 text-right font-mono text-xs font-bold text-emerald-700 focus:border-blue-500 focus:outline-none"
+                      value={modalScoreStr}
+                      onChange={(e) => setModalScoreStr(e.target.value)}
+                      onBlur={() => {
+                        const val = parseFloat(modalScoreStr);
+                        if (isNaN(val)) {
+                          setModalScoreStr(scorePercentage.toString());
+                        } else {
+                          const clamped = Math.min(100, Math.max(50, val));
+                          setScorePercentage(clamped);
+                          setModalScoreStr(clamped.toString());
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                      }}
+                      className="w-20 rounded-lg border border-slate-300 bg-white px-2 py-1 text-right font-mono text-xs font-bold text-emerald-700 focus:border-blue-500 focus:outline-none"
                     />
-                    <span className="font-mono text-slate-500 text-xs">%</span>
+                    <span className="font-mono text-slate-600 text-xs font-semibold">%</span>
                   </div>
                 </div>
                 <input
@@ -465,7 +493,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
 
               {/* Annual Budget */}
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs font-medium text-slate-700">
+                <div className="flex items-center justify-between text-xs font-semibold text-slate-800">
                   <label htmlFor="modal-budget-input">سقف الميزانية السنوية (المصروفات فقط):</label>
                   <div className="flex items-center gap-1.5">
                     <input
@@ -474,11 +502,24 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                       min={0}
                       max={300000}
                       step={5000}
-                      value={annualBudgetEgp}
-                      onChange={(e) => setAnnualBudgetEgp(parseInt(e.target.value, 10) || 0)}
-                      className="w-28 rounded border border-slate-300 bg-white px-2 py-1 text-right font-mono text-xs font-bold text-amber-700 focus:border-blue-500 focus:outline-none"
+                      value={modalBudgetStr}
+                      onChange={(e) => setModalBudgetStr(e.target.value)}
+                      onBlur={() => {
+                        const val = parseInt(modalBudgetStr, 10);
+                        if (isNaN(val)) {
+                          setModalBudgetStr(annualBudgetEgp.toString());
+                        } else {
+                          const clamped = Math.min(300000, Math.max(0, val));
+                          setAnnualBudgetEgp(clamped);
+                          setModalBudgetStr(clamped.toString());
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                      }}
+                      className="w-28 rounded-lg border border-slate-300 bg-white px-2 py-1 text-right font-mono text-xs font-bold text-amber-700 focus:border-blue-500 focus:outline-none"
                     />
-                    <span className="text-slate-500 text-xs">ج.م</span>
+                    <span className="text-slate-600 text-xs font-semibold">ج.م</span>
                   </div>
                 </div>
                 <input
@@ -493,13 +534,13 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
 
                 {/* Budget Preset Chips */}
                 <div className="flex items-center gap-1.5 pt-1">
-                  <span className="text-[11px] text-slate-500">خيارات سريعة:</span>
+                  <span className="text-xs text-slate-600 font-medium">خيارات سريعة:</span>
                   {[50000, 100000, 150000, 200000].map((preset) => (
                     <button
                       key={preset}
                       type="button"
                       onClick={() => setAnnualBudgetEgp(preset)}
-                      className={`px-2 py-0.5 rounded text-[11px] border transition-colors cursor-pointer ${
+                      className={`px-2 py-0.5 rounded text-xs border transition-colors cursor-pointer ${
                         annualBudgetEgp === preset
                           ? "bg-amber-50 text-amber-800 border-amber-300 font-semibold"
                           : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
@@ -542,10 +583,10 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center justify-center gap-1 py-1 px-2.5 rounded-lg text-[11px] font-medium transition-colors ${
+                className={`flex flex-col items-center justify-center gap-1 py-1 px-2.5 rounded-lg text-xs font-medium transition-colors ${
                   isActive
                     ? "text-blue-600 font-bold"
-                    : "text-slate-500 hover:text-slate-900"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 <Icon className={`h-4 w-4 ${isActive ? "text-blue-600" : "text-slate-400"}`} />

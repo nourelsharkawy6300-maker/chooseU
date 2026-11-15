@@ -155,7 +155,7 @@ export function PersonaRadarHexagon({
         })}
       </svg>
 
-      <div className="w-full grid grid-cols-2 sm:grid-cols-3 gap-1.5 mt-3 pt-3 border-t border-slate-200 text-[11px]">
+      <div className="w-full grid grid-cols-2 sm:grid-cols-3 gap-1.5 mt-3 pt-3 border-t border-slate-200 text-xs">
         {clusterKeys.map((k) => {
           const cluster = CLUSTERS[k];
           const val = affinities[k] || 0;

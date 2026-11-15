@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedCounter } from "@/components/MotionPrimitives";
+import { useStudent } from "@/context/StudentContext";
 import {
   ArrowLeft,
   ArrowRight,
@@ -161,12 +162,6 @@ const ASSESSMENT_QUESTIONS = [
 ];
 
 export function FourStationJourney({
-  initialStudentName = "عمر خالد محمود",
-  initialStream = "Math",
-  initialScore = 83.5,
-  initialBudget = 65000,
-  initialGov = "المنوفية",
-  initialLivingMode = "commute",
   onOpenFacultyDrawer,
 }: FourStationJourneyProps) {
   // Current Station: 1 (Discover), 2 (Match), 3 (Simulate), 4 (Decide)
@@ -182,13 +177,37 @@ export function FourStationJourney({
   });
   const [hasCompletedAssessment, setHasCompletedAssessment] = useState(false);
 
-  // Student Profile State
-  const [studentName, setStudentName] = useState(initialStudentName);
-  const [stream, setStream] = useState<StreamType>(initialStream);
-  const [score, setScore] = useState<number>(initialScore);
-  const [budget, setBudget] = useState<number>(initialBudget);
-  const [governorate, setGovernorate] = useState(initialGov);
-  const [livingMode, setLivingMode] = useState<LivingMode>(initialLivingMode);
+  // Student Profile State from Global StudentContext (FIX 1: Un-Break State)
+  const {
+    studentName,
+    setStudentName,
+    stream,
+    setStream,
+    scorePercentage: score,
+    setScorePercentage: setScore,
+    annualBudgetEgp: budget,
+    setAnnualBudgetEgp: setBudget,
+    governorate,
+    setGovernorate,
+    livingMode,
+    setLivingMode,
+  } = useStudent();
+
+  // Local string states for non-hostile input typing (FIX 2: Destroy Hostile Input Clamping)
+  const [scoreInputStr, setScoreInputStr] = useState<string>(score.toString());
+  const [budgetInputStr, setBudgetInputStr] = useState<string>(budget.toString());
+  const [prevScore, setPrevScore] = useState(score);
+  const [prevBudget, setPrevBudget] = useState(budget);
+
+  if (score !== prevScore) {
+    setPrevScore(score);
+    setScoreInputStr(score.toString());
+  }
+
+  if (budget !== prevBudget) {
+    setPrevBudget(budget);
+    setBudgetInputStr(budget.toString());
+  }
 
   // Station 2 State (Match)
   const [explainFaculty, setExplainFaculty] = useState<RankedFaculty | null>(null);
@@ -447,7 +466,7 @@ export function FourStationJourney({
           </div>
 
           {/* Stepper Buttons (1, 2, 3, 4) with sliding layoutId */}
-          <div className="w-full sm:w-auto grid grid-cols-4 sm:flex sm:items-center gap-1 sm:gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 text-[11px] sm:text-[12px] relative">
+          <div className="w-full sm:w-auto grid grid-cols-4 sm:flex sm:items-center gap-1 sm:gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs relative">
             {[
               { id: 1 as const, title: "01 الاكتشاف", short: "اكتشف", icon: Compass },
               { id: 2 as const, title: "02 المطابقة", short: "طابق", icon: Layers },
@@ -516,19 +535,19 @@ export function FourStationJourney({
             {/* Header Description */}
             <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-medium">
+                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold">
                   <span>المحطة الأولى • تقييم الميول</span>
                 </div>
                 <h2 className="text-xl font-bold text-slate-900 leading-[1.45]">
                   المحطة الأولى: تقييم الميول وتوثيق الملف الأكاديمي
                 </h2>
-                <p className="text-[12px] text-slate-600">
+                <p className="text-xs text-slate-600">
                   حل الأسئلة الأربعة لتحديد سماتك الأكاديمية بدقة، وتنتقل تلقائياً لملفك الشخصي وبيانات التنسيق.
                 </p>
               </div>
 
               {/* Toggle Sub-View within Station 1 */}
-              <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200 text-[11px] font-medium shrink-0">
+              <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-medium shrink-0">
                 <button
                   type="button"
                   onClick={() => setStation1SubView("assessment")}
@@ -563,7 +582,7 @@ export function FourStationJourney({
                       key={q.id}
                       className="bg-white border border-slate-200 rounded-xl p-5 space-y-3 shadow-xs"
                     >
-                      <div className="flex items-center justify-between text-[11px] text-slate-500">
+                      <div className="flex items-center justify-between text-xs text-slate-600 font-medium">
                         <span>السؤال <span dir="ltr" className="font-mono tabular-nums">0{idx + 1} / 04</span></span>
                         {assessmentAnswers[q.id] && (
                           <span className="text-emerald-700 flex items-center gap-1">
@@ -607,10 +626,10 @@ export function FourStationJourney({
                                 <span>{opt.label}</span>
                               </div>
                               <span
-                                className={`text-[10px] px-2 py-0.5 rounded border shrink-0 ${
+                                className={`text-xs px-2.5 py-1 rounded-md border shrink-0 font-medium ${
                                   isSelected
-                                    ? "bg-[#377ef0] border-[#377ef0] text-white font-medium"
-                                    : "bg-slate-100 border-slate-200 text-slate-600"
+                                    ? "bg-[#377ef0] border-[#377ef0] text-white"
+                                    : "bg-slate-100 border-slate-200 text-slate-700"
                                 }`}
                               >
                                 {opt.badge}
@@ -638,7 +657,7 @@ export function FourStationJourney({
                     <button
                       type="button"
                       onClick={() => setStation1SubView("profile")}
-                      className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-[11px] transition-colors cursor-pointer"
+                      className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
                     >
                       استكمال ملف الطالب ←
                     </button>
@@ -654,12 +673,12 @@ export function FourStationJourney({
                   <h3 className="text-base font-bold text-slate-900">
                     بيانات الطالب الأكاديمية والمالية
                   </h3>
-                  <p className="text-[12px] text-slate-600 mt-0.5">
+                  <p className="text-xs text-slate-600 mt-0.5">
                     هذه البيانات تضبط التوصيات المخصصة لك في المحطة 2 وحسابات التكلفة التقديرية.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-[12px]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
                   {/* Name */}
                   <div className="space-y-1.5">
                     <label className="text-slate-700 font-medium">اسم الطالب:</label>
@@ -674,7 +693,7 @@ export function FourStationJourney({
                   {/* Academic Stream */}
                   <div className="space-y-1.5">
                     <label className="text-slate-700 font-medium">الشعبة الأكاديمية:</label>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200 text-[11px] font-medium">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-medium">
                       {(
                         [
                           { id: "Math", label: "علمي رياضة" },
@@ -702,7 +721,7 @@ export function FourStationJourney({
                   {/* Score Percentage */}
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-slate-700">
-                      <label htmlFor="station1-score-input" className="font-medium">المجموع بالنسبة المئوية:</label>
+                      <label htmlFor="station1-score-input" className="text-xs font-semibold text-slate-800">المجموع بالنسبة المئوية:</label>
                       <div className="flex items-center gap-1.5">
                         <input
                           id="station1-score-input"
@@ -710,11 +729,24 @@ export function FourStationJourney({
                           min={50}
                           max={100}
                           step={0.1}
-                          value={score}
-                          onChange={(e) => setScore(parseFloat(e.target.value) || 50)}
-                          className="w-16 rounded border border-slate-300 bg-white px-2 py-0.5 text-right font-mono text-xs font-bold text-slate-900 focus:border-blue-500 focus:outline-none"
+                          value={scoreInputStr}
+                          onChange={(e) => setScoreInputStr(e.target.value)}
+                          onBlur={() => {
+                            const val = parseFloat(scoreInputStr);
+                            if (isNaN(val)) {
+                              setScoreInputStr(score.toString());
+                            } else {
+                              const clamped = Math.min(100, Math.max(50, val));
+                              setScore(clamped);
+                              setScoreInputStr(clamped.toString());
+                            }
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                          }}
+                          className="w-16 rounded-lg border border-slate-300 bg-white px-2 py-1 text-right font-mono text-xs font-bold text-slate-900 focus:border-blue-500 focus:outline-none"
                         />
-                        <span className="font-mono text-slate-500 text-xs">%</span>
+                        <span className="font-mono text-slate-600 text-xs font-semibold">%</span>
                       </div>
                     </div>
                     <input
@@ -747,7 +779,7 @@ export function FourStationJourney({
                   {/* Annual Budget */}
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-slate-700">
-                      <label htmlFor="station1-budget-input" className="font-medium">سقف الميزانية السنوية:</label>
+                      <label htmlFor="station1-budget-input" className="text-xs font-semibold text-slate-800">سقف الميزانية السنوية:</label>
                       <div className="flex items-center gap-1.5">
                         <input
                           id="station1-budget-input"
@@ -755,11 +787,24 @@ export function FourStationJourney({
                           min={0}
                           max={300000}
                           step={5000}
-                          value={budget}
-                          onChange={(e) => setBudget(parseInt(e.target.value, 10) || 0)}
-                          className="w-24 rounded border border-slate-300 bg-white px-2 py-0.5 text-right font-mono text-xs font-bold text-emerald-700 focus:border-emerald-500 focus:outline-none"
+                          value={budgetInputStr}
+                          onChange={(e) => setBudgetInputStr(e.target.value)}
+                          onBlur={() => {
+                            const val = parseInt(budgetInputStr, 10);
+                            if (isNaN(val)) {
+                              setBudgetInputStr(budget.toString());
+                            } else {
+                              const clamped = Math.min(300000, Math.max(0, val));
+                              setBudget(clamped);
+                              setBudgetInputStr(clamped.toString());
+                            }
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                          }}
+                          className="w-24 rounded-lg border border-slate-300 bg-white px-2 py-1 text-right font-mono text-xs font-bold text-emerald-700 focus:border-emerald-500 focus:outline-none"
                         />
-                        <span className="text-slate-500 text-xs">ج.م</span>
+                        <span className="text-slate-600 text-xs font-semibold">ج.م</span>
                       </div>
                     </div>
                     <input
@@ -771,20 +816,20 @@ export function FourStationJourney({
                       onChange={(e) => setBudget(parseInt(e.target.value, 10))}
                       className="w-full cursor-pointer"
                     />
-                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                      <span className="text-[10px] text-slate-500">سقف تقريبي:</span>
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      <span className="text-xs text-slate-600 font-medium">سقف تقريبي:</span>
                       {[50000, 100000, 150000, 200000].map((preset) => (
                         <button
                           key={preset}
                           type="button"
                           onClick={() => setBudget(preset)}
-                          className={`px-1.5 py-0.5 rounded text-[10px] border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
+                          className={`px-2.5 py-1 rounded-lg text-xs border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
                             budget === preset
-                              ? "bg-emerald-50 text-emerald-800 border-emerald-300 font-semibold"
-                              : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                              ? "bg-emerald-50 text-emerald-800 border-emerald-300 font-bold"
+                              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
                           }`}
                         >
-                          <span dir="ltr" className="font-mono tabular-nums">{(preset / 1000).toFixed(0)}k</span> ج.م
+                          <span dir="ltr" className="font-mono tabular-nums font-semibold">{(preset / 1000).toFixed(0)}k</span> ج.م
                         </button>
                       ))}
                       <span className="text-slate-300">|</span>
@@ -793,10 +838,10 @@ export function FourStationJourney({
                           key={tier.label}
                           type="button"
                           onClick={() => setBudget(tier.amount)}
-                          className={`px-1.5 py-0.5 rounded text-[10px] border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
+                          className={`px-2.5 py-1 rounded-lg text-xs border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
                             budget === tier.amount
                               ? "bg-blue-50 text-blue-700 border-blue-300 font-bold"
-                              : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
                           }`}
                         >
                           {tier.label} (<span dir="ltr" className="font-mono tabular-nums">{tier.amount.toLocaleString()}</span>)
@@ -808,7 +853,7 @@ export function FourStationJourney({
                   {/* Living Mode */}
                   <div className="space-y-1.5">
                     <label className="text-slate-700 font-medium">طبيعة المعيشة والانتقال:</label>
-                    <div className="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200 text-[11px] font-medium">
+                    <div className="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-medium">
                       <button
                         type="button"
                         onClick={() => setLivingMode("commute")}
@@ -874,13 +919,13 @@ export function FourStationJourney({
             {/* Header */}
             <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-medium">
+                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold">
                   <span>المحطة الثانية • التوصيات والمقارنة</span>
                 </div>
                 <h2 className="text-xl font-bold text-slate-900 leading-[1.45]">
                   المحطة الثانية: ترشيحات الكليات والمقارنة
                 </h2>
-                <p className="text-[12px] text-slate-600">
+                <p className="text-xs text-slate-600">
                   كليات مصنفة حسب أمان قبولك، مع زر أسباب الترشيح لمطالعة تفاصيل كل خيار.
                 </p>
               </div>
@@ -890,7 +935,7 @@ export function FourStationJourney({
                 <button
                   type="button"
                   onClick={() => setStation(1)}
-                  className="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg text-[11px] font-medium transition-colors cursor-pointer flex items-center gap-1"
+                  className="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-1"
                 >
                   <ArrowRight className="w-3.5 h-3.5" />
                   <span>المحطة 1</span>
@@ -898,7 +943,7 @@ export function FourStationJourney({
                 <button
                   type="button"
                   onClick={() => setStation(3)}
-                  className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[11px] font-bold transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer flex items-center gap-1 shadow-xs"
+                  className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer flex items-center gap-1 shadow-xs"
                 >
                   <span>المحطة 3 (المحاكاة)</span>
                   <ArrowLeft className="w-3.5 h-3.5" />
@@ -907,8 +952,8 @@ export function FourStationJourney({
             </div>
 
             {/* Quick Sector Filter Pills */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 text-[11px]">
-              <span className="text-slate-500 text-[11px] shrink-0 font-medium">تصنيف الكليات:</span>
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+              <span className="text-slate-600 text-xs shrink-0 font-medium">تصنيف الكليات:</span>
               {[
                 { id: "all", label: "الكل" },
                 { id: "safe", label: `فرص مضمونة (${safeFaculties.length})` },
@@ -949,11 +994,11 @@ export function FourStationJourney({
                     <div className="space-y-3">
                       <div className="flex items-start justify-between gap-2">
                         <span
-                          className={`text-[10px] px-2 py-0.5 rounded border font-medium ${fac.safetyBadge.style}`}
+                          className={`text-xs px-2.5 py-0.5 rounded border font-medium ${fac.safetyBadge.style}`}
                         >
                           {fac.safetyBadge.label}
                         </span>
-                        <span className="text-[11px] font-bold text-blue-700">
+                        <span className="text-xs font-bold text-blue-700">
                           توافق <span dir="ltr" className="font-mono tabular-nums">{fac.matchScore}%</span>
                         </span>
                       </div>
@@ -962,19 +1007,19 @@ export function FourStationJourney({
                         <h3 className="text-sm font-bold text-slate-900 leading-snug">
                           {fac.name}
                         </h3>
-                        <p className="text-[11px] text-slate-500 mt-0.5">
+                        <p className="text-xs text-slate-600 mt-0.5">
                           {fac.university} • {fac.gov}
                         </p>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-[11px]">
+                      <div className="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-xs">
                         <div>
-                          <span className="text-slate-500 text-[10px] block">الحد الأدنى للتنسيق:</span>
+                          <span className="text-slate-600 text-xs font-medium block">الحد الأدنى للتنسيق:</span>
                           <span dir="ltr" className="font-mono font-bold text-slate-900 tabular-nums">
                             {fac.shiftedCutoff}%
                           </span>
                           <span
-                            className={`text-[10px] mr-1.5 font-bold ${
+                            className={`text-xs mr-1.5 font-bold ${
                               fac.margin >= 0 ? "text-emerald-700" : "text-amber-700"
                             }`}
                           >
@@ -982,7 +1027,7 @@ export function FourStationJourney({
                           </span>
                         </div>
                         <div>
-                          <span className="text-slate-500 text-[10px] block">المصروفات السنوية:</span>
+                          <span className="text-slate-600 text-xs font-medium block">المصروفات السنوية:</span>
                           <span className="font-bold text-slate-900">
                             {fac.y1_base_fee === 0 ? (
                               "مجاني حكومي"
@@ -1001,14 +1046,14 @@ export function FourStationJourney({
                       <button
                         type="button"
                         onClick={() => setExplainFaculty(fac)}
-                        className="w-full py-1.5 px-3 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-lg text-[11px] font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                        className="w-full py-2 px-3 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                       >
                         <HelpCircle className="w-3.5 h-3.5 stroke-[1.5]" />
                         <span>لماذا هذا التخصص؟</span>
                       </button>
 
                       {/* Quick Compare & Drawer Triggers */}
-                      <div className="flex items-center gap-2 text-[11px]">
+                      <div className="flex items-center gap-2 text-xs">
                         <button
                           type="button"
                           onClick={() => handleToggleCompare(fac.id)}
@@ -1046,23 +1091,23 @@ export function FourStationJourney({
                     <h3 className="text-base font-bold text-slate-900">
                       مقارنة الكليات والبرامج المختارة ({comparedFaculties.length} كليات)
                     </h3>
-                    <p className="text-[11px] text-slate-600">
+                    <p className="text-xs text-slate-600">
                       مقارنة جنباً إلى جنب في التنسيق، المصروفات، واعتمادات الجودة.
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setComparedFacultyIds([])}
-                    className="text-[11px] text-slate-500 hover:text-red-600 cursor-pointer"
+                    className="text-xs text-slate-600 hover:text-red-600 font-medium cursor-pointer"
                   >
                     تفريغ المقارنة
                   </button>
                 </div>
 
                 <div className="overflow-x-auto">
-                  <table className="w-full text-right text-[12px] border-collapse">
+                  <table className="w-full text-right text-xs border-collapse">
                     <thead>
-                      <tr className="border-b border-slate-200 text-slate-500 text-[11px]">
+                      <tr className="border-b border-slate-200 text-slate-600 text-xs font-semibold">
                         <th className="py-2.5 px-3">المعيار</th>
                         {comparedFaculties.map((f) => (
                           <th key={f.id} className="py-2.5 px-3 font-bold text-slate-900">
@@ -1073,7 +1118,7 @@ export function FourStationJourney({
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                       <tr>
-                        <td className="py-2.5 px-3 text-slate-500">الجامعة والجهة</td>
+                        <td className="py-2.5 px-3 text-slate-600 font-medium">الجامعة والجهة</td>
                         {comparedFaculties.map((f) => (
                           <td key={f.id} className="py-2.5 px-3 font-medium text-slate-800">
                             {f.university} ({f.type})
@@ -1144,13 +1189,13 @@ export function FourStationJourney({
             {/* Header */}
             <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-medium">
+                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold">
                   <span>المحطة الثالثة • المحاكاة وخارطة الطريق</span>
                 </div>
                 <h2 className="text-xl font-bold text-slate-900 leading-[1.45]">
                   المحطة الثالثة: لوحة المحاكاة الموحدة، مستقبلي، وخارطة الطريق
                 </h2>
-                <p className="text-[12px] text-slate-600">
+                <p className="text-xs text-slate-600">
                   اختبر سيناريوهات التنسيق (What-If)، استشرف رواتب ووظائف 2030 (Future Me)، واستكشف خارطة السنوات الـ 4.
                 </p>
               </div>
@@ -1160,7 +1205,7 @@ export function FourStationJourney({
                 <button
                   type="button"
                   onClick={() => setStation(2)}
-                  className="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg text-[11px] font-medium transition-colors cursor-pointer flex items-center gap-1"
+                  className="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-1"
                 >
                   <ArrowRight className="w-3.5 h-3.5" />
                   <span>المحطة 2</span>
@@ -1168,7 +1213,7 @@ export function FourStationJourney({
                 <button
                   type="button"
                   onClick={() => setStation(4)}
-                  className="px-4 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 rounded-lg text-[11px] font-semibold transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer flex items-center gap-1 shadow-xs"
+                  className="px-4 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 rounded-lg text-xs font-bold transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer flex items-center gap-1 shadow-xs"
                 >
                   <span>المحطة 4 (القرار النهائي)</span>
                   <ArrowLeft className="w-3.5 h-3.5" />
@@ -1185,7 +1230,7 @@ export function FourStationJourney({
                     محاكي سيناريوهات التنسيق والحد الأدنى (What-If Simulator)
                   </h3>
                 </div>
-                <div className="text-[11px] text-slate-500">
+                <div className="text-xs text-slate-600 font-medium">
                   تأثير التغير على خياراتك اللحظية
                 </div>
               </div>
@@ -1216,7 +1261,7 @@ export function FourStationJourney({
                     onChange={(e) => setTansikShift(parseFloat(e.target.value))}
                     className="w-full cursor-pointer"
                   />
-                  <div className="flex justify-between text-[10px] text-slate-500">
+                  <div className="flex justify-between text-xs text-slate-600 font-medium">
                     <span>انخفاض التنسيق (<span dir="ltr" className="font-mono tabular-nums">-2%</span>)</span>
                     <span>تنسيق <span dir="ltr" className="font-mono tabular-nums">2025</span> (ثابت)</span>
                     <span>ارتفاع التنسيق (<span dir="ltr" className="font-mono tabular-nums">+2%</span>)</span>
@@ -1225,7 +1270,7 @@ export function FourStationJourney({
 
                 {/* Score Tweak Slider (Tazallom / Abilities) */}
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-[12px]">
+                  <div className="flex items-center justify-between text-xs">
                     <span className="text-slate-700 font-medium">إضافة درجات تظلم أو اختبار قدرات:</span>
                     <span className="font-bold text-blue-700">
                       <span dir="ltr" className="font-mono tabular-nums">{scoreTweak > 0 ? `+${scoreTweak}%` : "0.0%"}</span> (المجموع الفعلي: <span dir="ltr" className="font-mono tabular-nums">{(score + scoreTweak).toFixed(1)}%</span>)
@@ -1240,7 +1285,7 @@ export function FourStationJourney({
                     onChange={(e) => setScoreTweak(parseFloat(e.target.value))}
                     className="w-full cursor-pointer"
                   />
-                  <div className="flex justify-between text-[10px] text-slate-500">
+                  <div className="flex justify-between text-xs text-slate-600 font-medium">
                     <span>بدون تعديل</span>
                     <span><span dir="ltr" className="font-mono tabular-nums">+1.0%</span></span>
                     <span><span dir="ltr" className="font-mono tabular-nums">+2.5%</span> درجات تظلم</span>
@@ -1249,7 +1294,7 @@ export function FourStationJourney({
               </div>
 
               {/* Dynamic Impact Summary */}
-              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between text-[11px]">
+              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between text-xs font-medium">
                 <div className="text-slate-700">
                   النتيجة في هذا السيناريو: أصبح لديك{" "}
                   <strong className="text-emerald-700 font-bold tabular-nums">
@@ -1267,7 +1312,7 @@ export function FourStationJourney({
                     setTansikShift(0);
                     setScoreTweak(0);
                   }}
-                  className="text-slate-500 hover:text-slate-900 underline cursor-pointer"
+                  className="text-slate-600 hover:text-slate-900 underline font-medium cursor-pointer"
                 >
                   إعادة الضبط
                 </button>
@@ -1285,9 +1330,9 @@ export function FourStationJourney({
                   </h3>
                 </div>
 
-                <div className="space-y-4 text-[12px]">
+                <div className="space-y-4 text-xs">
                   <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
-                    <div className="text-[11px] text-slate-600">الوظائف الأكثر طلباً لتخصصك الموصى به:</div>
+                    <div className="text-xs text-slate-700 font-medium">الوظائف الأكثر طلباً لتخصصك الموصى به:</div>
                     <div className="flex flex-wrap gap-1.5 pt-1">
                       {[
                         "مهندس ذكاء اصطناعي (AI Engineer)",
@@ -1297,7 +1342,7 @@ export function FourStationJourney({
                       ].map((role, rIdx) => (
                         <span
                           key={rIdx}
-                          className="px-2.5 py-1 rounded-md bg-blue-50 border border-blue-200 text-blue-800 text-[11px]"
+                          className="px-2.5 py-1 rounded-md bg-blue-50 border border-blue-200 text-blue-800 text-xs font-medium"
                         >
                           {role}
                         </span>
@@ -1312,37 +1357,37 @@ export function FourStationJourney({
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center">
                       <div className="bg-white p-3 rounded-lg border border-slate-200">
-                        <div className="text-[10px] text-slate-500">حديث تخرج (0-2 سنة)</div>
+                        <div className="text-xs text-slate-600 font-medium">حديث تخرج (0-2 سنة)</div>
                         <div className="text-sm font-bold text-slate-900 mt-1">
                           <span dir="ltr" className="font-mono tabular-nums">20k - 35k</span> ج.م
                         </div>
-                        <div className="text-[10px] text-slate-500">شهرياً</div>
+                        <div className="text-xs text-slate-600 font-medium">شهرياً</div>
                       </div>
                       <div className="bg-white p-3 rounded-lg border border-slate-200">
-                        <div className="text-[10px] text-slate-500">متوسط خبرة (3-5 سنوات)</div>
+                        <div className="text-xs text-slate-600 font-medium">متوسط خبرة (3-5 سنوات)</div>
                         <div className="text-sm font-bold text-blue-700 mt-1">
                           <span dir="ltr" className="font-mono tabular-nums">50k - 90k</span> ج.م
                         </div>
-                        <div className="text-[10px] text-slate-500">شهرياً</div>
+                        <div className="text-xs text-slate-600 font-medium">شهرياً</div>
                       </div>
                       <div className="bg-white p-3 rounded-lg border border-slate-200">
-                        <div className="text-[10px] text-slate-500">مسار إقليمي / شركات دولية</div>
+                        <div className="text-xs text-slate-600 font-medium">مسار إقليمي / شركات دولية</div>
                         <div className="text-sm font-bold text-emerald-700 mt-1">
                           <span dir="ltr" className="font-mono tabular-nums">25,000 - 45,000</span> ج.م
                         </div>
-                        <div className="text-[10px] text-slate-500">شهرياً (متوسط تقديري)</div>
+                        <div className="text-xs text-slate-600 font-medium">شهرياً (متوسط تقديري)</div>
                       </div>
                     </div>
                   </div>
 
                   {/* Top 4 Skills in Demand */}
                   <div className="space-y-1.5 pt-1">
-                    <span className="text-slate-600 font-medium block text-[11px]">
+                    <span className="text-slate-700 font-semibold block text-xs">
                       أهم المهارات المطلوبة للتوظيف الفوري:
                     </span>
-                    <div className="flex flex-wrap gap-1 text-[11px]">
+                    <div className="flex flex-wrap gap-1.5 text-xs">
                       {["Python & PyTorch", "Cloud Architecture (AWS)", "Docker & Kubernetes", "Clean Code & Algorithms"].map((sk, sIdx) => (
-                        <span key={sIdx} className="px-2 py-0.5 rounded bg-slate-100 border border-slate-200 text-slate-700">
+                        <span key={sIdx} className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700 font-medium">
                           {sk}
                         </span>
                       ))}
@@ -1358,19 +1403,19 @@ export function FourStationJourney({
                     <Award className="w-4 h-4 text-blue-600 stroke-[1.5]" />
                     <h3 className="text-sm font-bold text-slate-900">خارطة السنوات الأكاديمية</h3>
                   </div>
-                  <div className="flex gap-1 text-[10px]">
+                  <div className="flex gap-2">
                     {[1, 2, 3, 4].map((yr) => (
                       <button
                         key={yr}
                         type="button"
                         onClick={() => setActiveRoadmapYear(yr)}
-                        className={`w-6 h-6 rounded flex items-center justify-center cursor-pointer transition-colors ${
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer transition-colors ${
                           activeRoadmapYear === yr
-                            ? "bg-blue-600 text-white font-bold"
-                            : "bg-white text-slate-600 hover:text-slate-900 border border-slate-200"
+                            ? "bg-blue-600 text-white font-bold shadow-xs"
+                            : "bg-white text-slate-700 hover:text-slate-900 border border-slate-200 hover:bg-slate-50"
                         }`}
                       >
-                        <span dir="ltr" className="font-mono tabular-nums">Y{yr}</span>
+                        <span dir="ltr" className="font-mono tabular-nums text-xs font-bold">Y{yr}</span>
                       </button>
                     ))}
                   </div>
@@ -1429,11 +1474,11 @@ export function FourStationJourney({
                             >
                               السنة {node.year}: {node.title}
                             </span>
-                            <span className="text-[10px] text-slate-500 font-medium">
+                            <span className="text-xs text-slate-600 font-medium">
                               السنة 0{node.year}
                             </span>
                           </div>
-                          <p className="text-slate-600 leading-relaxed text-[11px]">
+                          <p className="text-slate-600 leading-relaxed text-xs">
                             {node.desc}
                           </p>
                         </div>
@@ -1442,7 +1487,7 @@ export function FourStationJourney({
                   })}
                 </div>
 
-                <div className="border-t border-slate-200 pt-2 text-[10px] text-slate-500">
+                <div className="border-t border-slate-200 pt-2 text-xs text-slate-600 font-medium">
                   مؤشر الطلب بسوق العمل:{" "}
                   <span className="text-emerald-700 font-bold">
                     مرتفع (متوسط طلب متزايد على الكوادر المؤهلة)
@@ -1505,22 +1550,22 @@ export function FourStationJourney({
                     <Compass className="w-4 h-4 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="text-[13px] font-bold text-slate-900">
+                    <h3 className="text-sm font-bold text-slate-900">
                       المستشار الأكاديمي التوجيهي
                     </h3>
-                    <div className="text-[10px] text-slate-500">
+                    <div className="text-xs text-slate-600 font-medium">
                       إرشادات وترتيبات مبنية على مجموعك وشعبتك
                     </div>
                   </div>
                 </div>
 
-                <div className="text-[11px] text-slate-500 hidden sm:block">
+                <div className="text-xs text-slate-600 font-medium hidden sm:block">
                   بياناتك: <span dir="ltr" className="font-mono tabular-nums"><AnimatedCounter value={score} />%</span> • <span>{stream === "Math" ? "علمي رياضة" : stream === "Science" ? "علمي علوم" : stream === "stem" ? "STEM" : "أدبي"}</span> • {governorate}
                 </div>
               </div>
 
               {/* Messages Scroll Area */}
-              <div className="flex-1 p-4 overflow-y-auto space-y-3 text-[12px]">
+              <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
                 {chatMessages.map((msg) => (
                   <div
                     key={msg.id}
@@ -1535,8 +1580,8 @@ export function FourStationJourney({
                     >
                       <div className="whitespace-pre-line">{msg.text}</div>
                       <div
-                        className={`text-[9px] mt-1 text-right ${
-                          msg.sender === "user" ? "text-blue-200" : "text-slate-500"
+                        className={`text-xs mt-1 text-right ${
+                          msg.sender === "user" ? "text-blue-100 font-medium" : "text-slate-600 font-medium"
                         }`}
                       >
                         {msg.timestamp}
@@ -1547,8 +1592,8 @@ export function FourStationJourney({
               </div>
 
               {/* Quick Prompt Suggestions */}
-              <div className="p-2.5 bg-slate-50 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto text-[11px]">
-                <span className="text-slate-500 text-[10px] shrink-0 font-medium">مقترحات:</span>
+              <div className="p-2.5 bg-slate-50 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto text-xs">
+                <span className="text-slate-600 text-xs shrink-0 font-medium">مقترحات:</span>
                 {[
                   "ما هو الترتيب الاستراتيجي للـ 75 رغبة؟",
                   "هل أختار برنامج ساعات معتمدة أم كليات عامة؟",
@@ -1624,13 +1669,13 @@ export function FourStationJourney({
           <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-2xl p-6 space-y-5 shadow-2xl">
             <div className="flex items-start justify-between">
               <div>
-                <span className="text-[11px] font-medium text-blue-700">
+                <span className="text-xs font-semibold text-blue-700">
                   مصفوفة التحليل والتفسير الأكاديمي
                 </span>
                 <h3 className="text-lg font-bold text-slate-900 mt-0.5">
                   لماذا رشحنا لك {explainFaculty.name}؟
                 </h3>
-                <p className="text-[12px] text-slate-500">
+                <p className="text-xs text-slate-600 font-medium">
                   {explainFaculty.university} • مؤشر القبول الاسترشادي: {explainFaculty.cutoff_2026}%
                 </p>
               </div>
@@ -1643,7 +1688,7 @@ export function FourStationJourney({
               </button>
             </div>
 
-            <div className="space-y-3 text-[12px]">
+            <div className="space-y-3 text-xs">
               {/* Factor 1: Score & Margin */}
               <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
                 <div className="flex items-center justify-between font-bold text-slate-900">
@@ -1652,7 +1697,7 @@ export function FourStationJourney({
                     {explainFaculty.margin >= 0 ? `+${explainFaculty.margin}%` : `${explainFaculty.margin}%`}
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-600">
+                <p className="text-xs text-slate-700 leading-relaxed font-medium">
                   مجموعك الحالي ({score}%) مقارنة بمؤشر القبول الاسترشادي ({explainFaculty.cutoff_2026}%):{" "}
                   {explainFaculty.margin >= 1.5
                     ? "فرصة قبول قوية تتجاوز المعدل المعتاد."
@@ -1666,7 +1711,7 @@ export function FourStationJourney({
                   <span>2. تطابق الميول والسمات</span>
                   <span className="text-blue-700">تطابق <span dir="ltr" className="font-mono tabular-nums">{explainFaculty.matchScore}%</span></span>
                 </div>
-                <p className="text-[11px] text-slate-600">
+                <p className="text-xs text-slate-700 leading-relaxed font-medium">
                   إجاباتك في اختبار الميول أظهرت تفضيلاً استثنائياً لحل المشكلات البرمجية ومسار{" "}
                   {TRACK_DETAILS[dominantTrack]?.title}.
                 </p>
@@ -1686,7 +1731,7 @@ export function FourStationJourney({
                     )}
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-600">
+                <p className="text-xs text-slate-700 leading-relaxed font-medium">
                   المصروفات السنوية تقع تحت سقف ميزانيتك المقدرة بـ {budget.toLocaleString()} ج.م، مما يحميك من أي تعثر مالي مستقبلي.
                 </p>
               </div>
@@ -1697,7 +1742,7 @@ export function FourStationJourney({
                   <span>4. التوزيع الجغرافي والاغتراب</span>
                   <span className="text-slate-900">{explainFaculty.gov}</span>
                 </div>
-                <p className="text-[11px] text-slate-600">
+                <p className="text-xs text-slate-700 leading-relaxed font-medium">
                   {explainFaculty.gov === governorate
                     ? "تقع في نطاقك الجغرافي الأول (أ) مما يوفر عليك نفقات السكن الطلابي والمواصلات الشاقة."
                     : "تقع في النطاق المجاور وتتطلب ترتيباً مناسباً للسكن الطلابي أو الانتقال المنظم."}
@@ -1725,13 +1770,13 @@ export function FourStationJourney({
             {/* Report Header Bar */}
             <div className="flex items-start justify-between border-b border-slate-200 pb-4">
               <div>
-                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-medium">
+                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold">
                   <span>وثيقة القرار النهائي المعتمدة • تنسيق 2026</span>
                 </div>
                 <h2 className="text-xl font-bold text-slate-900 mt-1 leading-[1.45]">
                   وثيقة القرار النهائي لبطاقة الرغبات والمسار الجامعي
                 </h2>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-xs text-slate-600 mt-0.5">
                   الرقم المرجعي المعتمد: CU-2026-{Math.floor(score * 100)}-{stream.toUpperCase()}
                 </p>
               </div>
@@ -1746,23 +1791,23 @@ export function FourStationJourney({
             </div>
 
             {/* Student Verified Profile Block */}
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-3 text-[12px]">
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
               <div>
-                <span className="text-slate-500 text-[10px] block">اسم الطالب:</span>
+                <span className="text-slate-600 text-xs font-medium block">اسم الطالب:</span>
                 <span className="font-bold text-slate-900">{studentName}</span>
               </div>
               <div>
-                <span className="text-slate-500 text-[10px] block">الشعبة والمجموع:</span>
+                <span className="text-slate-600 text-xs font-medium block">الشعبة والمجموع:</span>
                 <span className="font-bold text-blue-700">
                   <span dir="ltr" className="font-mono tabular-nums">{score}%</span> ({stream === "Math" ? "علمي رياضة" : stream === "Science" ? "علمي علوم" : "أدبي"})
                 </span>
               </div>
               <div>
-                <span className="text-slate-500 text-[10px] block">المحافظة:</span>
-                <span className="text-slate-800">{governorate}</span>
+                <span className="text-slate-600 text-xs font-medium block">المحافظة:</span>
+                <span className="text-slate-800 font-semibold">{governorate}</span>
               </div>
               <div>
-                <span className="text-slate-500 text-[10px] block">المسار الأكاديمي الموصى به:</span>
+                <span className="text-slate-600 text-xs font-medium block">المسار الأكاديمي الموصى به:</span>
                 <span className="font-bold text-emerald-700">
                   {TRACK_DETAILS[dominantTrack]?.title || "علوم البيانات والذكاء الاصطناعي"}
                 </span>
@@ -1774,33 +1819,33 @@ export function FourStationJourney({
               <h3 className="text-sm font-bold text-slate-900">
                 خطة التوزيع الاستراتيجي للـ 75 رغبة في التنسيق الرسمي:
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[12px]">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                 <div className="bg-purple-50/70 border border-purple-200 p-3.5 rounded-xl space-y-1">
-                  <div className="text-[10px] font-semibold text-purple-700">
+                  <div className="text-xs font-bold text-purple-700">
                     <span dir="ltr" className="font-mono tabular-nums">01 - 15</span> (<span dir="ltr" className="font-mono tabular-nums">15</span> رغبة)
                   </div>
                   <div className="font-bold text-purple-900">خيارات طموحة ومسارات مميزة</div>
-                  <p className="text-[11px] text-slate-600">
+                  <p className="text-xs text-slate-600 leading-relaxed">
                     كليات وبرامج ساعات معتمدة متقدمة تتطلب مجموعاً مساوياً أو أعلى بقليل لتأمين فرصة في حال انخفاض الحد الأدنى.
                   </p>
                 </div>
 
                 <div className="bg-blue-50/70 border border-blue-200 p-3.5 rounded-xl space-y-1">
-                  <div className="text-[10px] font-semibold text-blue-700">
+                  <div className="text-xs font-bold text-blue-700">
                     <span dir="ltr" className="font-mono tabular-nums">16 - 50</span> (<span dir="ltr" className="font-mono tabular-nums">35</span> رغبة)
                   </div>
                   <div className="font-bold text-blue-900">خيارات واقعية متوازنة</div>
-                  <p className="text-[11px] text-slate-600">
+                  <p className="text-xs text-slate-600 leading-relaxed">
                     الكليات التي تطابق مجموعك تماماً بنطاقك الجغرافي والنطاق الإقليمي المجاور، وهي الخيارات المرجحة بنسبة 85%+.
                   </p>
                 </div>
 
                 <div className="bg-emerald-50/70 border border-emerald-200 p-3.5 rounded-xl space-y-1">
-                  <div className="text-[10px] font-semibold text-emerald-700">
+                  <div className="text-xs font-bold text-emerald-700">
                     <span dir="ltr" className="font-mono tabular-nums">51 - 75</span> (<span dir="ltr" className="font-mono tabular-nums">25</span> رغبة)
                   </div>
                   <div className="font-bold text-emerald-900">شبكة الأمان والضمان الأكيد</div>
-                  <p className="text-[11px] text-slate-600">
+                  <p className="text-xs text-slate-600 leading-relaxed">
                     كليات مضمونة 100% يقل تنسيقها عن مجموعك بـ 2% فأكثر لضمان عدم استنفاد الرغبات تحت أي ظرف.
                   </p>
                 </div>
@@ -1812,26 +1857,26 @@ export function FourStationJourney({
               <h3 className="text-sm font-bold text-slate-900">
                 الترشيحات الثلاثة الأولى الموصى بها في بطاقتك:
               </h3>
-              <div className="space-y-1.5 text-[12px]">
+              <div className="space-y-1.5 text-xs">
                 {rankedFaculties.slice(0, 3).map((f, idx) => (
                   <div
                     key={f.id}
                     className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2.5">
-                      <span className="w-5 h-5 rounded-full bg-blue-600 text-white font-mono font-bold text-[11px] flex items-center justify-center">
+                      <span className="w-5 h-5 rounded-full bg-blue-600 text-white font-mono font-bold text-xs flex items-center justify-center">
                         0{idx + 1}
                       </span>
                       <div>
                         <span className="font-bold text-slate-900">{f.name}</span>
-                        <span className="text-slate-500 text-[11px] mr-2">
+                        <span className="text-slate-600 text-xs mr-2 font-medium">
                           ({f.university} - {f.type})
                         </span>
                       </div>
                     </div>
                     <div className="text-left">
                       <span dir="ltr" className="font-mono text-blue-700 font-bold tabular-nums">{f.cutoff_2026}%</span>
-                      <span className="text-[10px] text-slate-500 block">
+                      <span className="text-xs text-slate-600 font-medium block">
                         {f.y1_base_fee === 0 ? (
                           "مجاني"
                         ) : (
@@ -1847,8 +1892,8 @@ export function FourStationJourney({
             </div>
 
             {/* Print & Action Controls */}
-            <div className="border-t border-slate-200 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px]">
-              <div className="text-slate-500 text-[11px]">
+            <div className="border-t border-slate-200 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+              <div className="text-slate-600 text-xs font-medium">
                 وثيقة استرشادية معتمدة تم إنشاؤها وفقاً لخوارزميات التنسيق التنبؤية لعام 2026.
               </div>
 

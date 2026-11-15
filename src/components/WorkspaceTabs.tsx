@@ -133,6 +133,22 @@ export function WorkspaceTabs({
   const [auditedFaculty, setAuditedFaculty] = useState<Faculty | null>(null);
   const [isMethodologyOpen, setIsMethodologyOpen] = useState<boolean>(false);
 
+  // Local string states for non-hostile input typing (FIX 2: Form Clamping onBlur only)
+  const [scoreInputStr, setScoreInputStr] = useState<string>(score.toString());
+  const [budgetInputStr, setBudgetInputStr] = useState<string>(budget.toString());
+  const [prevScore, setPrevScore] = useState(score);
+  const [prevBudget, setPrevBudget] = useState(budget);
+
+  if (score !== prevScore) {
+    setPrevScore(score);
+    setScoreInputStr(score.toString());
+  }
+
+  if (budget !== prevBudget) {
+    setPrevBudget(budget);
+    setBudgetInputStr(budget.toString());
+  }
+
   const activeQuestions = STREAM_QUIZ_BANKS[stream] || [];
   const currentStreamAnswers = answersByStream[stream] || {};
 
@@ -210,7 +226,7 @@ export function WorkspaceTabs({
             <button
               type="button"
               onClick={onResetParameters}
-              className="text-[11px] font-medium text-slate-500 hover:text-slate-900 flex items-center gap-1 cursor-pointer"
+              className="text-xs font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1 cursor-pointer"
             >
               <RotateCcw className="w-3 h-3" strokeWidth={1.5} />
               <span>إعادة ضبط المعايير</span>
@@ -303,23 +319,33 @@ export function WorkspaceTabs({
         {/* Score Slider (50 to 100, step 0.5) + Numeric Input */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <label className="text-[13px] font-medium text-slate-700">
+            <label className="text-xs font-semibold text-slate-800">
               المجموع المئوي (%)
             </label>
-            <div className="flex items-center gap-1 tabular-nums">
+            <div className="flex items-center gap-1.5 tabular-nums">
               <input
                 type="number"
                 min={50}
                 max={100}
                 step={0.5}
-                value={score}
-                onChange={(e) => {
-                  const val = parseFloat(e.target.value);
-                  if (!isNaN(val)) setScore(Math.min(100, Math.max(50, val)));
+                value={scoreInputStr}
+                onChange={(e) => setScoreInputStr(e.target.value)}
+                onBlur={() => {
+                  const val = parseFloat(scoreInputStr);
+                  if (isNaN(val)) {
+                    setScoreInputStr(score.toString());
+                  } else {
+                    const clamped = Math.min(100, Math.max(50, val));
+                    setScore(clamped);
+                    setScoreInputStr(clamped.toString());
+                  }
                 }}
-                className="w-18 border border-slate-300 focus:border-blue-600 rounded-lg px-2 py-1 text-[13px] font-semibold text-slate-900 text-left tabular-nums focus:outline-none bg-white"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                }}
+                className="w-18 border border-slate-300 focus:border-blue-600 rounded-lg px-2 py-1 text-xs font-bold text-slate-900 text-left tabular-nums focus:outline-none bg-white"
               />
-              <span className="text-[12px] text-slate-500">%</span>
+              <span className="text-xs font-semibold text-slate-600">%</span>
             </div>
           </div>
           <input
@@ -331,7 +357,7 @@ export function WorkspaceTabs({
             onChange={(e) => setScore(parseFloat(e.target.value))}
             className="w-full cursor-pointer"
           />
-          <div className="flex justify-between text-[11px] text-slate-500 tabular-nums">
+          <div className="flex justify-between text-xs text-slate-600 font-medium tabular-nums">
             <span>50%</span>
             <span>75%</span>
             <span>100%</span>
@@ -341,24 +367,33 @@ export function WorkspaceTabs({
         {/* Max Annual Budget Slider (5000 to 250000, step 5000) + Numeric Input */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <label className="text-[13px] font-medium text-slate-700">
+            <label className="text-xs font-semibold text-slate-800">
               الحد الأقصى للميزانية السنوية
             </label>
-            <div className="flex items-center gap-1 tabular-nums">
+            <div className="flex items-center gap-1.5 tabular-nums">
               <input
                 type="number"
                 min={5000}
                 max={250000}
                 step={5000}
-                value={budget}
-                onChange={(e) => {
-                  const val = parseInt(e.target.value, 10);
-                  if (!isNaN(val))
-                    setBudget(Math.min(250000, Math.max(5000, val)));
+                value={budgetInputStr}
+                onChange={(e) => setBudgetInputStr(e.target.value)}
+                onBlur={() => {
+                  const val = parseInt(budgetInputStr, 10);
+                  if (isNaN(val)) {
+                    setBudgetInputStr(budget.toString());
+                  } else {
+                    const clamped = Math.min(250000, Math.max(5000, val));
+                    setBudget(clamped);
+                    setBudgetInputStr(clamped.toString());
+                  }
                 }}
-                className="w-24 border border-slate-300 focus:border-blue-600 rounded-lg px-2 py-1 text-[13px] font-semibold text-slate-900 text-left tabular-nums focus:outline-none bg-white"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                }}
+                className="w-24 border border-slate-300 focus:border-blue-600 rounded-lg px-2 py-1 text-xs font-bold text-slate-900 text-left tabular-nums focus:outline-none bg-white"
               />
-              <span className="text-[11px] text-slate-500">ج.م</span>
+              <span className="text-xs font-semibold text-slate-600">ج.م</span>
             </div>
           </div>
           <input
@@ -371,13 +406,13 @@ export function WorkspaceTabs({
             className="w-full cursor-pointer"
           />
           <div className="flex flex-wrap items-center gap-1.5 pt-1">
-            <span className="text-[11px] text-slate-500">سقف تقريبي:</span>
+            <span className="text-xs text-slate-600 font-medium">سقف تقريبي:</span>
             {[50000, 100000, 150000, 200000].map((preset) => (
               <button
                 key={preset}
                 type="button"
                 onClick={() => setBudget(preset)}
-                className={`px-2 py-0.5 rounded text-[11px] border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
+                className={`px-2 py-0.5 rounded text-xs border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
                   budget === preset
                     ? "bg-blue-50 text-blue-700 border-blue-300 font-bold"
                     : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
@@ -392,7 +427,7 @@ export function WorkspaceTabs({
                 key={tier.label}
                 type="button"
                 onClick={() => setBudget(tier.amount)}
-                className={`px-2 py-0.5 rounded text-[11px] border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
+                className={`px-2 py-0.5 rounded text-xs border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
                   budget === tier.amount
                     ? "bg-blue-50 text-blue-700 border-blue-300 font-bold"
                     : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
@@ -464,7 +499,7 @@ export function WorkspaceTabs({
           <div className="text-[16px] font-bold text-slate-900 tabular-nums">
             {formatFacultyCount(evaluation.allRanked.length)}
           </div>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-xs text-slate-600 font-medium">
             المسار المتصدر: {TRACK_DETAILS[topTrack]?.title}
           </p>
         </div>
@@ -550,7 +585,7 @@ export function WorkspaceTabs({
                     خريطة التوافق التخصصي ({TRACK_DETAILS[topTrack]?.title})
                   </h3>
                 </div>
-                <span className="text-[11px] text-slate-500">
+                <span className="text-xs text-slate-600 font-medium">
                   تتحدث الأوزان النسبية تلقائياً مع كل إجابة
                 </span>
               </div>
@@ -651,10 +686,10 @@ export function WorkspaceTabs({
                           >
                             <div className="flex items-center gap-3">
                               <span
-                                className={`w-5 h-5 rounded-full border flex items-center justify-center text-[11px] shrink-0 ${
+                                className={`w-6 h-6 rounded-full border flex items-center justify-center text-xs shrink-0 font-bold ${
                                   selected
-                                    ? "border-blue-600 bg-blue-600 text-white font-bold"
-                                    : "border-slate-300 bg-white text-slate-500"
+                                    ? "border-blue-600 bg-blue-600 text-white"
+                                    : "border-slate-300 bg-white text-slate-600"
                                 }`}
                               >
                                 {optionLetters[optIdx]}
@@ -663,7 +698,7 @@ export function WorkspaceTabs({
                                 {opt.label}
                               </span>
                             </div>
-                            <kbd className="text-[11px] font-mono text-slate-500 border border-slate-200 bg-slate-50 px-2 py-0.5 rounded shrink-0 tabular-nums">
+                            <kbd className="text-xs font-mono text-slate-600 font-semibold border border-slate-200 bg-slate-50 px-2 py-0.5 rounded shrink-0 tabular-nums">
                               {optIdx + 1}
                             </kbd>
                           </button>
@@ -788,7 +823,7 @@ export function WorkspaceTabs({
 
               {/* Sector Filter Pills with layoutId spring pill */}
               <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-200">
-                <span className="text-[11px] font-semibold text-slate-500 ml-1">
+                <span className="text-xs font-semibold text-slate-700 ml-1">
                   تصفية حسب نوع الكلية:
                 </span>
                 {[
@@ -802,7 +837,7 @@ export function WorkspaceTabs({
                     key={sec}
                     type="button"
                     onClick={() => setSectorFilter(sec)}
-                    className={`relative px-3 py-1 rounded-lg text-[11px] font-medium transition cursor-pointer ${
+                    className={`relative px-3 py-1 rounded-lg text-xs font-medium transition cursor-pointer ${
                       sectorFilter === sec
                         ? "text-[#377ef0] font-bold"
                         : "text-slate-600 hover:text-slate-900 border border-slate-200 hover:bg-slate-50"
@@ -877,30 +912,30 @@ export function WorkspaceTabs({
                           <div className="min-w-0 flex-1 space-y-1">
                             <div className="flex flex-wrap items-center gap-1.5">
                               <span
-                                className={`px-2 py-0.5 rounded text-[11px] font-medium border ${getCategoryBadgeStyle(
+                                className={`px-2 py-0.5 rounded text-xs font-medium border ${getCategoryBadgeStyle(
                                   fac.type
                                 )}`}
                               >
                                 {fac.type}
                               </span>
                               <span
-                                className={`px-2 py-0.5 rounded text-[11px] font-medium border tabular-nums ${fac.safetyBadge.style}`}
+                                className={`px-2 py-0.5 rounded text-xs font-medium border tabular-nums ${fac.safetyBadge.style}`}
                               >
                                 {fac.safetyBadge.label}
                               </span>
-                              <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-semibold tabular-nums">
+                              <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold tabular-nums">
                                 توافق {fac.matchScore}%
                               </span>
                             </div>
                             <h4 className="text-[14px] font-semibold text-slate-900 leading-snug">
                               {fac.name}
                             </h4>
-                            <p className="text-[12px] text-slate-500">
+                            <p className="text-xs text-slate-600 font-medium">
                               {fac.university}
                             </p>
                             {fac.whyMatch && (
-                              <p className="text-[11px] text-slate-600 line-clamp-1">
-                                <strong className="text-slate-700">سبب الترشيح: </strong>
+                              <p className="text-xs text-slate-700 line-clamp-1">
+                                <strong className="text-slate-800">سبب الترشيح: </strong>
                                 {fac.whyMatch}
                               </p>
                             )}
@@ -908,25 +943,25 @@ export function WorkspaceTabs({
                         </div>
 
                         {/* Aligned Metadata Columns: governorate, cutoff, yearly fee, total cost */}
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center sm:text-start shrink-0 text-[12px] py-1 border-t sm:border-t-0 border-slate-100">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center sm:text-start shrink-0 text-xs py-1 border-t sm:border-t-0 border-slate-100">
                           <div className="space-y-0.5 min-w-[70px]">
-                            <div className="text-[10px] text-slate-400">المحافظة</div>
+                            <div className="text-xs text-slate-600 font-medium">المحافظة</div>
                             <div className="font-medium text-slate-700">{fac.gov}</div>
                           </div>
                           <div className="space-y-0.5 min-w-[70px]">
-                            <div className="text-[10px] text-slate-400">حد القبول</div>
+                            <div className="text-xs text-slate-600 font-medium">حد القبول</div>
                             <div className="font-semibold text-slate-900 tabular-nums">
                               {fac.shiftedCutoff.toFixed(1)}%
                             </div>
                           </div>
                           <div className="space-y-0.5 min-w-[90px]">
-                            <div className="text-[10px] text-slate-400">المصروفات السنوية</div>
+                            <div className="text-xs text-slate-600 font-medium">المصروفات السنوية</div>
                             <div className="font-bold text-slate-900">
                               <AnimatedCounter value={fac.y1_base_fee} suffix=" ج.م" />
                             </div>
                           </div>
                           <div className="space-y-0.5 min-w-[95px]">
-                            <div className="text-[10px] text-slate-400">التكلفة الإجمالية</div>
+                            <div className="text-xs text-slate-600 font-medium">التكلفة الإجمالية</div>
                             <div className="font-bold text-[#377ef0]">
                               <AnimatedCounter value={m.total4Yr} suffix=" ج.م" />
                             </div>
@@ -938,7 +973,7 @@ export function WorkspaceTabs({
                           <button
                             type="button"
                             onClick={() => setAuditedFaculty(fac)}
-                            className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-2.5 py-1.5 rounded-lg text-[11px] font-medium flex items-center gap-1 cursor-pointer transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
+                            className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
                           >
                             <FileText
                               className="w-3.5 h-3.5 text-slate-500"
@@ -951,7 +986,7 @@ export function WorkspaceTabs({
                             <button
                               type="button"
                               onClick={() => onSelectFutureCareer(fac)}
-                              className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-2.5 py-1.5 rounded-lg text-[11px] font-medium flex items-center gap-1 cursor-pointer transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
+                              className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
                             >
                               <Briefcase
                                 className="w-3.5 h-3.5 text-blue-600"
@@ -961,7 +996,7 @@ export function WorkspaceTabs({
                             </button>
                           )}
 
-                          <label className="flex items-center gap-1.5 text-[11px] font-medium text-slate-700 cursor-pointer select-none border border-slate-300 px-2.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]">
+                          <label className="flex items-center gap-1.5 text-xs font-medium text-slate-700 cursor-pointer select-none border border-slate-300 px-2.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]">
                             <input
                               type="checkbox"
                               checked={isCompared}
@@ -1018,13 +1053,13 @@ export function WorkspaceTabs({
                     منهجية الحساب ومراجعة البيانات
                   </button>
                   <span className="text-slate-300">|</span>
-                  <span className="text-slate-500">
+                  <span className="text-slate-600 font-medium">
                     أول ترشيحين مفتوحان مجاناً بالكامل
                   </span>
                 </div>
               </div>
 
-              <div className="bg-slate-100 p-1 rounded-xl grid grid-cols-3 gap-1 text-[11px] tabular-nums border border-slate-200">
+              <div className="bg-slate-100 p-1 rounded-xl grid grid-cols-3 gap-1 text-xs tabular-nums border border-slate-200">
                 {[
                   { rate: 10, label: "10% مستقر" },
                   { rate: 15, label: "15% مرجعي" },
@@ -1078,7 +1113,7 @@ export function WorkspaceTabs({
                     <col className="w-[6%]" />
                   </colgroup>
                   <thead>
-                    <tr className="bg-slate-50 text-slate-700 text-[11px] font-semibold border-b border-slate-200">
+                    <tr className="bg-slate-50 text-slate-700 text-xs font-semibold border-b border-slate-200">
                       <th className="py-3.5 px-4 min-w-[240px] sticky right-0 bg-slate-50 z-10">
                         الكلية والجامعة
                       </th>
@@ -1095,7 +1130,7 @@ export function WorkspaceTabs({
                       <th className="py-3.5 px-3 text-center">قارن</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-200 text-[12px] tabular-nums">
+                  <tbody className="divide-y divide-slate-200 text-xs tabular-nums">
                     {unlockedFreeFaculties.map((fac, idx) => {
                       const m = computeFacultyTcoMetrics(
                         fac,
@@ -1109,19 +1144,19 @@ export function WorkspaceTabs({
                           {/* Column 1: Badge ABOVE Faculty Name (min-w-[240px] flex flex-col items-start gap-1.5) */}
                           <td className="py-4 px-4 align-top sticky right-0 bg-white z-10">
                             <div className="min-w-[240px] flex flex-col items-start gap-1.5">
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">
                                 الترشيح 0{idx + 1} • مفتوح
                               </span>
                               <span className="font-semibold text-[13px] text-slate-900 leading-snug">
                                 {fac.name}
                               </span>
-                              <span className="text-[11px] text-slate-500">
+                              <span className="text-xs text-slate-600 font-medium">
                                 {fac.university} • {fac.type}
                               </span>
                               <button
                                 type="button"
                                 onClick={() => setAuditedFaculty(fac)}
-                                className="text-[11px] font-medium text-blue-600 hover:underline cursor-pointer"
+                                className="text-xs font-semibold text-blue-600 hover:underline cursor-pointer"
                               >
                                 تفاصيل اللائحة
                               </button>
@@ -1132,7 +1167,7 @@ export function WorkspaceTabs({
                             <div className="font-bold text-[13px] text-slate-900 whitespace-nowrap">
                               {m.total4Yr.toLocaleString()} ج.م
                             </div>
-                            <div className="text-[11px] text-slate-500 mt-0.5">
+                            <div className="text-xs text-slate-600 font-medium mt-0.5">
                               سنة 1 أساسي: {m.y1Base.toLocaleString()} ج.م
                             </div>
                             {/* 4px Stacked Breakdown Bar */}
@@ -1157,15 +1192,15 @@ export function WorkspaceTabs({
                           </td>
 
                           <td className="py-4 px-4 text-slate-700 align-top leading-relaxed">
-                            <div className="font-medium text-slate-900 text-[11px]">
+                            <div className="font-semibold text-slate-900 text-xs">
                               {m.geoTierLabel}
                             </div>
-                            <div className="text-[11px] text-slate-500">
+                            <div className="text-xs text-slate-600">
                               {m.livingDesc}
                             </div>
                           </td>
 
-                          <td className="py-4 px-4 text-slate-700 align-top leading-relaxed text-[11px]">
+                          <td className="py-4 px-4 text-slate-700 align-top leading-relaxed text-xs">
                             <div>{fac.gpa_requirement}</div>
                             <div className="text-blue-700 font-medium mt-1">
                               {fac.scholarship_rule}
@@ -1221,13 +1256,13 @@ export function WorkspaceTabs({
                           >
                             <td className={`py-4 px-4 align-top sticky right-0 z-10 ${isReportUnlocked ? "bg-white" : "bg-slate-50"}`}>
                               <div className="min-w-[240px] flex flex-col items-start gap-1.5">
-                                <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-500 border border-slate-200 whitespace-nowrap">
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200 whitespace-nowrap">
                                   الترشيح 0{idx + 3}
                                 </span>
                                 <span className="font-semibold text-[13px] text-slate-900 leading-snug">
                                   {fac.name}
                                 </span>
-                                <span className="text-[11px] text-slate-500">
+                                <span className="text-xs text-slate-600 font-medium">
                                   {fac.university} • {fac.type}
                                 </span>
                               </div>
@@ -1248,7 +1283,7 @@ export function WorkspaceTabs({
                               {m.livingDesc}
                             </td>
                             <td
-                              className={`py-4 px-4 text-slate-700 text-[11px] align-top ${blurClass}`}
+                              className={`py-4 px-4 text-slate-700 text-xs align-top ${blurClass}`}
                             >
                               {fac.gpa_requirement}
                             </td>
@@ -1323,11 +1358,11 @@ export function WorkspaceTabs({
                   <span className="text-[12px] font-bold text-blue-900">
                     الخيار الأنسب لملفك الأكاديمي والمالي
                   </span>
-                  <span className="text-[11px] font-semibold text-blue-700 bg-white px-2.5 py-0.5 rounded border border-blue-200 tabular-nums">
+                  <span className="text-xs font-semibold text-blue-700 bg-white px-2.5 py-0.5 rounded border border-blue-200 tabular-nums">
                     الأعلى كفاءة لملفك
                   </span>
                 </div>
-                <p className="text-[12px] text-slate-700 leading-relaxed tabular-nums">
+                <p className="text-xs text-slate-700 leading-relaxed tabular-nums">
                   بناءً على مقارنة البدائل المختارة مع مجموعك ({score.toFixed(1)}
                   %) وميزانيتك السنوية ({budget.toLocaleString()} ج.م) في محافظة{" "}
                   {gov}، يتصدر{" "}
@@ -1344,7 +1379,7 @@ export function WorkspaceTabs({
 
             {/* 8-Row Side-by-Side Comparison Matrix */}
             <div className="overflow-x-auto border border-slate-200 rounded-xl">
-              <table className="w-full text-right border-collapse text-[12px] tabular-nums">
+              <table className="w-full text-right border-collapse text-xs tabular-nums">
                 <thead>
                   <tr className="bg-slate-50 border-b border-slate-200">
                     <th className="py-3.5 px-4 font-semibold text-slate-700 w-44 sticky right-0 bg-slate-50 z-10">
@@ -1356,7 +1391,7 @@ export function WorkspaceTabs({
                         className="py-3.5 px-4 font-bold text-slate-900 min-w-[210px]"
                       >
                         <div>{fac.name}</div>
-                        <div className="text-[11px] font-normal text-slate-500 mt-0.5">
+                        <div className="text-xs font-medium text-slate-600 mt-0.5">
                           {fac.university}
                         </div>
                       </th>
@@ -1371,7 +1406,7 @@ export function WorkspaceTabs({
                     {comparedFacultiesList.map((fac) => (
                       <td key={fac.id} className="py-3 px-4">
                         <span
-                          className={`px-2 py-0.5 rounded text-[11px] font-medium border ${getCategoryBadgeStyle(
+                          className={`px-2 py-0.5 rounded text-xs font-medium border ${getCategoryBadgeStyle(
                             fac.type
                           )}`}
                         >
@@ -1445,11 +1480,11 @@ export function WorkspaceTabs({
                         inflationScenario
                       );
                       return (
-                        <td key={fac.id} className="py-3 px-4 text-[11px]">
+                        <td key={fac.id} className="py-3 px-4 text-xs">
                           <div className="font-semibold text-slate-900">
                             {m.geoTierLabel}
                           </div>
-                          <div className="text-slate-500">{m.livingDesc}</div>
+                          <div className="text-xs text-slate-600 font-medium">{m.livingDesc}</div>
                         </td>
                       );
                     })}
@@ -1462,7 +1497,7 @@ export function WorkspaceTabs({
                     {comparedFacultiesList.map((fac) => (
                       <td
                         key={fac.id}
-                        className="py-3 px-4 text-[11px] leading-relaxed text-slate-700"
+                        className="py-3 px-4 text-xs leading-relaxed text-slate-700 font-medium"
                       >
                         {fac.gpa_requirement}
                       </td>
@@ -1476,7 +1511,7 @@ export function WorkspaceTabs({
                     {comparedFacultiesList.map((fac) => (
                       <td
                         key={fac.id}
-                        className="py-3 px-4 text-[11px] leading-relaxed text-slate-700"
+                        className="py-3 px-4 text-xs leading-relaxed text-slate-700 font-medium"
                       >
                         {fac.scholarship_rule}
                       </td>
@@ -1490,7 +1525,7 @@ export function WorkspaceTabs({
                     {comparedFacultiesList.map((fac) => (
                       <td
                         key={fac.id}
-                        className="py-3 px-4 text-[11px] space-y-1"
+                        className="py-3 px-4 text-xs space-y-1"
                       >
                         <div className="font-semibold text-emerald-800">
                           الطلب: {fac.future_career.market_demand}
@@ -1498,7 +1533,7 @@ export function WorkspaceTabs({
                         <div className="font-medium text-slate-900">
                           {fac.future_career.salary_range_egp}
                         </div>
-                        <div className="text-slate-500">
+                        <div className="text-xs text-slate-600 font-medium">
                           {fac.future_career.roles.slice(0, 2).join(" • ")}
                         </div>
                       </td>
@@ -1560,7 +1595,7 @@ export function WorkspaceTabs({
               <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
                 <div>
                   <span
-                    className={`inline-flex px-2.5 py-0.5 rounded text-[11px] font-medium border ${getCategoryBadgeStyle(
+                    className={`inline-flex px-2.5 py-0.5 rounded text-xs font-medium border ${getCategoryBadgeStyle(
                       auditedFaculty.type
                     )}`}
                   >
@@ -1569,7 +1604,7 @@ export function WorkspaceTabs({
                   <h3 className="text-[18px] font-bold text-slate-900 mt-1.5">
                     {auditedFaculty.name}
                   </h3>
-                  <p className="text-[13px] text-slate-500">
+                  <p className="text-[13px] text-slate-600 font-medium">
                     {auditedFaculty.university}
                   </p>
                 </div>

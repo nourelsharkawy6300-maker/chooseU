@@ -243,11 +243,11 @@ export function LandingView({
                   <h3 className="text-[15px] font-semibold text-slate-900">
                     {card.title}
                   </h3>
-                  <p className="text-[12px] text-slate-600 leading-relaxed">
+                  <p className="text-xs text-slate-600 leading-relaxed font-medium">
                     {card.desc}
                   </p>
                 </div>
-                <div className="pt-3 border-t border-slate-100 text-[11px] font-semibold text-blue-700 tabular-nums">
+                <div className="pt-3 border-t border-slate-100 text-xs font-semibold text-blue-700 tabular-nums">
                   {card.metric}
                 </div>
               </div>
@@ -260,7 +260,7 @@ export function LandingView({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 flex flex-col justify-between space-y-6">
           <div className="space-y-3">
-            <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded">
+            <span className="text-xs font-semibold text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded">
               الباقة الأساسية للطلاب
             </span>
             <div className="flex items-baseline justify-between">
@@ -271,7 +271,7 @@ export function LandingView({
                 0 ج.م
               </span>
             </div>
-            <p className="text-[13px] text-slate-500">
+            <p className="text-[13px] text-slate-600 font-medium">
               أدوات تفاعلية مجانية لاختبار الميول المهنية واستكشاف أعلى كليتين توافقاً مع مجموعك وميزانيتك.
             </p>
             <ul className="space-y-2.5 pt-2 text-[13px] text-slate-700">
@@ -306,7 +306,7 @@ export function LandingView({
 
         <div className="bg-white border-2 border-blue-600 rounded-xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-sm">
           <div className="space-y-3">
-            <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded">
+            <span className="text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded">
               الخدمة الاستشارية الكاملة للأسر
             </span>
             <div className="flex items-baseline justify-between">
@@ -405,7 +405,7 @@ export function FutureMeView({
         </div>
 
         <div className="w-full md:w-96">
-          <label className="block text-[11px] font-semibold text-slate-500 mb-1">
+          <label className="block text-xs font-semibold text-slate-700 mb-1">
             اختر الكلية لاستعراض مسارها الوظيفي:
           </label>
           <select
@@ -433,7 +433,7 @@ export function FutureMeView({
           <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 pb-4">
             <div>
               <span
-                className={`inline-flex px-2.5 py-0.5 rounded text-[11px] font-medium border ${getCategoryBadgeStyle(
+                className={`inline-flex px-2.5 py-0.5 rounded text-xs font-medium border ${getCategoryBadgeStyle(
                   activeFaculty.type
                 )}`}
               >
@@ -483,11 +483,11 @@ export function FutureMeView({
         {/* Salary & Academic Entry Requirements Card */}
         <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs flex flex-col justify-between space-y-5">
           <div className="space-y-4">
-            <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded inline-block">
+            <span className="text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded inline-block">
               العائد الوظيفي المتوقع في مصر
             </span>
             <div>
-              <div className="text-[12px] text-slate-500">
+              <div className="text-xs text-slate-600 font-medium">
                 متوسط نطاق الرواتب الشهرية
               </div>
               <div className="text-[18px] font-bold text-slate-900 mt-1 tabular-nums">
@@ -497,18 +497,18 @@ export function FutureMeView({
 
             <div className="pt-3 border-t border-slate-200 space-y-2 text-[12px] text-slate-700 tabular-nums">
               <div className="flex justify-between">
-                <span className="text-slate-500">مؤشر القبول الاسترشادي:</span>
+                <span className="text-slate-600 font-medium">مؤشر القبول الاسترشادي:</span>
                 <strong className="text-slate-900">
                   {activeFaculty.cutoff_2026.toFixed(1)}%
                 </strong>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">مصروفات السنة الأولى:</span>
+                <span className="text-slate-600 font-medium">مصروفات السنة الأولى:</span>
                 <strong className="text-blue-700">
                   {activeFaculty.y1_base_fee.toLocaleString()} ج.م
                 </strong>
               </div>
-              <div className="pt-2 text-[11px] text-slate-600 leading-relaxed">
+              <div className="pt-2 text-xs text-slate-700 leading-relaxed font-medium">
                 <strong className="text-slate-900 block mb-0.5">
                   شرط التخصص الداخلي:
                 </strong>
@@ -572,7 +572,7 @@ export function FutureMeView({
                       {title}
                     </h4>
                     {step?.year && (
-                      <span className="text-[11px] text-slate-400 font-medium">
+                      <span className="text-xs text-slate-600 font-medium">
                         ({step.year})
                       </span>
                     )}
@@ -585,7 +585,7 @@ export function FutureMeView({
                       {step.skills.map((sk) => (
                         <span
                           key={sk}
-                          className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium"
+                          className="px-2.5 py-0.5 rounded bg-slate-100 text-slate-700 text-xs font-medium"
                         >
                           {sk}
                         </span>
@@ -776,7 +776,7 @@ export function DirectoryView({
                     <div className="font-semibold text-slate-900 text-[14px] leading-snug">
                       {fac.name}
                     </div>
-                    <div className="text-[12px] text-slate-500 mt-0.5">
+                    <div className="text-xs text-slate-600 font-medium mt-0.5">
                       {fac.university} • محافظة {fac.gov}
                     </div>
                   </div>
@@ -784,7 +784,7 @@ export function DirectoryView({
 
                 <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-5 shrink-0 pr-9 sm:pr-0">
                   <span
-                    className={`px-2.5 py-0.5 rounded-md text-[11px] font-medium border shrink-0 ${getCategoryBadgeStyle(
+                    className={`px-2.5 py-0.5 rounded-md text-xs font-medium border shrink-0 ${getCategoryBadgeStyle(
                       fac.type
                     )}`}
                   >
@@ -795,7 +795,7 @@ export function DirectoryView({
                     <span className="font-bold text-[13px] text-slate-900">
                       {fac.y1_base_fee.toLocaleString()}
                     </span>
-                    <span className="text-[11px] text-slate-500 mr-1">ج.م/سنة</span>
+                    <span className="text-xs text-slate-600 font-medium mr-1">ج.م/سنة</span>
                   </div>
 
                   <button
@@ -898,13 +898,13 @@ export function SampleReportView({
         <div className="relative z-10 space-y-8">
           <div className="border-b-2 border-slate-900 pb-5 flex flex-wrap items-start justify-between gap-4">
             <div>
-              <div className="text-[11px] font-semibold text-blue-600">
+              <div className="text-xs font-semibold text-blue-600">
                 ChooseU Executive Academic & Financial Audit
               </div>
               <h2 className="text-[20px] font-bold text-slate-900 mt-1 leading-[1.45]">
                 التقرير الاستشاري المعتمد لتنسيق الجامعات والتدفق المالي لـ 4 سنوات
               </h2>
-              <p className="text-[12px] text-slate-500 mt-1 tabular-nums">
+              <p className="text-xs text-slate-600 font-medium mt-1 tabular-nums">
                 وثيقة استشارية مدققة وفق حدود القبول الرسمية ولوائح المصروفات الجامعية (أكتوبر 2026)
               </p>
             </div>
@@ -1037,7 +1037,7 @@ export function SampleReportView({
                           <div className="font-semibold text-slate-900">
                             0{i + 1}. {f.name}
                           </div>
-                          <div className="text-[11px] text-slate-500">
+                          <div className="text-xs text-slate-600 font-medium">
                             {f.university} • {f.type}
                           </div>
                         </td>
@@ -1050,10 +1050,10 @@ export function SampleReportView({
                         <td className="py-3 px-3.5 font-bold text-slate-900 whitespace-nowrap align-top">
                           {m.total4Yr.toLocaleString()} ج.م
                         </td>
-                        <td className="py-3 px-3.5 text-[11px] align-top">
+                        <td className="py-3 px-3.5 text-xs align-top">
                           {m.livingDesc}
                         </td>
-                        <td className="py-3 px-3.5 text-[11px] leading-relaxed align-top">
+                        <td className="py-3 px-3.5 text-xs leading-relaxed align-top">
                           {f.gpa_requirement}
                         </td>
                       </tr>
@@ -1287,7 +1287,7 @@ export function TrackOrderView({
                       />
                     )}
                   </div>
-                  <p className="text-[11px] text-slate-500 leading-relaxed">
+                  <p className="text-xs text-slate-600 font-medium leading-relaxed">
                     {st.desc}
                   </p>
                 </div>
@@ -1365,14 +1365,14 @@ export function TrackOrderView({
                     التقرير الاستشاري المالي والأكاديمي المعتمد —{" "}
                     {orderResult.student_name}
                   </h3>
-                  <p className="text-[12px] text-slate-500 mt-0.5 tabular-nums">
+                  <p className="text-xs text-slate-600 font-medium mt-0.5 tabular-nums">
                     كود الطلب: {orderResult.order_code} • المجموع:{" "}
                     {Number(orderResult.score_percentage).toFixed(1)}% •
                     الميزانية: {Number(orderResult.max_budget).toLocaleString()}{" "}
                     ج.م • المحافظة: {orderResult.governorate}
                   </p>
                 </div>
-                <span className="px-3 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold">
+                <span className="px-3 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
                   نسخة أصلية معتمدة (Approved)
                 </span>
               </div>
@@ -1394,7 +1394,7 @@ export function TrackOrderView({
                   جدول المقارنة المالية والأكاديمية الكامل لـ 4 سنوات (مفتوح بالكامل):
                 </h4>
                 <div className="overflow-x-auto border border-slate-200 rounded-xl">
-                  <table className="w-full text-right border-collapse text-[12px] tabular-nums">
+                  <table className="w-full text-right border-collapse text-xs tabular-nums">
                     <thead>
                       <tr className="bg-slate-100 text-slate-700 font-semibold border-b border-slate-200">
                         <th className="py-3 px-4 min-w-[230px]">
@@ -1423,7 +1423,7 @@ export function TrackOrderView({
                               <div className="font-semibold text-slate-900">
                                 0{i + 1}. {f.name}
                               </div>
-                              <div className="text-[11px] text-slate-500">
+                              <div className="text-xs text-slate-600 font-medium">
                                 {f.university} • {f.type}
                               </div>
                             </td>
@@ -1436,10 +1436,10 @@ export function TrackOrderView({
                             <td className="py-3 px-4 font-bold text-slate-900 whitespace-nowrap align-top">
                               {m.total4Yr.toLocaleString()} ج.م
                             </td>
-                            <td className="py-3 px-4 text-[11px] align-top">
+                            <td className="py-3 px-4 text-xs align-top">
                               {m.livingDesc}
                             </td>
-                            <td className="py-3 px-4 text-[11px] leading-relaxed align-top">
+                            <td className="py-3 px-4 text-xs leading-relaxed align-top">
                               <div>{f.gpa_requirement}</div>
                               <div className="text-blue-700 font-medium mt-0.5">
                                 {f.scholarship_rule}
@@ -1610,7 +1610,7 @@ export function CheckoutModal({
 
               <div className="flex items-center justify-between bg-white border border-slate-200 rounded-lg px-3 py-2">
                 <div>
-                  <span className="text-[11px] text-slate-500 block">
+                  <span className="text-xs text-slate-600 font-medium block">
                     عنوان الدفع عبر InstaPay
                   </span>
                   <code className="font-mono font-semibold text-slate-900 dir-ltr">
@@ -1624,16 +1624,16 @@ export function CheckoutModal({
                     setCopiedAddress(true);
                     setTimeout(() => setCopiedAddress(false), 2000);
                   }}
-                  className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-2.5 py-1 rounded text-[11px] font-medium flex items-center gap-1 cursor-pointer"
+                  className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
                 >
                   {copiedAddress ? (
                     <>
-                      <Check className="w-3 h-3 text-emerald-600" strokeWidth={1.5} />
+                      <Check className="w-3.5 h-3.5 text-emerald-600" strokeWidth={1.5} />
                       <span>تم النسخ</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3 h-3" strokeWidth={1.5} />
+                      <Copy className="w-3.5 h-3.5" strokeWidth={1.5} />
                       <span>نسخ العنوان</span>
                     </>
                   )}
@@ -1642,7 +1642,7 @@ export function CheckoutModal({
 
               <div className="flex items-center justify-between bg-white border border-slate-200 rounded-lg px-3 py-2 tabular-nums">
                 <div>
-                  <span className="text-[11px] text-slate-500 block">
+                  <span className="text-xs text-slate-600 font-medium block">
                     رقم المحفظة / InstaPay Phone
                   </span>
                   <code className="font-mono font-semibold text-slate-900 dir-ltr">
@@ -1656,11 +1656,11 @@ export function CheckoutModal({
                     setCopiedPhone(true);
                     setTimeout(() => setCopiedPhone(false), 2000);
                   }}
-                  className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-2.5 py-1 rounded text-[11px] font-medium flex items-center gap-1 cursor-pointer"
+                  className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
                 >
                   {copiedPhone ? (
                     <>
-                      <Check className="w-3 h-3 text-emerald-600" strokeWidth={1.5} />
+                      <Check className="w-3.5 h-3.5 text-emerald-600" strokeWidth={1.5} />
                       <span>تم النسخ</span>
                     </>
                   ) : (
@@ -1739,11 +1739,11 @@ export function CheckoutModal({
                 <span className="text-[13px] font-mono font-bold text-slate-900">
                   {createdOrder.order_code}
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-100 text-amber-800 border border-amber-300">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 border border-amber-300">
                   قيد المراجعة وتأكيد التحويل (15–60 دقيقة)
                 </span>
               </div>
-              <p className="text-[12px] text-slate-700 leading-relaxed">
+              <p className="text-xs text-slate-700 leading-relaxed font-medium">
                 تم حفظ طلبك بنجاح في قاعدة البيانات. احتفظ برقم طلبك (
                 <strong className="font-mono">{createdOrder.order_code}</strong>
                 ) لمتابعة حالته واستلام التقرير، واضغط بالأسفل لإرسال إشعار التحويل عبر واتساب.
