@@ -651,7 +651,7 @@ export function FourStationJourney({
                       step={0.1}
                       value={score}
                       onChange={(e) => setScore(parseFloat(e.target.value))}
-                      className="w-full accent-blue-600 cursor-pointer"
+                      className="w-full cursor-pointer"
                     />
                   </div>
 
@@ -696,7 +696,7 @@ export function FourStationJourney({
                       step={5000}
                       value={budget}
                       onChange={(e) => setBudget(parseInt(e.target.value, 10))}
-                      className="w-full accent-emerald-600 cursor-pointer"
+                      className="w-full cursor-pointer"
                     />
                     <div className="flex items-center gap-1.5 pt-1">
                       <span className="text-[10px] text-slate-500">سقف تقريبي:</span>
@@ -1112,7 +1112,7 @@ export function FourStationJourney({
                     step={0.25}
                     value={tansikShift}
                     onChange={(e) => setTansikShift(parseFloat(e.target.value))}
-                    className="w-full accent-blue-600 cursor-pointer"
+                    className="w-full cursor-pointer"
                   />
                   <div className="flex justify-between text-[10px] text-slate-500">
                     <span>انخفاض التنسيق (<span dir="ltr" className="font-mono tabular-nums">-2%</span>)</span>
@@ -1136,7 +1136,7 @@ export function FourStationJourney({
                     step={0.25}
                     value={scoreTweak}
                     onChange={(e) => setScoreTweak(parseFloat(e.target.value))}
-                    className="w-full accent-emerald-600 cursor-pointer"
+                    className="w-full cursor-pointer"
                   />
                   <div className="flex justify-between text-[10px] text-slate-500">
                     <span>بدون تعديل</span>

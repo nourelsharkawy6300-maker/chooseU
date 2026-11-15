@@ -304,10 +304,7 @@ export function WorkspaceTabs({
             step={0.5}
             value={score}
             onChange={(e) => setScore(parseFloat(e.target.value))}
-            style={{
-              background: `linear-gradient(to left, #2563eb ${scorePercent}%, #e2e8f0 ${scorePercent}%)`,
-            }}
-            className="enterprise-slider"
+            className="w-full cursor-pointer"
           />
           <div className="flex justify-between text-[11px] text-slate-500 tabular-nums">
             <span>50%</span>
@@ -346,10 +343,7 @@ export function WorkspaceTabs({
             step={5000}
             value={budget}
             onChange={(e) => setBudget(parseInt(e.target.value, 10))}
-            style={{
-              background: `linear-gradient(to left, #2563eb ${budgetPercent}%, #e2e8f0 ${budgetPercent}%)`,
-            }}
-            className="enterprise-slider"
+            className="w-full cursor-pointer"
           />
           <div className="flex items-center gap-1.5 pt-1">
             <span className="text-[11px] text-slate-500">سقف تقريبي:</span>
@@ -1013,129 +1007,29 @@ export function WorkspaceTabs({
               </div>
             </div>
 
-            {/* Wide Enterprise Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full text-right border-collapse table-fixed min-w-[840px]">
-                <colgroup>
-                  <col className="w-[29%]" />
-                  <col className="w-[19%]" />
-                  <col className="w-[15%]" />
-                  <col className="w-[17%]" />
-                  <col className="w-[14%]" />
-                  <col className="w-[6%]" />
-                </colgroup>
-                <thead>
-                  <tr className="bg-slate-50 text-slate-700 text-[11px] font-semibold border-b border-slate-200">
-                    <th className="py-3.5 px-4 min-w-[240px] sticky right-0 bg-slate-50 z-10">
-                      الكلية والجامعة
-                    </th>
-                    <th className="py-3.5 px-4">
-                      إجمالي 4 سنين شاملة الزيادة السنوية
-                    </th>
-                    <th className="py-3.5 px-4">مصاريف المعامل والكتب</th>
-                    <th className="py-3.5 px-4">
-                      المشوار أو السكن في محافظتك
-                    </th>
-                    <th className="py-3.5 px-4">
-                      شرط التخصص في سنة أولى والمنح
-                    </th>
-                    <th className="py-3.5 px-3 text-center">قارن</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 text-[12px] tabular-nums">
-                  {unlockedFreeFaculties.map((fac, idx) => {
-                    const m = computeFacultyTcoMetrics(
-                      fac,
-                      gov,
-                      livingMode,
-                      inflationScenario
-                    );
-                    const isCompared = comparedIds.includes(fac.id);
-                    return (
-                      <tr key={fac.id} className="bg-white hover:bg-slate-50">
-                        {/* Column 1: Badge ABOVE Faculty Name (min-w-[240px] flex flex-col items-start gap-1.5) */}
-                        <td className="py-4 px-4 align-top sticky right-0 bg-white z-10">
-                          <div className="min-w-[240px] flex flex-col items-start gap-1.5">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">
-                              الترشيح 0{idx + 1} • مفتوح
-                            </span>
-                            <span className="font-semibold text-[13px] text-slate-900 leading-snug">
-                              {fac.name}
-                            </span>
-                            <span className="text-[11px] text-slate-500">
-                              {fac.university} • {fac.type}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => setAuditedFaculty(fac)}
-                              className="text-[11px] font-medium text-blue-600 hover:underline cursor-pointer"
-                            >
-                              تفاصيل اللائحة
-                            </button>
-                          </div>
-                        </td>
-
-                        <td className="py-4 px-4 align-top">
-                          <div className="font-bold text-[13px] text-slate-900 whitespace-nowrap">
-                            {m.total4Yr.toLocaleString()} ج.م
-                          </div>
-                          <div className="text-[11px] text-slate-500 mt-0.5">
-                            سنة 1 أساسي: {m.y1Base.toLocaleString()} ج.م
-                          </div>
-                          {/* 4px Stacked Breakdown Bar */}
-                          <div className="w-full h-1 bg-slate-100 rounded-full overflow-hidden flex mt-2">
-                            <div
-                              className="bg-blue-600 h-full"
-                              style={{ width: `${m.basePct}%` }}
-                            />
-                            <div
-                              className="bg-amber-500 h-full"
-                              style={{ width: `${m.adminPct}%` }}
-                            />
-                            <div
-                              className="bg-emerald-500 h-full"
-                              style={{ width: `${m.livingPct}%` }}
-                            />
-                          </div>
-                        </td>
-
-                        <td className="py-4 px-4 text-slate-700 align-top">
-                          +{m.adminFee.toLocaleString()} ج.م/سنة
-                        </td>
-
-                        <td className="py-4 px-4 text-slate-700 align-top leading-relaxed">
-                          <div className="font-medium text-slate-900 text-[11px]">
-                            {m.geoTierLabel}
-                          </div>
-                          <div className="text-[11px] text-slate-500">
-                            {m.livingDesc}
-                          </div>
-                        </td>
-
-                        <td className="py-4 px-4 text-slate-700 align-top leading-relaxed text-[11px]">
-                          <div>{fac.gpa_requirement}</div>
-                          <div className="text-blue-700 font-medium mt-1">
-                            {fac.scholarship_rule}
-                          </div>
-                        </td>
-
-                        <td className="py-4 px-3 text-center align-top">
-                          <input
-                            type="checkbox"
-                            checked={isCompared}
-                            onChange={() => onToggleCompare(fac.id)}
-                            className="rounded border-slate-300 text-blue-600 cursor-pointer"
-                          />
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-
-              {/* Blurred Rows 3+ with Centered Floating Paywall Callout Card */}
-              <div className="relative border-t border-slate-200 min-w-[840px]">
-                <table className="w-full text-right border-collapse table-fixed">
+            {/* Wide Enterprise Table or Empty Table State */}
+            {unlockedFreeFaculties.length === 0 ? (
+              <div className="p-12 text-center space-y-4">
+                <p className="text-[14px] text-slate-700 leading-relaxed font-medium">
+                  مفيش كليات مناسبة بالميزانية دي. جرّب ترفع الميزانية أو تعدّل المجموع.
+                </p>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const presets = [50000, 100000, 150000, 200000];
+                      const next = presets.find((p) => p > budget) ?? Math.min(250000, budget + 50000);
+                      setBudget(next);
+                    }}
+                    className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-4 py-2.5 rounded-xl text-[13px] font-medium transition cursor-pointer shadow-2xs"
+                  >
+                    رفع الميزانية إلى {([50000, 100000, 150000, 200000].find((p) => p > budget) ?? Math.min(250000, budget + 50000)).toLocaleString()} ج.م
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-right border-collapse table-fixed min-w-[840px]">
                   <colgroup>
                     <col className="w-[29%]" />
                     <col className="w-[19%]" />
@@ -1144,32 +1038,40 @@ export function WorkspaceTabs({
                     <col className="w-[14%]" />
                     <col className="w-[6%]" />
                   </colgroup>
+                  <thead>
+                    <tr className="bg-slate-50 text-slate-700 text-[11px] font-semibold border-b border-slate-200">
+                      <th className="py-3.5 px-4 min-w-[240px] sticky right-0 bg-slate-50 z-10">
+                        الكلية والجامعة
+                      </th>
+                      <th className="py-3.5 px-4">
+                        إجمالي 4 سنين شاملة الزيادة السنوية
+                      </th>
+                      <th className="py-3.5 px-4">مصاريف المعامل والكتب</th>
+                      <th className="py-3.5 px-4">
+                        المشوار أو السكن في محافظتك
+                      </th>
+                      <th className="py-3.5 px-4">
+                        شرط التخصص في سنة أولى والمنح
+                      </th>
+                      <th className="py-3.5 px-3 text-center">قارن</th>
+                    </tr>
+                  </thead>
                   <tbody className="divide-y divide-slate-200 text-[12px] tabular-nums">
-                    {(isReportUnlocked
-                      ? evaluation.allRanked.slice(2, 10)
-                      : lockedComparisonFaculties
-                    ).map((fac, idx) => {
+                    {unlockedFreeFaculties.map((fac, idx) => {
                       const m = computeFacultyTcoMetrics(
                         fac,
                         gov,
                         livingMode,
                         inflationScenario
                       );
-                      const blurClass = isReportUnlocked
-                        ? ""
-                        : "blur-[5px] select-none pointer-events-none opacity-60";
                       const isCompared = comparedIds.includes(fac.id);
                       return (
-                        <tr
-                          key={fac.id}
-                          className={
-                            isReportUnlocked ? "bg-white hover:bg-slate-50" : "bg-slate-50/50"
-                          }
-                        >
-                          <td className={`py-4 px-4 align-top sticky right-0 z-10 ${isReportUnlocked ? "bg-white" : "bg-slate-50"}`}>
+                        <tr key={fac.id} className="bg-white hover:bg-slate-50">
+                          {/* Column 1: Badge ABOVE Faculty Name (min-w-[240px] flex flex-col items-start gap-1.5) */}
+                          <td className="py-4 px-4 align-top sticky right-0 bg-white z-10">
                             <div className="min-w-[240px] flex flex-col items-start gap-1.5">
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-500 border border-slate-200 whitespace-nowrap">
-                                الترشيح 0{idx + 3}
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">
+                                الترشيح 0{idx + 1} • مفتوح
                               </span>
                               <span className="font-semibold text-[13px] text-slate-900 leading-snug">
                                 {fac.name}
@@ -1177,28 +1079,60 @@ export function WorkspaceTabs({
                               <span className="text-[11px] text-slate-500">
                                 {fac.university} • {fac.type}
                               </span>
+                              <button
+                                type="button"
+                                onClick={() => setAuditedFaculty(fac)}
+                                className="text-[11px] font-medium text-blue-600 hover:underline cursor-pointer"
+                              >
+                                تفاصيل اللائحة
+                              </button>
                             </div>
                           </td>
-                          <td
-                            className={`py-4 px-4 font-bold text-slate-900 align-top ${blurClass}`}
-                          >
-                            {m.total4Yr.toLocaleString()} ج.م
+
+                          <td className="py-4 px-4 align-top">
+                            <div className="font-bold text-[13px] text-slate-900 whitespace-nowrap">
+                              {m.total4Yr.toLocaleString()} ج.م
+                            </div>
+                            <div className="text-[11px] text-slate-500 mt-0.5">
+                              سنة 1 أساسي: {m.y1Base.toLocaleString()} ج.م
+                            </div>
+                            {/* 4px Stacked Breakdown Bar */}
+                            <div className="w-full h-1 bg-slate-100 rounded-full overflow-hidden flex mt-2">
+                              <div
+                                className="bg-blue-600 h-full"
+                                style={{ width: `${m.basePct}%` }}
+                              />
+                              <div
+                                className="bg-amber-500 h-full"
+                                style={{ width: `${m.adminPct}%` }}
+                              />
+                              <div
+                                className="bg-emerald-500 h-full"
+                                style={{ width: `${m.livingPct}%` }}
+                              />
+                            </div>
                           </td>
-                          <td
-                            className={`py-4 px-4 text-slate-700 align-top ${blurClass}`}
-                          >
+
+                          <td className="py-4 px-4 text-slate-700 align-top">
                             +{m.adminFee.toLocaleString()} ج.م/سنة
                           </td>
-                          <td
-                            className={`py-4 px-4 text-slate-700 align-top ${blurClass}`}
-                          >
-                            {m.livingDesc}
+
+                          <td className="py-4 px-4 text-slate-700 align-top leading-relaxed">
+                            <div className="font-medium text-slate-900 text-[11px]">
+                              {m.geoTierLabel}
+                            </div>
+                            <div className="text-[11px] text-slate-500">
+                              {m.livingDesc}
+                            </div>
                           </td>
-                          <td
-                            className={`py-4 px-4 text-slate-700 text-[11px] align-top ${blurClass}`}
-                          >
-                            {fac.gpa_requirement}
+
+                          <td className="py-4 px-4 text-slate-700 align-top leading-relaxed text-[11px]">
+                            <div>{fac.gpa_requirement}</div>
+                            <div className="text-blue-700 font-medium mt-1">
+                              {fac.scholarship_rule}
+                            </div>
                           </td>
+
                           <td className="py-4 px-3 text-center align-top">
                             <input
                               type="checkbox"
@@ -1213,28 +1147,109 @@ export function WorkspaceTabs({
                   </tbody>
                 </table>
 
-                {!isReportUnlocked && (
-                  <div className="absolute inset-x-0 top-10 z-20 bg-white/95 border border-slate-200 shadow-2xl rounded-xl p-6 text-center no-print">
-                    <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center mb-3">
-                      <Lock className="w-4 h-4" strokeWidth={1.5} />
+                {/* Blurred Rows 3+ with Centered Floating Paywall Callout Card */}
+                <div className="relative border-t border-slate-200 min-w-[840px]">
+                  <table className="w-full text-right border-collapse table-fixed">
+                    <colgroup>
+                      <col className="w-[29%]" />
+                      <col className="w-[19%]" />
+                      <col className="w-[15%]" />
+                      <col className="w-[17%]" />
+                      <col className="w-[14%]" />
+                      <col className="w-[6%]" />
+                    </colgroup>
+                    <tbody className="divide-y divide-slate-200 text-[12px] tabular-nums">
+                      {(isReportUnlocked
+                        ? evaluation.allRanked.slice(2, 10)
+                        : lockedComparisonFaculties
+                      ).map((fac, idx) => {
+                        const m = computeFacultyTcoMetrics(
+                          fac,
+                          gov,
+                          livingMode,
+                          inflationScenario
+                        );
+                        const blurClass = isReportUnlocked
+                          ? ""
+                          : "blur-[5px] select-none pointer-events-none opacity-60";
+                        const isCompared = comparedIds.includes(fac.id);
+                        return (
+                          <tr
+                            key={fac.id}
+                            className={
+                              isReportUnlocked ? "bg-white hover:bg-slate-50" : "bg-slate-50/50"
+                            }
+                          >
+                            <td className={`py-4 px-4 align-top sticky right-0 z-10 ${isReportUnlocked ? "bg-white" : "bg-slate-50"}`}>
+                              <div className="min-w-[240px] flex flex-col items-start gap-1.5">
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-500 border border-slate-200 whitespace-nowrap">
+                                  الترشيح 0{idx + 3}
+                                </span>
+                                <span className="font-semibold text-[13px] text-slate-900 leading-snug">
+                                  {fac.name}
+                                </span>
+                                <span className="text-[11px] text-slate-500">
+                                  {fac.university} • {fac.type}
+                                </span>
+                              </div>
+                            </td>
+                            <td
+                              className={`py-4 px-4 font-bold text-slate-900 align-top ${blurClass}`}
+                            >
+                              {m.total4Yr.toLocaleString()} ج.م
+                            </td>
+                            <td
+                              className={`py-4 px-4 text-slate-700 align-top ${blurClass}`}
+                            >
+                              +{m.adminFee.toLocaleString()} ج.م/سنة
+                            </td>
+                            <td
+                              className={`py-4 px-4 text-slate-700 align-top ${blurClass}`}
+                            >
+                              {m.livingDesc}
+                            </td>
+                            <td
+                              className={`py-4 px-4 text-slate-700 text-[11px] align-top ${blurClass}`}
+                            >
+                              {fac.gpa_requirement}
+                            </td>
+                            <td className="py-4 px-3 text-center align-top">
+                              <input
+                                type="checkbox"
+                                checked={isCompared}
+                                onChange={() => onToggleCompare(fac.id)}
+                                className="rounded border-slate-300 text-blue-600 cursor-pointer"
+                              />
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+
+                  {!isReportUnlocked && (
+                    <div className="absolute inset-x-0 top-10 z-20 bg-white/95 border border-slate-200 shadow-2xl rounded-xl p-6 text-center no-print">
+                      <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center mb-3">
+                        <Lock className="w-4 h-4" strokeWidth={1.5} />
+                      </div>
+                      <h3 className="text-[15px] font-semibold text-slate-900">
+                        افتح مصفوفة الـ 4 سنوات الكاملة لباقي الكليات المطابقة
+                      </h3>
+                      <p className="text-[12px] text-slate-600 mt-1.5 mb-4 leading-relaxed tabular-nums">
+                        يشمل حساب التدفق المالي الكامل بالتضخم، لوائح الـ GPA الداخلي، ومراجعة المستشار الأكاديمي مع المذكرة الصوتية.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={onOpenCheckout}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl text-[13px] font-semibold transition cursor-pointer tabular-nums shadow-sm"
+                      >
+                        فتح التقرير المقارن الكامل واعتماد المستشار — 150 ج.م
+                      </button>
                     </div>
-                    <h3 className="text-[15px] font-semibold text-slate-900">
-                      افتح مصفوفة الـ 4 سنوات الكاملة لباقي الكليات المطابقة
-                    </h3>
-                    <p className="text-[12px] text-slate-600 mt-1.5 mb-4 leading-relaxed tabular-nums">
-                      يشمل حساب التدفق المالي الكامل بالتضخم، لوائح الـ GPA الداخلي، ومراجعة المستشار الأكاديمي مع المذكرة الصوتية.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={onOpenCheckout}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl text-[13px] font-semibold transition cursor-pointer tabular-nums shadow-sm"
-                    >
-                      فتح التقرير المقارن الكامل واعتماد المستشار — 150 ج.م
-                    </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Bottom Tab Navigation */}
             <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-between">

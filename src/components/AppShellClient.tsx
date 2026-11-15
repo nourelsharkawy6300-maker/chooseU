@@ -404,7 +404,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                   step={0.1}
                   value={scorePercentage}
                   onChange={(e) => setScorePercentage(parseFloat(e.target.value))}
-                  className="w-full accent-emerald-600 cursor-pointer"
+                  className="w-full cursor-pointer"
                 />
               </div>
 
@@ -433,7 +433,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                   step={5000}
                   value={annualBudgetEgp}
                   onChange={(e) => setAnnualBudgetEgp(parseInt(e.target.value, 10))}
-                  className="w-full accent-amber-600 cursor-pointer"
+                  className="w-full cursor-pointer"
                 />
 
                 {/* Budget Preset Chips */}
