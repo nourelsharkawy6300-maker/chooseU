@@ -93,7 +93,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
 
   if (isAdmin) {
     return (
-      <div className="flex min-h-screen w-full bg-slate-50 text-slate-900">
+      <div className="flex min-h-screen w-full bg-[var(--paper)] text-slate-900">
         <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth">
           {children}
         </main>
@@ -102,7 +102,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-slate-50">
+    <div className="flex h-screen w-full overflow-hidden bg-[var(--paper)]">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex lg:w-72 lg:flex-col lg:shrink-0 border-l border-slate-200 bg-white">
         <div className="flex h-16 items-center justify-between px-6 border-b border-slate-200">
@@ -180,7 +180,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex flex-1 flex-col min-w-0 overflow-hidden bg-slate-50">
+      <div className="flex flex-1 flex-col min-w-0 overflow-hidden bg-[var(--paper)]">
         <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             {/* Mobile Hamburger Button */}
