@@ -237,6 +237,31 @@ export function FourStationJourney({
     return top as TrackKey;
   }, [assessmentAnswers]);
 
+  const budgetTiers = useMemo(() => {
+    let maxGov = 0;
+    let maxAhli = 0;
+    let maxPrivate = 0;
+
+    for (const f of FACULTIES_DATABASE) {
+      const fee = f.y1_base_fee ?? 0;
+      if (f.type.includes("حكومي")) {
+        if (fee > maxGov) maxGov = fee;
+      }
+      if (f.type.includes("أهلي")) {
+        if (fee > maxAhli) maxAhli = fee;
+      }
+      if (f.type.includes("خاص") || f.type.includes("دولي")) {
+        if (fee > maxPrivate) maxPrivate = fee;
+      }
+    }
+
+    return [
+      { label: "حكومي", amount: maxGov },
+      { label: "أهلي", amount: maxAhli },
+      { label: "خاص ودولي", amount: maxPrivate },
+    ];
+  }, []);
+
   // Ranked Faculties Engine
   const rankedFaculties = useMemo<RankedFaculty[]>(() => {
     const effectiveScore = +(score + scoreTweak).toFixed(2);
@@ -712,7 +737,7 @@ export function FourStationJourney({
                       onChange={(e) => setBudget(parseInt(e.target.value, 10))}
                       className="w-full cursor-pointer"
                     />
-                    <div className="flex items-center gap-1.5 pt-1">
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
                       <span className="text-[10px] text-slate-500">سقف تقريبي:</span>
                       {[50000, 100000, 150000, 200000].map((preset) => (
                         <button
@@ -726,6 +751,21 @@ export function FourStationJourney({
                           }`}
                         >
                           <span dir="ltr" className="font-mono tabular-nums">{(preset / 1000).toFixed(0)}k</span> ج.م
+                        </button>
+                      ))}
+                      <span className="text-slate-300">|</span>
+                      {budgetTiers.map((tier) => (
+                        <button
+                          key={tier.label}
+                          type="button"
+                          onClick={() => setBudget(tier.amount)}
+                          className={`px-1.5 py-0.5 rounded text-[10px] border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
+                            budget === tier.amount
+                              ? "bg-blue-50 text-blue-700 border-blue-300 font-bold"
+                              : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                          }`}
+                        >
+                          {tier.label} (<span dir="ltr" className="font-mono tabular-nums">{tier.amount.toLocaleString()}</span>)
                         </button>
                       ))}
                     </div>
