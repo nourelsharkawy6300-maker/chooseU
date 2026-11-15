@@ -1342,32 +1342,81 @@ export function FourStationJourney({
                   </div>
                 </div>
 
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 text-[12px]">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-blue-700">
-                      السنة {activeRoadmapYear}:{" "}
-                      {activeRoadmapYear === 1 && "التأسيس الأكاديمي وبناء المعدل"}
-                      {activeRoadmapYear === 2 && "التخصص الدقيق والمشاريع"}
-                      {activeRoadmapYear === 3 && "التدريب الصيفي والشهادات الدولية"}
-                      {activeRoadmapYear === 4 && "مشروع التخرج والتوظيف المباشر"}
-                    </span>
-                  </div>
+                {/* Connected nodes along a line */}
+                <div className="relative border-s border-slate-300 ms-3 ps-6 space-y-3 py-1">
+                  {[
+                    {
+                      year: 1,
+                      title: "التأسيس الأكاديمي وبناء المعدل",
+                      desc: "التركيز الكامل على مقررات الرياضيات والبرمجة التأسيسية لتحقيق GPA لا يقل عن 3.4 لحجز التخصص المرغوب في السنة الثانية.",
+                    },
+                    {
+                      year: 2,
+                      title: "التخصص الدقيق والمشاريع",
+                      desc: "المشاركة في أول هاكاثون وبناء 3 مشاريع عملية حقيقية على GitHub، مع الانضمام للأنشطة الطلابية التقنية.",
+                    },
+                    {
+                      year: 3,
+                      title: "التدريب الصيفي والشهادات الدولية",
+                      desc: "قضاء تدريب صيفي مدفوع (Internship) في إحدى الشركات التقنية المعتمدة، واجتياز شهادة دولية مثل AWS Solutions Architect.",
+                    },
+                    {
+                      year: 4,
+                      title: "مشروع التخرج والتوظيف المباشر",
+                      desc: "تنفيذ مشروع تخرج له جدوى تجارية تطبيقية، حضور معارض التوظيف، وتوقيع أول عقد عمل قبل استلام شهادة التخرج.",
+                    },
+                  ].map((node, idx) => {
+                    const isActive = activeRoadmapYear === node.year;
+                    return (
+                      <div
+                        key={node.year}
+                        onClick={() => setActiveRoadmapYear(node.year)}
+                        style={{
+                          animation: `fade-up 250ms var(--ease-out-expo) ${idx * 60}ms both`,
+                        }}
+                        className={`relative p-3 rounded-xl border transition-all duration-150 cursor-pointer hover:-translate-y-0.5 active:scale-[0.98] ${
+                          isActive
+                            ? "bg-blue-50/70 border-blue-300 shadow-2xs"
+                            : "bg-white border-slate-200/80 hover:bg-slate-50"
+                        }`}
+                      >
+                        <span
+                          className={`absolute -start-[31px] top-3.5 w-3.5 h-3.5 rounded-full border-2 transition-colors ${
+                            isActive
+                              ? "bg-blue-600 border-white ring-2 ring-blue-200"
+                              : "bg-white border-slate-400"
+                          }`}
+                        />
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span
+                              className={`text-[12px] font-bold ${
+                                isActive ? "text-blue-700" : "text-slate-800"
+                              }`}
+                            >
+                              السنة {node.year}: {node.title}
+                            </span>
+                            <span
+                              dir="ltr"
+                              className="font-mono text-[10px] text-slate-400 tabular-nums"
+                            >
+                              Y0{node.year}
+                            </span>
+                          </div>
+                          <p className="text-slate-600 leading-relaxed text-[11px]">
+                            {node.desc}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
 
-                  <p className="text-slate-700 leading-relaxed text-[11px]">
-                    {activeRoadmapYear === 1 &&
-                      "التركيز الكامل على مقررات الرياضيات والبرمجة التأسيسية لتحقيق GPA لا يقل عن 3.4 لحجز التخصص المرغوب في السنة الثانية."}
-                    {activeRoadmapYear === 2 &&
-                      "المشاركة في أول هاكاثون وبناء 3 مشاريع عملية حقيقية على GitHub، مع الانضمام للأنشطة الطلابية التقنية."}
-                    {activeRoadmapYear === 3 &&
-                      "قضاء تدريب صيفي مدفوع (Internship) في إحدى الشركات التقنية المعتمدة، واجتياز شهادة دولية مثل AWS Solutions Architect."}
-                    {activeRoadmapYear === 4 &&
-                      "تنفيذ مشروع تخرج له جدوى تجارية تطبيقية، حضور معارض التوظيف، وتوقيع أول عقد عمل قبل استلام شهادة التخرج."}
-                  </p>
-
-                  <div className="border-t border-slate-200 pt-2 text-[10px] text-slate-500">
-                    مؤشر الطلب بسوق العمل:{" "}
-                    <span className="text-emerald-700 font-bold">مرتفع (متوسط طلب متزايد على الكوادر المؤهلة)</span>
-                  </div>
+                <div className="border-t border-slate-200 pt-2 text-[10px] text-slate-500">
+                  مؤشر الطلب بسوق العمل:{" "}
+                  <span className="text-emerald-700 font-bold">
+                    مرتفع (متوسط طلب متزايد على الكوادر المؤهلة)
+                  </span>
                 </div>
 
                 <button
