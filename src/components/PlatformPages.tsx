@@ -730,11 +730,19 @@ export function DirectoryView({
 
       {/* Numbered University Index List */}
       {filteredFaculties.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-500 text-[13px]">
+        <div
+          key="empty"
+          style={{ animation: "fade-up 220ms var(--ease-out-expo) both" }}
+          className="bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-500 text-[13px]"
+        >
           لا توجد كليات تطابق معايير البحث الحالية.
         </div>
       ) : (
-        <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-200 overflow-hidden shadow-2xs">
+        <div
+          key={`${streamFilter}-${categoryFilter}-${searchQuery}`}
+          style={{ animation: "fade-up 220ms var(--ease-out-expo) both" }}
+          className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-200 overflow-hidden shadow-2xs"
+        >
           {filteredFaculties.map((fac, idx) => {
             const isCompared = comparedIds.includes(fac.id);
             const numStr = String(idx + 1).padStart(2, "0");
