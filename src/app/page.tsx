@@ -66,7 +66,12 @@ export default function HomePage() {
   return (
     <div className="space-y-10">
       {/* Editorial Hero Header */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 sm:p-12 text-right shadow-2xs">
+      <div
+        style={{
+          animation: "fade-up var(--dur-base) var(--ease-out-expo) both",
+        }}
+        className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 sm:p-12 text-right shadow-2xs"
+      >
         <div className="max-w-3xl space-y-5">
           <h1 className="text-3xl sm:text-5xl font-black text-slate-900 leading-[1.45]">
             قرارك الأكاديمي والمالي
@@ -103,12 +108,16 @@ export default function HomePage() {
       {/* Grid of Platform Modules */}
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {MODULES.map((m) => {
+          {MODULES.map((m, idx) => {
             const Icon = m.icon;
             return (
               <Link
                 key={m.href}
                 href={m.href}
+                style={{
+                  animation: "fade-up var(--dur-base) var(--ease-out-expo) both",
+                  animationDelay: `${(idx + 1) * 60}ms`,
+                }}
                 className="group relative flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-6 transition-all hover:border-slate-300 hover:bg-slate-50/80 shadow-2xs"
               >
                 <div className="space-y-3">
