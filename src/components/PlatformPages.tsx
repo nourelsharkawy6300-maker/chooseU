@@ -787,13 +787,13 @@ export function DirectoryView({
                   <button
                     type="button"
                     onClick={() => onToggleCompare(fac.id)}
-                    className={`px-3 py-1.5 rounded-lg text-[12px] font-medium border transition cursor-pointer shrink-0 ${
+                    className={`px-3 py-1.5 rounded-lg text-[12px] font-medium border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer shrink-0 ${
                       isCompared
-                        ? "bg-blue-600 text-white border-blue-600"
+                        ? "bg-blue-600 text-white border-blue-600 font-semibold"
                         : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"
                     }`}
                   >
-                    {isCompared ? "في القائمة" : "إضافة للرغبات"}
+                    {isCompared ? "محفوظ في مسودة الرغبات" : "حفظ في مسودة الرغبات"}
                   </button>
                 </div>
               </div>

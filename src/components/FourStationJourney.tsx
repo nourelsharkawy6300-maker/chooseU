@@ -978,13 +978,13 @@ export function FourStationJourney({
                         <button
                           type="button"
                           onClick={() => handleToggleCompare(fac.id)}
-                          className={`flex-1 py-1.5 rounded-lg border transition-colors cursor-pointer text-center font-medium ${
+                          className={`flex-1 py-1.5 rounded-lg border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer text-center font-medium ${
                             isCompared
                               ? "bg-blue-50 border-blue-300 text-blue-700"
                               : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                           }`}
                         >
-                          {isCompared ? "✓ مضافة للمقارنة" : "+ أضف للمقارنة"}
+                          {isCompared ? "✓ محفوظة في مسودة الرغبات" : "+ حفظ في مسودة الرغبات"}
                         </button>
 
                         {onOpenFacultyDrawer && (
