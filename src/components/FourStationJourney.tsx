@@ -925,7 +925,7 @@ export function FourStationJourney({
                         className="w-full py-1.5 px-3 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-lg text-[11px] font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                       >
                         <HelpCircle className="w-3.5 h-3.5 stroke-[1.5]" />
-                        <span>لماذا هذا التخصص؟ (Explainable AI - Why?)</span>
+                        <span>لماذا هذا التخصص؟</span>
                       </button>
 
                       {/* Quick Compare & Drawer Triggers */}
@@ -1368,7 +1368,7 @@ export function FourStationJourney({
                 className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-[13px] transition-colors cursor-pointer flex items-center gap-2 shadow-md shrink-0"
               >
                 <FileText className="w-4 h-4 stroke-[2]" />
-                <span>إصدار تقرير القرار النهائي (Generate Report)</span>
+                <span>إصدار تقرير القرار النهائي</span>
               </button>
             </div>
 
@@ -1539,7 +1539,7 @@ export function FourStationJourney({
               {/* Factor 2: Trait & Aptitude Affinity */}
               <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
                 <div className="flex items-center justify-between font-bold text-slate-900">
-                  <span>2. تطابق الميول والسمات (Psychometric Trait)</span>
+                  <span>2. تطابق الميول والسمات</span>
                   <span className="text-blue-700">تطابق <span dir="ltr" className="font-mono tabular-nums">{explainFaculty.matchScore}%</span></span>
                 </div>
                 <p className="text-[11px] text-slate-600">

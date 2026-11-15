@@ -56,7 +56,7 @@ const NAVIGATION_ITEMS: NavItem[] = [
     icon: Milestone,
   },
   {
-    label: "التقرير الاستشاري (A4)",
+    label: "تقريري (A4)",
     sublabel: "النسخة المعتمدة والمراجعة الأكاديمية",
     href: "/sample-report",
     icon: FileCheck2,
@@ -116,7 +116,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                 ChooseU
               </span>
               <span className="block text-[11px] text-slate-500">
-                التدقيق الأكاديمي والمالي
+                دليلك الأكاديمي والمالي
               </span>
             </div>
           </Link>

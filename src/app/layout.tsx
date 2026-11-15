@@ -4,7 +4,7 @@ import { StudentProvider } from "@/context/StudentContext";
 import { AppShellClient } from "@/components/AppShellClient";
 
 export const metadata: Metadata = {
-  title: "ChooseU | منصة التدقيق الأكاديمي والمالي للجامعات المصرية",
+  title: "ChooseU | دليلك الأكاديمي والمالي للجامعات المصرية",
   description:
     "نظام التوجيه الجامعي، حساب التكلفة الشاملة (TCO)، وتحليل المسارات المهنية لطلاب الثانوية العامة وSTEM.",
 };

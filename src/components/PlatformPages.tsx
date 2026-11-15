@@ -102,7 +102,7 @@ export function LandingView({
             </span>
           </div>
           <h1 className="text-[26px] sm:text-[34px] font-bold text-slate-900 leading-[1.45]">
-            قرارك الجامعي مبني على تدقيق مالي وأكاديمي لـ 4 سنوات، وليس مجرد توقعات تنسيق.
+            قرارك الجامعي مبني على حساب مالي وأكاديمي لـ 4 سنوات، وليس مجرد توقعات تنسيق.
           </h1>
           <p className="text-[14px] sm:text-[15px] text-slate-600 leading-relaxed">
             منصة هندسية متكاملة لطلاب الثانوية العامة وما يعادلها وأولياء الأمور في مصر؛ تحسب التوافق التخصصي، تحاكي تغيرات التنسيق، وتكشف التكلفة التراكمية الحقيقية (شاملة التضخم السنوي، السكن، وشروط الـ GPA الداخلي).
@@ -195,10 +195,10 @@ export function LandingView({
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-[18px] font-semibold text-slate-900 leading-[1.45]">
-            معمارية التدقيق الأكاديمي والمالي في ChooseU
+            منظومة التوجيه الأكاديمي والمالي في ChooseU
           </h2>
           <span className="text-[12px] text-slate-500">
-            4 ركائز تحليلية لحماية مستقبل الطالب وميزانية الأسرة
+            4 ركائز عملية لحماية مستقبل الطالب وميزانية الأسرة
           </span>
         </div>
 
@@ -218,7 +218,7 @@ export function LandingView({
             },
             {
               icon: Scale,
-              title: "3. تدقيق شروط الـ GPA الداخلي والمنح",
+              title: "3. مراجعة شروط الـ GPA الداخلي والمنح",
               desc: "كشف اشتراطات المعدل التراكمي في السنة التأسيسية الأولى (مثل GPA >= 2.7) المطلوبة للتخصص في الذكاء الاصطناعي أو الأمن السيبراني.",
               metric: "حماية من مخاطر التشعيب الداخلي",
             },
@@ -278,7 +278,7 @@ export function LandingView({
                 "اختبار تقييم الميول المهنية المخصص لشعبتك (6 مواقف عملية)",
                 "محاكي حساسية التنسيق اللحظي (-1.5% / المتوقع / +1.5%)",
                 "فتح كامل تفاصيل ولوائح أول ترشيحين في مصفوفة الـ 4 سنوات",
-                "استكشاف المسار الوظيفي والرواتب المتوقعة (Future Me)",
+                "استكشاف المسار الوظيفي والرواتب المتوقعة",
               ].map((feat) => (
                 <li key={feat} className="flex items-center gap-2.5">
                   <Check
@@ -395,7 +395,7 @@ export function FutureMeView({
           <div className="flex items-center gap-2">
             <Briefcase className="w-5 h-5 text-blue-600" strokeWidth={1.5} />
             <h1 className="text-[20px] font-bold text-slate-900 leading-[1.45]">
-              المسار الوظيفي ومستقبلي (Future Me & Career Roadmap)
+              المسار الوظيفي ومستقبلي
             </h1>
           </div>
           <p className="text-[13px] text-slate-500">
@@ -471,7 +471,7 @@ export function FutureMeView({
           <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-1.5">
             <div className="text-[12px] font-semibold text-slate-800 flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4 text-blue-600" strokeWidth={1.5} />
-              <span>مسار التدرج الوظيفي (Career Progression):</span>
+              <span>مسار التدرج الوظيفي:</span>
             </div>
             <p className="text-[13px] text-slate-700 font-medium leading-relaxed">
               {career.progression}
@@ -1226,7 +1226,7 @@ export function TrackOrderView({
                 },
                 {
                   num: 2,
-                  title: "2. التدقيق المالي والجغرافي",
+                  title: "2. المراجعة المالية والجغرافية",
                   desc: "حساب مصفوفة السكن وسيناريوهات التضخم",
                   done: true,
                 },

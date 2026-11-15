@@ -969,7 +969,7 @@ export function WorkspaceTabs({
                     onClick={() => setIsMethodologyOpen(true)}
                     className="text-blue-600 hover:underline font-medium cursor-pointer"
                   >
-                    منهجية الحساب وتدقيق البيانات
+                    منهجية الحساب ومراجعة البيانات
                   </button>
                   <span className="text-slate-300">|</span>
                   <span className="text-slate-500">
@@ -1588,7 +1588,7 @@ export function WorkspaceTabs({
               <div className="flex items-center gap-2">
                 <Scale className="w-4 h-4 text-blue-600" strokeWidth={1.5} />
                 <h3 className="text-[16px] font-semibold text-slate-900">
-                  منهجية الحساب وتدقيق البيانات في ChooseU
+                  منهجية الحساب ومراجعة البيانات في ChooseU
                 </h3>
               </div>
               <button
