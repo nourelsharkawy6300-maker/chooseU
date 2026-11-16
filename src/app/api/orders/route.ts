@@ -1,57 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { checkRateLimit, getClientIp } from "@/lib/server-auth";
+import { checkStrictLimit, checkGlobalLimit, rateLimitExceededResponse } from "@/lib/security/ratelimit";
+import { sanitizeInput } from "@/lib/security/sanitize";
+import { getSupabaseClient } from "@/lib/supabase";
+import { getClientIp } from "@/lib/server-auth";
 import { ConsultationOrderRow } from "@/types/chooseu";
 import { EGYPT_GOVERNORATES } from "@/data/faculties-db";
 
-// Server-side strict validation schema
-const CreateOrderSchema = z.object({
-  student_name: z
-    .string()
-    .min(6, "اسم الطالب يجب أن يكون ثلاثياً واضحاً")
-    .max(100, "اسم الطالب طويل جداً")
-    .refine(
-      (val) => val.trim().split(/\s+/).length >= 3,
-      "يرجى إدخال اسم الطالب ثلاثياً على الأقل"
-    ),
-  whatsapp_phone: z
-    .string()
-    .regex(/^01[0125][0-9]{8}$/, "رقم هاتف مصري غير صحيح (01XXXXXXXXX)"),
-  academic_stream: z.enum(["Science", "Math", "Arts", "stem", "Undecided"]),
-  score_percentage: z.number().min(50).max(100),
-  max_budget: z.number().min(0).max(5000000),
-  governorate: z.string().refine((g) => EGYPT_GOVERNORATES.includes(g), {
-    message: "محافظة غير صالحة",
-  }),
-  instapay_ref: z
-    .string()
-    .min(6, "رقم مرجع التحويل يجب أن يكون 6 خانات على الأقل")
-    .max(64, "رقم مرجع التحويل طويل جداً")
-    .regex(/^[A-Za-z0-9\-_#]+$/, "مرجع تحويل غير صالح"),
-  quiz_results: z.record(z.string(), z.unknown()).optional(),
-});
-
-function sanitizeText(str: string): string {
-  return str
-    .replace(/<[^>]*>?/gm, "")
-    .replace(/[<>]/g, "")
-    .replace(/javascript:/gi, "")
-    .trim();
-}
+// Server-side strict validation schema (Hard-fail on unknown fields)
+const CreateOrderSchema = z
+  .object({
+    student_name: z
+      .string()
+      .min(6, "اسم الطالب يجب أن يكون ثلاثياً واضحاً")
+      .max(100, "اسم الطالب طويل جداً")
+      .refine(
+        (val) => val.trim().split(/\s+/).length >= 3,
+        "يرجى إدخال اسم الطالب ثلاثياً على الأقل"
+      ),
+    whatsapp_phone: z
+      .string()
+      .regex(/^01[0125][0-9]{8}$/, "رقم هاتف مصري غير صحيح (01XXXXXXXXX)"),
+    academic_stream: z.enum(["Science", "Math", "Arts", "stem", "Undecided"]),
+    score_percentage: z.number().min(50).max(100),
+    max_budget: z.number().min(0).max(5000000),
+    governorate: z.string().refine((g) => EGYPT_GOVERNORATES.includes(g), {
+      message: "محافظة غير صالحة",
+    }),
+    instapay_ref: z
+      .string()
+      .min(6, "رقم مرجع التحويل يجب أن يكون 6 خانات على الأقل")
+      .max(64, "رقم مرجع التحويل طويل جداً")
+      .regex(/^[A-Za-z0-9\-_#]+$/, "مرجع تحويل غير صالح"),
+    quiz_results: z.record(z.string(), z.unknown()).optional(),
+  })
+  .strict();
 
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req.headers);
-    // Rate limit: Max 10 orders per hour per IP to prevent spam
-    const rateLimit = checkRateLimit(`order_create_${ip}`, 10, 3600);
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "تم تجاوز الحد المسموح من الطلبات لهذا الجهاز. يرجى المحاولة لاحقاً.",
-        },
-        { status: 429 }
-      );
+    // Strict rate limit check: 5 requests per minute
+    const rateLimit = await checkStrictLimit(`order_create_${ip}`);
+    if (!rateLimit.success) {
+      return rateLimitExceededResponse(rateLimit.reset);
     }
 
     const body: unknown = await req.json();
@@ -75,14 +66,14 @@ export async function POST(req: NextRequest) {
 
     const sanitizedOrder: ConsultationOrderRow & { amount_egp: number } = {
       order_code: orderCode,
-      student_name: sanitizeText(data.student_name),
-      whatsapp_phone: data.whatsapp_phone,
+      student_name: sanitizeInput(data.student_name),
+      whatsapp_phone: sanitizeInput(data.whatsapp_phone),
       academic_stream: data.academic_stream,
       score_percentage: Number(data.score_percentage),
       max_budget: Number(data.max_budget),
-      governorate: sanitizeText(data.governorate),
+      governorate: sanitizeInput(data.governorate),
       quiz_results: data.quiz_results || {},
-      instapay_ref: sanitizeText(data.instapay_ref),
+      instapay_ref: sanitizeInput(data.instapay_ref),
       order_status: "pending",
       amount_egp: OFFICIAL_REPORT_PRICE_EGP,
       voice_note_url: "",
@@ -90,59 +81,42 @@ export async function POST(req: NextRequest) {
       created_at: new Date().toISOString(),
     };
 
-    // Forward to Supabase via server-side call
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    // Forward to Supabase via parameterized SDK call
+    const supabase = getSupabaseClient();
 
-    if (supabaseUrl && supabaseKey) {
-      try {
-        const response = await fetch(
-          `${supabaseUrl}/rest/v1/consultation_orders`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              apikey: supabaseKey,
-              Authorization: `Bearer ${supabaseKey}`,
-              Prefer: "return=representation",
-            },
-            body: JSON.stringify({
-              order_code: sanitizedOrder.order_code,
-              student_name: sanitizedOrder.student_name,
-              whatsapp_phone: sanitizedOrder.whatsapp_phone,
-              academic_stream: sanitizedOrder.academic_stream,
-              score_percentage: sanitizedOrder.score_percentage,
-              max_budget: sanitizedOrder.max_budget,
-              governorate: sanitizedOrder.governorate,
-              quiz_results: sanitizedOrder.quiz_results,
-              instapay_ref: sanitizedOrder.instapay_ref,
-              order_status: sanitizedOrder.order_status,
-            }),
-          }
-        );
+    if (supabase) {
+      const { data: insertedRows, error: insertError } = await supabase
+        .from("consultation_orders")
+        .insert({
+          order_code: sanitizedOrder.order_code,
+          student_name: sanitizedOrder.student_name,
+          whatsapp_phone: sanitizedOrder.whatsapp_phone,
+          academic_stream: sanitizedOrder.academic_stream,
+          score_percentage: sanitizedOrder.score_percentage,
+          max_budget: sanitizedOrder.max_budget,
+          governorate: sanitizedOrder.governorate,
+          quiz_results: sanitizedOrder.quiz_results,
+          instapay_ref: sanitizedOrder.instapay_ref,
+          order_status: sanitizedOrder.order_status,
+        })
+        .select();
 
-        if (!response.ok) {
-          const errText = await response.text();
-          console.error("Supabase order insert error:", errText);
-          return NextResponse.json(
-            { success: false, error: "فشل حفظ الطلب في قاعدة البيانات. يرجى التحقق من صحة البيانات والمحاولة مجدداً." },
-            { status: 500 }
-          );
-        }
-
-        const rows = (await response.json()) as ConsultationOrderRow[];
-        if (Array.isArray(rows) && rows.length > 0) {
-          return NextResponse.json({
-            success: true,
-            order: rows[0],
-          });
-        }
-      } catch (err) {
-        console.error("Supabase order fetch exception:", err);
+      if (insertError) {
+        console.error("Supabase parameterized insert error:", insertError.message);
         return NextResponse.json(
-          { success: false, error: "حدث خطأ في الاتصال بقاعدة البيانات لتسجيل الطلب." },
+          {
+            success: false,
+            error: "فشل حفظ الطلب في قاعدة البيانات. يرجى التحقق من صحة البيانات والمحاولة مجدداً.",
+          },
           { status: 500 }
         );
+      }
+
+      if (Array.isArray(insertedRows) && insertedRows.length > 0) {
+        return NextResponse.json({
+          success: true,
+          order: insertedRows[0],
+        });
       }
     }
 
@@ -161,13 +135,10 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const ip = getClientIp(req.headers);
-    // Rate limit search: Max 30 requests per 5 minutes per IP
-    const rateLimit = checkRateLimit(`order_query_${ip}`, 30, 300);
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { success: false, error: "طلبات بحث متكررة، يرجى الانتظار دقيقة." },
-        { status: 429 }
-      );
+    // Global rate limit: 50 requests per 10 seconds
+    const rateLimit = await checkGlobalLimit(`order_query_${ip}`);
+    if (!rateLimit.success) {
+      return rateLimitExceededResponse(rateLimit.reset);
     }
 
     const { searchParams } = new URL(req.url);
@@ -180,37 +151,31 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const cleanQuery = sanitizeText(query);
+    const cleanQuery = sanitizeInput(query);
     const upperCode = cleanQuery.toUpperCase();
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const supabase = getSupabaseClient();
 
-    if (supabaseUrl && supabaseKey) {
+    if (supabase) {
       try {
-        const filterParam = upperCode.startsWith("ORD-")
-          ? `order_code=ilike.${encodeURIComponent(upperCode)}`
-          : `or=(order_code.ilike.${encodeURIComponent(
-              upperCode
-            )},whatsapp_phone.eq.${encodeURIComponent(cleanQuery)})`;
+        let queryBuilder = supabase
+          .from("consultation_orders")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(1);
 
-        const response = await fetch(
-          `${supabaseUrl}/rest/v1/consultation_orders?${filterParam}&order=created_at.desc&limit=1`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              apikey: supabaseKey,
-              Authorization: `Bearer ${supabaseKey}`,
-            },
-            cache: "no-store",
-          }
-        );
+        if (upperCode.startsWith("ORD-")) {
+          queryBuilder = queryBuilder.ilike("order_code", upperCode);
+        } else {
+          queryBuilder = queryBuilder.or(
+            `order_code.ilike.${upperCode},whatsapp_phone.eq.${cleanQuery}`
+          );
+        }
 
-        if (response.ok) {
-          const rows = (await response.json()) as ConsultationOrderRow[];
-          if (Array.isArray(rows) && rows.length > 0) {
-            return NextResponse.json({ success: true, order: rows[0] });
-          }
+        const { data: rows, error } = await queryBuilder;
+
+        if (!error && Array.isArray(rows) && rows.length > 0) {
+          return NextResponse.json({ success: true, order: rows[0] as ConsultationOrderRow });
         }
       } catch {
         // Fall through

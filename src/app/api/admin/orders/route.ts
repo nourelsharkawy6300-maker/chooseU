@@ -1,22 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAdminSessionToken } from "@/lib/server-auth";
+import { sanitizeInput } from "@/lib/security/sanitize";
+import { getSupabaseClient } from "@/lib/supabase";
 import { ConsultationOrderRow } from "@/types/chooseu";
 
-const PatchOrderSchema = z.object({
-  order_code: z.string().min(4).max(64),
-  order_status: z.enum(["pending", "approved", "rejected"]),
-  advisor_notes: z.string().max(4000).optional(),
-  voice_note_url: z.string().url().max(1024).or(z.literal("")).optional(),
-});
-
-function sanitizeHtml(input: string): string {
-  return input
-    .replace(/<[^>]*>?/gm, "")
-    .replace(/[<>]/g, "")
-    .replace(/javascript:/gi, "")
-    .trim();
-}
+const PatchOrderSchema = z
+  .object({
+    order_code: z.string().min(4).max(64),
+    order_status: z.enum(["pending", "approved", "rejected"]),
+    advisor_notes: z.string().max(4000).optional(),
+    voice_note_url: z.string().url().max(1024).or(z.literal("")).optional(),
+  })
+  .strict();
 
 export async function GET(req: NextRequest) {
   // 1. RBAC Check: Must have a valid admin session cookie
@@ -30,27 +26,17 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  // 2. Fetch from Supabase REST API server-side
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (supabaseUrl && supabaseKey) {
+  // 2. Fetch from Supabase via parameterized client
+  const supabase = getSupabaseClient();
+  if (supabase) {
     try {
-      const response = await fetch(
-        `${supabaseUrl}/rest/v1/consultation_orders?select=*&order=created_at.desc`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            apikey: supabaseKey,
-            Authorization: `Bearer ${supabaseKey}`,
-          },
-          cache: "no-store",
-        }
-      );
+      const { data, error } = await supabase
+        .from("consultation_orders")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-      if (response.ok) {
-        const rows = (await response.json()) as ConsultationOrderRow[];
-        return NextResponse.json({ success: true, orders: rows });
+      if (!error && Array.isArray(data)) {
+        return NextResponse.json({ success: true, orders: data as ConsultationOrderRow[] });
       }
     } catch {
       // Fall through to empty array
@@ -89,40 +75,28 @@ export async function PATCH(req: NextRequest) {
     const { order_code, order_status, advisor_notes, voice_note_url } =
       parsed.data;
 
-    const sanitizedNotes = advisor_notes ? sanitizeHtml(advisor_notes) : null;
-    const sanitizedVoice = voice_note_url ? sanitizeHtml(voice_note_url) : null;
+    const sanitizedNotes = advisor_notes ? sanitizeInput(advisor_notes) : null;
+    const sanitizedVoice = voice_note_url ? sanitizeInput(voice_note_url) : null;
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const supabase = getSupabaseClient();
 
-    if (supabaseUrl && supabaseKey) {
+    if (supabase) {
       const patchBody: Record<string, unknown> = {
         order_status,
         advisor_notes: sanitizedNotes,
         voice_note_url: sanitizedVoice,
       };
 
-      const response = await fetch(
-        `${supabaseUrl}/rest/v1/consultation_orders?order_code=eq.${encodeURIComponent(
-          order_code
-        )}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            apikey: supabaseKey,
-            Authorization: `Bearer ${supabaseKey}`,
-            Prefer: "return=representation",
-          },
-          body: JSON.stringify(patchBody),
-        }
-      );
+      const { data: updatedRows, error } = await supabase
+        .from("consultation_orders")
+        .update(patchBody)
+        .eq("order_code", order_code)
+        .select();
 
-      if (response.ok) {
-        const updatedRows = (await response.json()) as ConsultationOrderRow[];
+      if (!error && Array.isArray(updatedRows) && updatedRows.length > 0) {
         return NextResponse.json({
           success: true,
-          order: updatedRows[0] || null,
+          order: updatedRows[0] as ConsultationOrderRow,
         });
       }
     }

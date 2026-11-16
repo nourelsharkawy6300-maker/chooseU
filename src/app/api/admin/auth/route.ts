@@ -1,33 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import {
-  checkRateLimit,
   createAdminSessionToken,
   getClientIp,
   verifyPasscode,
 } from "@/lib/server-auth";
+import { checkStrictLimit, rateLimitExceededResponse } from "@/lib/security/ratelimit";
+import { getHardenedCookieOptions } from "@/lib/security/cookies";
 
-const LoginSchema = z.object({
-  passcode: z
-    .string()
-    .min(1, "رمز المرور مطلوب")
-    .max(128, "رمز المرور أطول من المسموح"),
-});
+const LoginSchema = z
+  .object({
+    passcode: z
+      .string()
+      .min(1, "رمز المرور مطلوب")
+      .max(128, "رمز المرور أطول من المسموح"),
+  })
+  .strict();
 
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req.headers);
-    const rateLimit = checkRateLimit(`admin_auth_${ip}`, 5, 900); // 5 attempts per 15 min
+    const rateLimit = await checkStrictLimit(`admin_auth_${ip}`);
 
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "تم تجاوز الحد المسموح من المحاولات. يرجى المحاولة بعد قليل.",
-          resetSeconds: rateLimit.resetSeconds,
-        },
-        { status: 429 }
-      );
+    if (!rateLimit.success) {
+      return rateLimitExceededResponse(rateLimit.reset);
     }
 
     const body: unknown = await req.json();
@@ -61,7 +57,6 @@ export async function POST(req: NextRequest) {
     }
 
     const sessionToken = createAdminSessionToken(7200); // 2 hours
-    const isProduction = process.env.NODE_ENV === "production";
 
     const response = NextResponse.json({
       success: true,
@@ -71,11 +66,7 @@ export async function POST(req: NextRequest) {
     response.cookies.set({
       name: "chooseu_admin_session",
       value: sessionToken,
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: "strict",
-      path: "/",
-      maxAge: 7200,
+      ...getHardenedCookieOptions(7200),
     });
 
     return response;
