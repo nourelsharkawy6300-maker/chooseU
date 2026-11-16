@@ -267,7 +267,7 @@ export default function AdvisorAdminPortalPage() {
       ? `2${normalizedPhone}`
       : normalizedPhone;
     const msg = `مرحباً ${selectedOrder.student_name}،
-تمت مراجعة واعتماد تقريرك المالي والأكاديمي الشامل لـ 4 سنوات في منصة ChooseU بنجاح.
+تمت مراجعة واعتماد تقريرك المالي والأكاديمي الشامل لسنوات دراستك بالكامل في منصة ChooseU بنجاح.
 • رقم الطلب المعتمد: ${selectedOrder.order_code}
 • حالة التقرير: تم الاعتماد والفتح (Approved)
 يمكنك الآن الدخول إلى قسم «متابعة حالة الطلب» على المنصة وإدخال كود الطلب (${selectedOrder.order_code}) لاستعراض الجدول الكامل، الاستماع للمذكرة الصوتية، وتحميل نسخة الـ PDF.`;

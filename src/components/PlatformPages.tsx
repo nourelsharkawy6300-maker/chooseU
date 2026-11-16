@@ -105,7 +105,7 @@ export function LandingView({
             </span>
           </div>
           <h1 className="text-[26px] sm:text-[34px] font-bold text-slate-900 leading-[1.45]">
-            قرارك الجامعي مبني على حساب مالي وأكاديمي لـ 4 سنوات، وليس مجرد توقعات تنسيق.
+            قرارك الجامعي مبني على حساب مالي وأكاديمي لسنوات دراستك بالكامل، وليس مجرد توقعات تنسيق.
           </h1>
           <p className="text-[14px] sm:text-[15px] text-slate-600 leading-relaxed">
             منصة هندسية متكاملة لطلاب الثانوية العامة وما يعادلها وأولياء الأمور في مصر؛ تحسب التوافق التخصصي، تحاكي تغيرات التنسيق، وتكشف التكلفة التراكمية الحقيقية (شاملة التضخم السنوي، السكن، وشروط الـ GPA الداخلي).
@@ -215,8 +215,8 @@ export function LandingView({
             },
             {
               icon: Wallet,
-              title: "2. محاكي التضخم والتكلفة لـ 4 سنوات (TCO)",
-              desc: "حساب التدفق المالي التراكمي لـ 4 سنوات تحت سيناريوهات تضخم (10% و15% و22%) شاملة الرسوم المعملية والإدارية.",
+              title: "2. محاكي التضخم وتكلفة سنوات الدراسة (TCO)",
+              desc: "حساب التدفق المالي التراكمي لسنوات الدراسة بالكامل تحت سيناريوهات تضخم (10% و15% و22%) شاملة الرسوم المعملية والإدارية.",
               metric: "رؤية مالية واضحة حتى التخرج",
             },
             {
@@ -229,7 +229,7 @@ export function LandingView({
               icon: MapPin,
               title: "4. التوزيع الجغرافي وتكلفة السكن/المواصلات",
               desc: "مقارنة دقيقة بين الدراسة داخل نطاق محافظتك (نطاق أ) مقابل تكلفة السكن الطلابي أو خطوط النقل الإقليمية للمحافظات المجاورة.",
-              metric: "توفير حتى 85,000 ج.م في 4 سنوات",
+              metric: "توفير حتى 85,000 ج.م طوال سنوات الدراسة",
             },
           ].map((card) => {
             const IconComponent = card.icon;
@@ -280,7 +280,7 @@ export function LandingView({
               {[
                 "اختبار تقييم الميول المهنية المخصص لشعبتك (6 مواقف عملية)",
                 "محاكي حساسية التنسيق اللحظي (-1.5% / المتوقع / +1.5%)",
-                "فتح كامل تفاصيل ولوائح أول ترشيحين في مصفوفة الـ 4 سنوات",
+                "فتح كامل تفاصيل ولوائح أول ترشيحين في مصفوفة التكلفة الكاملة",
                 "استكشاف المسار الوظيفي والرواتب المتوقعة",
               ].map((feat) => (
                 <li key={feat} className="flex items-center gap-2.5">
@@ -324,7 +324,7 @@ export function LandingView({
             </p>
             <ul className="space-y-2.5 pt-2 text-[13px] text-slate-700">
               {[
-                "فتح جميع الكليات والبدائل الاستراتيجية في جدول الـ 4 سنوات بدون تمويه",
+                "فتح جميع الكليات والبدائل الاستراتيجية في جدول التكلفة بالكامل بدون تمويه",
                 "جدول التدفقات المالية التفصيلي تحت 3 سيناريوهات تضخم + تكلفة السكن",
                 "تحليل مخاطر الـ GPA في السنة التأسيسية الأولى وخارطة طريق التفوق",
                 "مراجعة بشرية من مستشار مختص + مذكرة صوتية مخصصة للأسرة عبر واتساب",
@@ -411,7 +411,7 @@ export function FutureMeView({
             </h1>
           </div>
           <p className="text-[13px] text-slate-500">
-            استكشف المسميات الوظيفية، متوسط الرواتب في مصر، وخارطة المهارات العملية لـ 4 سنوات لكل كلية.
+            استكشف المسميات الوظيفية، متوسط الرواتب في مصر، وخارطة المهارات العملية لسنوات الدراسة لكل كلية.
           </p>
         </div>
 
@@ -920,7 +920,7 @@ export function SampleReportView({
                 وثيقة التقييم الأكاديمي والمالي الشامل — ChooseU Advisory
               </div>
               <h2 className="text-[20px] font-bold text-slate-900 mt-1 leading-[1.45]">
-                التقرير الاستشاري المعتمد لتنسيق الجامعات والتدفق المالي لـ 4 سنوات
+                التقرير الاستشاري المعتمد لتنسيق الجامعات والتدفق المالي لسنوات الدراسة بالكامل
               </h2>
               <p className="text-xs text-slate-600 font-medium mt-1 tabular-nums">
                 وثيقة استشارية مدققة وفق حدود القبول الرسمية ولوائح المصروفات الجامعية (أكتوبر 2026)
@@ -1021,7 +1021,7 @@ export function SampleReportView({
           {/* 4-Year TCO Cashflow Table */}
           <div className="space-y-3">
             <h3 className="text-[15px] font-semibold text-slate-900">
-              ثانياً: جدول التدفقات المالية لـ 4 سنوات (TCO) ولوائح الـ GPA الداخلي
+              ثانياً: جدول التدفقات المالية لسنوات الدراسة بالكامل (TCO) ولوائح الـ GPA الداخلي
             </h3>
             <div className="overflow-x-auto border border-slate-200 rounded-xl">
               <table className="w-full text-right border-collapse text-[12px] tabular-nums">
@@ -1031,7 +1031,7 @@ export function SampleReportView({
                     <th className="py-3 px-3.5">حد 2026</th>
                     <th className="py-3 px-3.5">مصروفات سنة 1</th>
                     <th className="py-3 px-3.5">
-                      إجمالي 4 سنوات (تضخم {inflationScenario}%)
+                      إجمالي سنوات الدراسة بالكامل (تضخم {inflationScenario}%)
                     </th>
                     <th className="py-3 px-3.5">الاستقرار الجغرافي ({gov})</th>
                     <th className="py-3 px-3.5">شرط الـ GPA الداخلي</th>
@@ -1405,7 +1405,7 @@ export function TrackOrderView({
               {/* Full Unblurred Table */}
               <div className="space-y-2">
                 <h4 className="text-[14px] font-semibold text-slate-900">
-                  جدول المقارنة المالية والأكاديمية الكامل لـ 4 سنوات (مفتوح بالكامل):
+                  جدول المقارنة المالية والأكاديمية الكامل لسنوات الدراسة (مفتوح بالكامل):
                 </h4>
                 <div className="overflow-x-auto border border-slate-200 rounded-xl">
                   <table className="w-full text-right border-collapse text-xs tabular-nums">
@@ -1416,7 +1416,7 @@ export function TrackOrderView({
                         </th>
                         <th className="py-3 px-4">حد 2026</th>
                         <th className="py-3 px-4">مصروفات سنة 1</th>
-                        <th className="py-3 px-4">إجمالي 4 سنوات بالتضخم</th>
+                        <th className="py-3 px-4">إجمالي تكلفة الدراسة بالكامل بالتضخم</th>
                         <th className="py-3 px-4">
                           الانتقال / السكن ({orderResult.governorate})
                         </th>

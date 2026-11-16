@@ -1166,7 +1166,7 @@ export function FourStationJourney({
                         ))}
                       </tr>
                       <tr>
-                        <td className="py-2.5 px-3 text-slate-500">تقدير تكلفة الـ 4 سنوات (TCO)</td>
+                        <td className="py-2.5 px-3 text-slate-500">تقدير تكلفة مدة الدراسة بالكامل (TCO)</td>
                         {comparedFaculties.map((f) => {
                           const tcoEst = computeFacultyTcoMetrics(f, governorate, livingMode, 15).total4Yr;
                           return (

@@ -492,7 +492,7 @@ export function WorkspaceTabs({
             {workspaceTab === "scenarios" &&
               "استعرض الكليات المناسبة لمجموعك وجرّب سيناريوهات تغير درجات التنسيق صعوداً أو هبوطاً بنقرة واحدة."}
             {workspaceTab === "tco_table" &&
-              "احسب التكلفة الحقيقية الكاملة لـ 4 سنوات دراسية شاملة المصروفات، المعامل، والزيادة السنوية بالتضخم، وتكلفة الانتقال أو السكن."}
+              "احسب التكلفة الحقيقية الكاملة لسنوات الدراسة شاملة المصروفات، المعامل، والزيادة السنوية بالتضخم، وتكلفة الانتقال أو السكن."}
             {workspaceTab === "compare" &&
               "قارن بين كلياتك المفضلة وجهاً لوجه عبر 8 معايير دقيقة لتصل مع ولي أمرك للقرار الأنسب والأكثر أماناً."}
           </p>
@@ -989,7 +989,7 @@ export function WorkspaceTabs({
                 onClick={() => setWorkspaceTab("tco_table")}
                 className="bg-[#377ef0] hover:bg-[#2962be] text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 cursor-pointer shadow-sm transition"
               >
-                <span>مصفوفة الـ 4 سنوات والتضخم (TCO)</span>
+                <span>مصفوفة سنوات الدراسة والتضخم (TCO)</span>
                 <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
               </button>
             </div>
@@ -997,7 +997,7 @@ export function WorkspaceTabs({
         )}
 
         {/* ===================================================================
-            SUB-TAB 3: 3. مصفوفة الـ 4 سنوات والتضخم TCO (TCO_TABLE)
+            SUB-TAB 3: 3. مصفوفة سنوات الدراسة والتضخم TCO (TCO_TABLE)
            =================================================================== */}
         {workspaceTab === "tco_table" && (
           <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
@@ -1005,7 +1005,7 @@ export function WorkspaceTabs({
             <div className="p-6 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4">
               <div className="space-y-1">
                 <h2 className="text-[17px] font-semibold text-slate-900">
-                  مصفوفة التدفق المالي لـ 4 سنوات والتضخم (TCO)
+                  مصفوفة التدفق المالي لسنوات الدراسة والتضخم (TCO)
                 </h2>
                 <div className="flex items-center gap-3 text-[12px]">
                   <button
@@ -1270,7 +1270,7 @@ export function WorkspaceTabs({
                         <Lock className="w-4 h-4" strokeWidth={1.5} />
                       </div>
                       <h3 className="text-[15px] font-semibold text-slate-900">
-                        افتح مصفوفة الـ 4 سنوات الكاملة لباقي الكليات المطابقة
+                        افتح مصفوفة التكلفة الكاملة لباقي الكليات المطابقة
                       </h3>
                       <p className="text-[12px] text-slate-600 mt-1.5 mb-4 leading-relaxed tabular-nums">
                         يشمل حساب التدفق المالي الكامل بالتضخم، لوائح الـ GPA الداخلي، ومراجعة المستشار الأكاديمي مع المذكرة الصوتية.
@@ -1341,7 +1341,7 @@ export function WorkspaceTabs({
                     </strong>{" "}
                     كأفضل خيار يوازن بين قوة العائد الوظيفي ({
                       bestFitComparedFaculty.future_career?.salary_range_egp || "متوسط رواتب تنافسي"
-                    }) وتقليل أعباء الاغتراب والتضخم التراكمي لـ 4 سنوات.
+                    }) وتقليل أعباء الاغتراب والتضخم التراكمي طوال سنوات الدراسة.
                   </p>
                 </div>
               </UIMavenCard>
@@ -1418,7 +1418,7 @@ export function WorkspaceTabs({
 
                   <tr>
                     <td className="py-3 px-4 font-semibold text-slate-700 bg-slate-50 sticky right-0 z-10">
-                      4. إجمالي 4 سنوات بالتضخم
+                      4. إجمالي تكلفة الدراسة بالكامل بالتضخم
                     </td>
                     {comparedFacultiesList.map((fac) => {
                       const m = computeFacultyTcoMetrics(
@@ -1707,7 +1707,7 @@ export function WorkspaceTabs({
                 </p>
                 <p>
                   <strong className="text-slate-900 block mb-0.5">
-                    2. حساب التكلفة التراكمية لـ 4 سنوات (Compound TCO):
+                    2. حساب التكلفة التراكمية طوال سنوات الدراسة (Compound TCO):
                   </strong>
                   تُحسب التكلفة الكلية بإضافة الرسوم المعملية والإدارية السنوية ومعدل الزيادة المركبة للمصروفات (10% مستقر، 15% مرجعي، 22% تحوط أقصى) إلى جانب تكلفة الانتقال المحلي أو السكن الطلابي.
                 </p>
