@@ -1144,6 +1144,18 @@ export function FourStationJourney({
                             )}
                           </span>
                         </div>
+                        {(() => {
+                          const m = computeFacultyTcoMetrics(fac, governorate, livingMode, 15);
+                          const y1Actual = m.y1Base + m.adminFee + m.annualLiving;
+                          if (fac.y1_base_fee <= budget && y1Actual > budget && budget > 0) {
+                            return (
+                              <div className="col-span-2 text-[10px] text-amber-800 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5 font-medium leading-tight mt-1">
+                                الرسوم الأساسية ضمن ميزانيتك، لكن التكلفة الفعلية للسنة الأولى أعلى
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
                       </div>
                     </div>
 
@@ -1903,6 +1915,18 @@ export function FourStationJourney({
                 <p className="text-xs text-slate-700 leading-relaxed font-medium">
                   المصروفات السنوية تقع تحت سقف ميزانيتك المقدرة بـ {budget.toLocaleString()} ج.م، مما يحميك من أي تعثر مالي مستقبلي.
                 </p>
+                {(() => {
+                  const em = computeFacultyTcoMetrics(explainFaculty, governorate, livingMode, 15);
+                  const ey1 = em.y1Base + em.adminFee + em.annualLiving;
+                  if (explainFaculty.y1_base_fee <= budget && ey1 > budget && budget > 0) {
+                    return (
+                      <div className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded p-1.5 font-medium mt-1">
+                        الرسوم الأساسية ضمن ميزانيتك، لكن التكلفة الفعلية للسنة الأولى أعلى
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
               </div>
 
               {/* Factor 4: Location & Commute */}

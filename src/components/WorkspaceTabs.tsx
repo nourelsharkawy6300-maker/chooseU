@@ -918,6 +918,11 @@ export function WorkspaceTabs({
                             <div className="font-bold text-slate-900">
                               <AnimatedCounter value={fac.y1_base_fee} suffix=" ج.م" />
                             </div>
+                            {fac.y1_base_fee <= budget && m.y1Base + m.adminFee + m.annualLiving > budget && budget > 0 && (
+                              <div className="text-[10px] text-amber-800 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5 mt-1 font-medium leading-tight text-center sm:text-start">
+                                الرسوم الأساسية ضمن ميزانيتك، لكن التكلفة الفعلية للسنة الأولى أعلى
+                              </div>
+                            )}
                           </div>
                           <div className="space-y-0.5 min-w-[95px]">
                             <div className="text-xs text-slate-600 font-medium">التكلفة الإجمالية</div>
@@ -1614,6 +1619,17 @@ export function WorkspaceTabs({
                     {auditedFaculty.y1_base_fee.toLocaleString()} ج.م
                   </strong>
                 </div>
+                {(() => {
+                  const am = computeFacultyTcoMetrics(auditedFaculty, gov, livingMode, inflationScenario);
+                  if (auditedFaculty.y1_base_fee <= budget && am.y1Base + am.adminFee + am.annualLiving > budget && budget > 0) {
+                    return (
+                      <div className="col-span-2 text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-2 font-medium">
+                        الرسوم الأساسية ضمن ميزانيتك، لكن التكلفة الفعلية للسنة الأولى أعلى
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
               </div>
 
               <div className="space-y-2 text-[12px]">
