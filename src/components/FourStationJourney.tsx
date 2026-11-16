@@ -402,7 +402,7 @@ export function FourStationJourney({
     if (userText.includes("ساعات معتمدة") || userText.includes("أهلي")) {
       reply += `البرامج الأهلية والساعات المعتمدة توفر لك نفس الاعتماد الأكاديمي بحدود قبول أقل، مع ميزة الأعداد الأقل وتحديث اللوائح (مثل إمكانية التخرج في 4 سنوات لبعض كليات الهندسة)، وتكلفتها السنوية ضمن حدود ميزانيتك المقدرة بـ ${budget.toLocaleString()} ج.م.`;
     } else if (userText.includes("ترتيب") || userText.includes("رغبات")) {
-      reply += `ننصحك ببدء بطاقة الرغبات بـ 15 رغبة طموحة تليها 35 رغبة واقعية متوازنة تناسب مجموعك، ثم 25 رغبة كشبكة أمان في نطاقك الجغرافي (${governorate}).`;
+      reply += `كدليل استرشادي لتنسيق الـ 75 رغبة، ننصحك بالبدء بـ 15 رغبة طموحة تليها 35 رغبة واقعية متوازنة تناسب مجموعك، ثم 25 رغبة كشبكة أمان في نطاقك الجغرافي (${governorate}).`;
     } else if (userText.includes("سفر") || userText.includes("دول") || userText.includes("مرتب")) {
       reply += `المسارات التقنية والهندسية توفر فرص عمل واعدة في السوق المحلي والإقليمي، بمتوسط رواتب أولية تتراوح بين 15,000 و 30,000 ج.م شهرياً مع إمكانية التدرج للعمل مع شركات إقليمية ودولية.`;
     } else {
@@ -1615,7 +1615,7 @@ export function FourStationJourney({
               <div className="p-2.5 bg-slate-50 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs">
                 <span className="text-slate-600 text-xs shrink-0 font-medium">مقترحات:</span>
                 {[
-                  "ما هو الترتيب الاستراتيجي للـ 75 رغبة؟",
+                  "ما هو التوزيع الاسترشادي للـ 75 رغبة؟",
                   "هل أختار برنامج ساعات معتمدة أم كليات عامة؟",
                   "ما هي فرص العمل الدولي والسفر بعد التخرج؟",
                   "احسب لي تكلفة المعيشة في الاغتراب",
@@ -1663,7 +1663,7 @@ export function FourStationJourney({
                   أكملت المحطات الأربع بنجاح! جاهز لطباعة بطاقة الرغبات والتقرير المعتمد
                 </h3>
                 <p className="text-[12px] text-slate-600">
-                  تحتوي وثيقة القرار على الترتيب الرسمي المعتمد لـ 75 رغبة، تحليل التكلفة الإجمالية TCO، وخطة العمل.
+                  تحتوي وثيقة القرار على أفضل ترشيحاتك حسب المتاح في قاعدة البيانات، مع دليل توزيع استرشادي للـ 75 رغبة، تحليل التكلفة الإجمالية TCO، وخطة العمل.
                 </p>
               </div>
 
@@ -1834,10 +1834,10 @@ export function FourStationJourney({
               </div>
             </div>
 
-            {/* Strategic 75-Desire Distribution Breakdown */}
+            {/* Strategic 75-Desire Distribution Breakdown (Guidance) */}
             <div className="space-y-3">
               <h3 className="text-sm font-bold text-slate-900">
-                خطة التوزيع الاستراتيجي للـ 75 رغبة في التنسيق الرسمي:
+                دليل استرشادي لتوزيع الـ 75 رغبة في التنسيق الرسمي:
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                 <div className="bg-purple-50/70 border border-purple-200 p-3.5 rounded-xl space-y-1">
@@ -1872,10 +1872,10 @@ export function FourStationJourney({
               </div>
             </div>
 
-            {/* Top 3 Prioritized Faculties for the Student */}
+            {/* Top Prioritized Faculties for the Student from Database */}
             <div className="space-y-2">
               <h3 className="text-sm font-bold text-slate-900">
-                الترشيحات الثلاثة الأولى الموصى بها في بطاقتك:
+                أفضل ترشيحاتك الموصى بها حسب المتاح في قاعدة البيانات:
               </h3>
               <div className="space-y-1.5 text-xs">
                 {rankedFaculties.slice(0, 3).map((f, idx) => (
