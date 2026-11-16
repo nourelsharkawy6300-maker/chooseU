@@ -36,7 +36,7 @@ import {
   RankedFaculty,
   formatStream,
 } from "@/types/chooseu";
-import { FACULTIES_DATABASE, EGYPT_GOVERNORATES, TRACK_DETAILS, STREAM_QUIZ_BANKS } from "@/data/faculties-db";
+import { FACULTIES_DATABASE, TRACK_DETAILS, STREAM_QUIZ_BANKS } from "@/data/faculties-db";
 import { computeFacultyTcoMetrics } from "@/lib/engine";
 
 // ============================================================================
@@ -201,23 +201,14 @@ export function FourStationJourney({
     }
   }, [station]);
 
-  // Station 1 Internal View: "assessment" | "profile"
-  const [station1SubView, setStation1SubView] = useState<"assessment" | "profile">("assessment");
-
   // Student Profile State from Global StudentContext (FIX 1: Un-Break State)
   const {
     studentName,
-    setStudentName,
     stream,
-    setStream,
     scorePercentage: score,
-    setScorePercentage: setScore,
     annualBudgetEgp: budget,
-    setAnnualBudgetEgp: setBudget,
     governorate,
-    setGovernorate,
     livingMode,
-    setLivingMode,
     comparedIds: comparedFacultyIds,
     setComparedIds: setComparedFacultyIds,
     toggleComparedId: handleToggleCompare,
@@ -233,22 +224,6 @@ export function FourStationJourney({
   }, [stream]);
 
   const hasCompletedAssessment = Object.keys(assessmentAnswers || {}).length >= activeQuestions.length;
-
-  // Local string states for non-hostile input typing (FIX 2: Destroy Hostile Input Clamping)
-  const [scoreInputStr, setScoreInputStr] = useState<string>(score.toString());
-  const [budgetInputStr, setBudgetInputStr] = useState<string>(budget.toString());
-  const [prevScore, setPrevScore] = useState(score);
-  const [prevBudget, setPrevBudget] = useState(budget);
-
-  if (score !== prevScore) {
-    setPrevScore(score);
-    setScoreInputStr(score.toString());
-  }
-
-  if (budget !== prevBudget) {
-    setPrevBudget(budget);
-    setBudgetInputStr(budget.toString());
-  }
 
   // Station 2 State (Match)
   const [explainFaculty, setExplainFaculty] = useState<RankedFaculty | null>(null);
@@ -310,31 +285,6 @@ export function FourStationJourney({
     });
     return top;
   }, [assessmentAnswers]);
-
-  const budgetTiers = useMemo(() => {
-    let maxGov = 0;
-    let maxAhli = 0;
-    let maxPrivate = 0;
-
-    for (const f of FACULTIES_DATABASE) {
-      const fee = f.y1_base_fee ?? 0;
-      if (f.type.includes("حكومي")) {
-        if (fee > maxGov) maxGov = fee;
-      }
-      if (f.type.includes("أهلي")) {
-        if (fee > maxAhli) maxAhli = fee;
-      }
-      if (f.type.includes("خاص") || f.type.includes("دولي")) {
-        if (fee > maxPrivate) maxPrivate = fee;
-      }
-    }
-
-    return [
-      { label: "حكومي", amount: maxGov },
-      { label: "أهلي", amount: maxAhli },
-      { label: "خاص ودولي", amount: maxPrivate },
-    ];
-  }, []);
 
   // Ranked Faculties Engine
   const rankedFaculties = useMemo<RankedFaculty[]>(() => {
@@ -425,16 +375,7 @@ export function FourStationJourney({
 
   // Handlers
   const handleAnswerQuestion = (qId: number, track: TrackKey) => {
-    setAssessmentAnswers((prev) => {
-      const next = { ...prev, [qId]: track };
-      // Check if all 4 questions are answered
-      const answeredCount = Object.keys(next).length;
-      if (answeredCount >= activeQuestions.length) {
-        // Immediate deterministic view transition
-        setStation1SubView("profile");
-      }
-      return next;
-    });
+    setAssessmentAnswers((prev) => ({ ...prev, [qId]: track }));
   };
 
   const handleSendMessage = () => {
@@ -485,8 +426,8 @@ export function FourStationJourney({
       {/* 1. STICKY 4-STATION STEPPER DOCK (BlueprintFrame + Progress Spring)  */}
       {/* ==================================================================== */}
       <div className="sticky top-0 z-30 bg-[var(--paper)]/95 backdrop-blur-md border-b border-[#e2e2e2] px-4 sm:px-6 py-3 no-print">
-        <BlueprintFrame label="STATION ENGINE // 01 - 04" className="!p-3.5 sm:!p-4 bg-white/90">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <BlueprintFrame label="STATION ENGINE // 01 - 04" className="pt-10 sm:pt-4 px-4 pb-3.5 sm:px-5 sm:pb-4 bg-white/90">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             {/* Brand & Active Station Indicator */}
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-200/80 flex items-center justify-center p-1.5 shrink-0 text-[#377ef0] shadow-2xs">
@@ -509,7 +450,7 @@ export function FourStationJourney({
             </div>
 
             {/* Stepper Buttons (1, 2, 3, 4) with sliding layoutId */}
-            <div className="w-full sm:w-auto grid grid-cols-4 sm:flex sm:items-center gap-1 sm:gap-1.5 bg-[#f2efe9] p-1.5 rounded-xl border border-[#dedad0] text-xs relative">
+            <div className="w-full md:w-auto flex items-center gap-1.5 bg-[#f2efe9] p-1.5 rounded-xl border border-[#dedad0] text-xs relative overflow-x-auto no-scrollbar snap-x">
               {[
                 { id: 1 as const, title: "01 الاكتشاف", short: "01", icon: Compass },
                 { id: 2 as const, title: "02 المطابقة", short: "02", icon: Layers },
@@ -525,7 +466,7 @@ export function FourStationJourney({
                     key={st.id}
                     type="button"
                     onClick={() => setStation(st.id)}
-                    className={`relative flex items-center justify-center gap-1 sm:gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-colors cursor-pointer text-center z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                    className={`relative flex items-center justify-center gap-1 sm:gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-colors cursor-pointer text-center z-10 shrink-0 min-w-[80px] sm:min-w-[90px] snap-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                       isActive
                         ? "text-white font-bold"
                         : isPassed
@@ -587,65 +528,35 @@ export function FourStationJourney({
               className="space-y-6"
             >
             {/* Header Description */}
+            {/* Station 1 Heading & Progress Status */}
             <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold">
                   <span>المحطة الأولى • تقييم الميول</span>
                 </div>
                 <h2 className="text-xl font-bold text-slate-900 leading-[1.45]">
-                  المحطة الأولى: تقييم الميول وتوثيق الملف الأكاديمي
+                  المحطة الأولى: تقييم الميول والتوافق التخصصي
                 </h2>
                 <p className="text-xs text-slate-600">
-                  حل أسئلة الميول لتحديد سماتك الأكاديمية بدقة، وتنتقل تلقائياً لملفك الشخصي وبيانات التنسيق.
+                  أجب عن أسئلة التقييم لتحديد المسار الأكاديمي الأكثر مطابقة لشغفك ومهاراتك وفقاً لشعبتك ({formatStream(stream)}).
                 </p>
               </div>
 
-              {/* Toggle Sub-View within Station 1 + Retake Button */}
-              <div className="flex flex-wrap items-center gap-2">
-                {Object.keys(assessmentAnswers || {}).length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAssessmentAnswers({});
-                      setStation1SubView("assessment");
-                    }}
-                    className="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    <span>إعادة الاختبار</span>
-                  </button>
-                )}
-
-                <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-medium shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => setStation1SubView("assessment")}
-                    className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
-                      station1SubView === "assessment"
-                        ? "bg-blue-600 text-white font-bold"
-                        : "text-slate-600 hover:text-slate-900"
-                    }`}
-                  >
-                    1. اختبار الميول ({activeQuestions.length} أسئلة)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setStation1SubView("profile")}
-                    className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
-                      station1SubView === "profile"
-                        ? "bg-blue-600 text-white font-bold"
-                        : "text-slate-600 hover:text-slate-900"
-                    }`}
-                  >
-                    2. ملف الطالب والتنسيق
-                  </button>
-                </div>
-              </div>
+              {/* Retake Button */}
+              {Object.keys(assessmentAnswers || {}).length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setAssessmentAnswers({})}
+                  className="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 min-h-[36px]"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>إعادة الاختبار</span>
+                </button>
+              )}
             </div>
 
-            {/* Sub-View A: AI Assessment Questions */}
-            {station1SubView === "assessment" && (
-              <div className="space-y-5">
+            {/* AI Assessment Questions */}
+            <div className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {activeQuestions.map((q, idx) => (
                     <UIMavenCard
@@ -721,9 +632,9 @@ export function FourStationJourney({
 
                 {/* Auto-transition status banner */}
                 {hasCompletedAssessment && (
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between text-[12px] text-emerald-900">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] text-emerald-900">
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 stroke-[2]" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 stroke-[2] shrink-0" />
                       <span>
                         اكتمل التقييم بنجاح! المسار الأنسب لشغفك:{" "}
                         <strong className="text-emerald-950 font-bold">
@@ -733,13 +644,10 @@ export function FourStationJourney({
                         </strong>
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0">
                       <button
                         type="button"
-                        onClick={() => {
-                          setAssessmentAnswers({});
-                          setStation1SubView("assessment");
-                        }}
+                        onClick={() => setAssessmentAnswers({})}
                         className="px-3 py-1.5 bg-white border border-emerald-300 hover:bg-emerald-100 text-emerald-800 rounded-lg font-medium text-xs transition-colors cursor-pointer flex items-center gap-1"
                       >
                         <RotateCcw className="w-3.5 h-3.5" />
@@ -747,254 +655,16 @@ export function FourStationJourney({
                       </button>
                       <button
                         type="button"
-                        onClick={() => setStation1SubView("profile")}
-                        className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
+                        onClick={() => setStation(2)}
+                        className="px-4 py-2 bg-[#377ef0] hover:bg-[#2962be] text-white rounded-lg font-bold text-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm"
                       >
-                        استكمال ملف الطالب ←
+                        <span>الانتقال للمحطة 2: مطابقة الكليات</span>
+                        <ArrowLeft className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
                 )}
               </div>
-            )}
-
-            {/* Sub-View B: Student Profile */}
-            {station1SubView === "profile" && (
-              <div className="anima-playground-dock">
-                <div className="anima-playground-surface p-6 space-y-6">
-                  <div className="border-b border-slate-200 pb-4">
-                  <h3 className="text-base font-bold text-slate-900">
-                    بيانات الطالب الأكاديمية والمالية
-                  </h3>
-                  <p className="text-xs text-slate-600 mt-0.5">
-                    هذه البيانات تضبط التوصيات المخصصة لك في المحطة 2 وحسابات التكلفة التقديرية.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
-                  {/* Name */}
-                  <div className="space-y-1.5">
-                    <label className="text-slate-700 font-medium">اسم الطالب:</label>
-                    <input
-                      type="text"
-                      value={studentName}
-                      onChange={(e) => setStudentName(e.target.value)}
-                      className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-900 font-medium focus:border-blue-500 focus:outline-none"
-                    />
-                  </div>
-
-                  {/* Academic Stream */}
-                  <div className="space-y-1.5">
-                    <label className="text-slate-700 font-medium">الشعبة الأكاديمية:</label>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-medium">
-                      {(
-                        [
-                          { id: "Math", label: "علمي رياضة" },
-                          { id: "Science", label: "علمي علوم" },
-                          { id: "stem", label: "مدارس STEM" },
-                          { id: "Arts", label: "أدبي" },
-                        ] as const
-                      ).map((st) => (
-                        <button
-                          key={st.id}
-                          type="button"
-                          onClick={() => setStream(st.id as StreamType)}
-                          className={`py-1.5 rounded-md text-center cursor-pointer transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] ${
-                            stream === st.id
-                              ? "bg-blue-600 text-white font-bold"
-                              : "text-slate-600 hover:text-slate-900"
-                          }`}
-                        >
-                          {st.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Score Percentage */}
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-slate-700">
-                      <label htmlFor="station1-score-input" className="text-xs font-semibold text-slate-800">المجموع بالنسبة المئوية:</label>
-                      <div className="flex items-center gap-1.5">
-                        <input
-                          id="station1-score-input"
-                          type="number"
-                          min={50}
-                          max={100}
-                          step={0.1}
-                          value={scoreInputStr}
-                          onChange={(e) => setScoreInputStr(e.target.value)}
-                          onBlur={() => {
-                            const val = parseFloat(scoreInputStr);
-                            if (isNaN(val)) {
-                              setScoreInputStr(score.toString());
-                            } else {
-                              const clamped = Math.min(100, Math.max(50, val));
-                              setScore(clamped);
-                              setScoreInputStr(clamped.toString());
-                            }
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") (e.target as HTMLInputElement).blur();
-                          }}
-                          className="w-16 rounded-lg border border-slate-300 bg-white px-2 py-1 text-right font-mono text-xs font-bold text-slate-900 focus:border-blue-500 focus:outline-none"
-                        />
-                        <span className="font-mono text-slate-600 text-xs font-semibold">%</span>
-                      </div>
-                    </div>
-                    <input
-                      type="range"
-                      min={50}
-                      max={100}
-                      step={0.1}
-                      value={score}
-                      onChange={(e) => setScore(parseFloat(e.target.value))}
-                      className="w-full cursor-pointer"
-                    />
-                  </div>
-
-                  {/* Governorate */}
-                  <div className="space-y-1.5">
-                    <label className="text-slate-700 font-medium">المحافظة (النطاق الجغرافي):</label>
-                    <select
-                      value={governorate}
-                      onChange={(e) => setGovernorate(e.target.value)}
-                      className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-900 font-medium focus:border-blue-500 focus:outline-none cursor-pointer"
-                    >
-                      {EGYPT_GOVERNORATES.map((gov) => (
-                        <option key={gov} value={gov}>
-                          {gov}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Annual Budget */}
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-slate-700">
-                      <label htmlFor="station1-budget-input" className="text-xs font-semibold text-slate-800">سقف الميزانية السنوية:</label>
-                      <div className="flex items-center gap-1.5">
-                        <input
-                          id="station1-budget-input"
-                          type="number"
-                          min={0}
-                          max={300000}
-                          step={5000}
-                          value={budgetInputStr}
-                          onChange={(e) => setBudgetInputStr(e.target.value)}
-                          onBlur={() => {
-                            const val = parseInt(budgetInputStr, 10);
-                            if (isNaN(val)) {
-                              setBudgetInputStr(budget.toString());
-                            } else {
-                              const clamped = Math.min(300000, Math.max(0, val));
-                              setBudget(clamped);
-                              setBudgetInputStr(clamped.toString());
-                            }
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") (e.target as HTMLInputElement).blur();
-                          }}
-                          className="w-24 rounded-lg border border-slate-300 bg-white px-2 py-1 text-right font-mono text-xs font-bold text-emerald-700 focus:border-emerald-500 focus:outline-none"
-                        />
-                        <span className="text-slate-600 text-xs font-semibold">ج.م</span>
-                      </div>
-                    </div>
-                    <input
-                      type="range"
-                      min={0}
-                      max={300000}
-                      step={5000}
-                      value={budget}
-                      onChange={(e) => setBudget(parseInt(e.target.value, 10))}
-                      className="w-full cursor-pointer"
-                    />
-                    <div className="flex flex-wrap items-center gap-2 pt-1">
-                      <span className="text-xs text-slate-600 font-medium">سقف تقريبي:</span>
-                      {[50000, 100000, 150000, 200000].map((preset) => (
-                        <button
-                          key={preset}
-                          type="button"
-                          onClick={() => setBudget(preset)}
-                          className={`px-2.5 py-1 rounded-lg text-xs border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
-                            budget === preset
-                              ? "bg-emerald-50 text-emerald-800 border-emerald-300 font-bold"
-                              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
-                          }`}
-                        >
-                          <span dir="ltr" className="font-mono tabular-nums font-semibold">{(preset / 1000).toFixed(0)}k</span> ج.م
-                        </button>
-                      ))}
-                      <span className="text-slate-300">|</span>
-                      {budgetTiers.map((tier) => (
-                        <button
-                          key={tier.label}
-                          type="button"
-                          onClick={() => setBudget(tier.amount)}
-                          className={`px-2.5 py-1 rounded-lg text-xs border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer ${
-                            budget === tier.amount
-                              ? "bg-blue-50 text-blue-700 border-blue-300 font-bold"
-                              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
-                          }`}
-                        >
-                          {tier.label} (<span dir="ltr" className="font-mono tabular-nums">{tier.amount.toLocaleString()}</span>)
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Living Mode */}
-                  <div className="space-y-1.5">
-                    <label className="text-slate-700 font-medium">طبيعة المعيشة والانتقال:</label>
-                    <div className="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-medium">
-                      <button
-                        type="button"
-                        onClick={() => setLivingMode("commute")}
-                        className={`py-1.5 rounded-md cursor-pointer transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] ${
-                          livingMode === "commute"
-                            ? "bg-blue-600 text-white font-bold"
-                            : "text-slate-600 hover:text-slate-900"
-                        }`}
-                      >
-                        انتقال يومي (محل سكنك)
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setLivingMode("dorm")}
-                        className={`py-1.5 rounded-md cursor-pointer transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] ${
-                          livingMode === "dorm"
-                            ? "bg-blue-600 text-white font-bold"
-                            : "text-slate-600 hover:text-slate-900"
-                        }`}
-                      >
-                        سكن طلابي / اغتراب
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Transition to Station 2 CTA */}
-                <div className="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="text-[12px] text-slate-600">
-                    ملفك جاهز: تم رصد{" "}
-                    <span className="text-slate-900 font-bold tabular-nums">
-                      <AnimatedCounter value={rankedFaculties.length} />
-                    </span>{" "}
-                    برنامج وكلية متوافقة مع شعبتك ومجموعك.
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setStation(2)}
-                    className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold text-[13px] transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-sm"
-                  >
-                    <span>الانتقال للمحطة 2: المطابقة والتوصيات</span>
-                    <ArrowLeft className="w-4 h-4 stroke-[2]" />
-                  </button>
-                </div>
-              </div>
-            </div>
-            )}
           </motion.div>
         )}
 

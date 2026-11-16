@@ -13,9 +13,11 @@ export interface StudentProfile {
   inflationScenario: number;
   comparedIds: string[];
   assessmentAnswers: Record<number, TrackKey>;
+  hasCompletedOnboarding?: boolean;
 }
 
 export interface StudentContextType extends StudentProfile {
+  hydrated: boolean;
   setStudentName: (name: string) => void;
   setStream: (stream: StreamType) => void;
   setScorePercentage: (score: number) => void;
@@ -30,6 +32,7 @@ export interface StudentContextType extends StudentProfile {
       | Record<number, TrackKey>
       | ((prev: Record<number, TrackKey>) => Record<number, TrackKey>)
   ) => void;
+  setHasCompletedOnboarding: (completed: boolean) => void;
   updateStudent: (patch: Partial<StudentProfile>) => void;
   resetStudent: () => void;
 }
@@ -37,15 +40,16 @@ export interface StudentContextType extends StudentProfile {
 const STORAGE_KEY = "chooseu_student_profile_v2";
 
 const DEFAULT_PROFILE: StudentProfile = {
-  studentName: "عمر خالد محمود",
-  stream: "Math",
-  scorePercentage: 89.4,
-  annualBudgetEgp: 95000,
+  studentName: "",
+  stream: "Science",
+  scorePercentage: 0,
+  annualBudgetEgp: 0,
   governorate: "القاهرة",
   livingMode: "commute",
   inflationScenario: 12,
   comparedIds: [],
   assessmentAnswers: {},
+  hasCompletedOnboarding: false,
 };
 
 const StudentContext = createContext<StudentContextType | undefined>(undefined);
@@ -85,6 +89,7 @@ export function StudentProvider({ children }: { children: React.ReactNode }) {
   const value: StudentContextType = useMemo(
     () => ({
       ...profile,
+      hydrated,
       setStudentName: (studentName: string) => setProfile((p) => ({ ...p, studentName })),
       setStream: (stream: StreamType) => setProfile((p) => ({ ...p, stream })),
       setScorePercentage: (scorePercentage: number) => setProfile((p) => ({ ...p, scorePercentage })),
@@ -115,10 +120,12 @@ export function StudentProvider({ children }: { children: React.ReactNode }) {
               : answers;
           return { ...p, assessmentAnswers: next };
         }),
+      setHasCompletedOnboarding: (hasCompletedOnboarding: boolean) =>
+        setProfile((p) => ({ ...p, hasCompletedOnboarding })),
       updateStudent: (patch: Partial<StudentProfile>) => setProfile((p) => ({ ...p, ...patch })),
       resetStudent: () => setProfile(DEFAULT_PROFILE),
     }),
-    [profile]
+    [profile, hydrated]
   );
 
   return <StudentContext.Provider value={value}>{children}</StudentContext.Provider>;
