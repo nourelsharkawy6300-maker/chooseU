@@ -214,6 +214,7 @@ export function FourStationJourney({
     toggleComparedId: handleToggleCompare,
     assessmentAnswers = {},
     setAssessmentAnswers,
+    setHasCompletedOnboarding,
   } = useStudent();
 
   const activeQuestions = useMemo(() => {
@@ -288,7 +289,9 @@ export function FourStationJourney({
 
   // Ranked Faculties Engine
   const rankedFaculties = useMemo<RankedFaculty[]>(() => {
-    const effectiveScore = +(score + scoreTweak).toFixed(2);
+    const rawScore = +(score + scoreTweak).toFixed(2);
+    // STEM flexible ratio boost (+10% to reflect specialized competitive allocation)
+    const effectiveScore = stream === "stem" ? +(rawScore + 10).toFixed(2) : rawScore;
 
     return FACULTIES_DATABASE.filter((f) => {
       if (stream === "stem") {
@@ -332,14 +335,18 @@ export function FourStationJourney({
       if (margin >= 0) matchScore += Math.min(15, margin * 4);
       if (f.gov === governorate) matchScore += 10;
       if (dominantTrack && f.tracks.includes(dominantTrack)) matchScore += 15;
-      if (f.y1_base_fee <= budget) matchScore += 5;
+      if (budget === 0 ? f.y1_base_fee <= 3000 : f.y1_base_fee <= budget) matchScore += 5;
       matchScore = Math.min(99, Math.max(50, Math.round(matchScore)));
 
       const trackMatchText =
         dominantTrack && TRACK_DETAILS[dominantTrack]
           ? `، ومطابقتها لميولك في مسار ${TRACK_DETAILS[dominantTrack].title}`
           : "";
-      const whyMatch = `توافق بنسبة ${matchScore}% بناءً على مجموعك (${effectiveScore}%) مقارنة بتنسيقها (${shiftedCutoff}%)${trackMatchText}، ونطاقك الجغرافي (${f.gov}).`;
+      const scoreExplanation =
+        stream === "stem"
+          ? `${rawScore}% (مُعادلة بنسبة مرنة: ${effectiveScore}%)`
+          : `${effectiveScore}%`;
+      const whyMatch = `توافق بنسبة ${matchScore}% بناءً على مجموعك (${scoreExplanation}) مقارنة بتنسيقها (${shiftedCutoff}%)${trackMatchText}، ونطاقك الجغرافي (${f.gov}).`;
 
       return {
         ...f,
@@ -1382,15 +1389,25 @@ export function FourStationJourney({
                 </p>
               </div>
 
-              {/* Generate Final Report Button */}
-              <button
-                type="button"
-                onClick={() => setShowReportModal(true)}
-                className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-[13px] transition-colors cursor-pointer flex items-center gap-2 shadow-md shrink-0"
-              >
-                <FileText className="w-4 h-4 stroke-[2]" />
-                <span>إصدار تقرير القرار النهائي</span>
-              </button>
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setHasCompletedOnboarding(false)}
+                  className="px-3.5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-xl font-bold text-[13px] transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>تعديل الملف والبيانات</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowReportModal(true)}
+                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-[13px] transition-colors cursor-pointer flex items-center gap-2 shadow-md shrink-0"
+                >
+                  <FileText className="w-4 h-4 stroke-[2]" />
+                  <span>إصدار تقرير القرار النهائي</span>
+                </button>
+              </div>
             </div>
 
             {/* Academic Advisor Interactive Q&A Interface */}
@@ -1764,7 +1781,19 @@ export function FourStationJourney({
                 وثيقة استرشادية معتمدة تم إنشاؤها وفقاً لخوارزميات التنسيق التنبؤية لعام 2026.
               </div>
 
-              <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowReportModal(false);
+                    setHasCompletedOnboarding(false);
+                  }}
+                  className="flex-1 sm:flex-none px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 rounded-lg font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  <RotateCcw className="w-4 h-4 stroke-[1.5]" />
+                  <span>تعديل البيانات وإعادة البدء</span>
+                </button>
+
                 <button
                   type="button"
                   onClick={() => {

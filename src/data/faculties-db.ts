@@ -6,24 +6,33 @@ import {
 } from "../types/chooseu";
 
 export const EGYPT_GOVERNORATES: string[] = [
-  "المنوفية",
   "القاهرة",
   "الجيزة",
   "القليوبية",
+  "الإسكندرية",
+  "المنوفية",
   "الغربية",
   "الدقهلية",
   "الشرقية",
-  "الإسكندرية",
   "كفر الشيخ",
   "البحيرة",
   "دمياط",
-  "الإسماعيلية",
   "بورسعيد",
+  "الإسماعيلية",
   "السويس",
+  "شمال سيناء",
+  "جنوب سيناء",
   "بني سويف",
   "الفيوم",
   "المنيا",
   "أسيوط",
+  "سوهاج",
+  "قنا",
+  "الأقصر",
+  "أسوان",
+  "البحر الأحمر",
+  "الوادي الجديد",
+  "مطروح",
 ];
 
 export const TRACK_DETAILS: Record<
@@ -968,7 +977,7 @@ export const FACULTIES_DATABASE: Faculty[] = [
     gpa_requirement: "GPA >= 2.2 واجتياز التدريب الميداني المساحي",
     scholarship_rule: "خصم 15% للأول على البرنامج.",
     aptitude_test: false,
-    tracks: ["Data", "Arch_Civil", "Edu_Human"],
+    tracks: ["Data", "Edu_Human", "Lang_Trans"],
     future_career: CAREER_PROFILES.lang_gis_edu,
   },
   {

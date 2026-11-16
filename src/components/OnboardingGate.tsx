@@ -132,7 +132,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
 
     const parsedScore = parseFloat(score);
     if (!score || isNaN(parsedScore) || parsedScore < 50 || parsedScore > 100) {
-      setErrorMsg("يرجى إدخال مجموع مئوي صالح بين 50% و 100%.");
+      setErrorMsg("يرجى إدخال مجموع مئوي بين 50% و 100%");
       return;
     }
 
@@ -588,16 +588,16 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                   </div>
 
                   {/* Submit Button */}
-                  <div className="pt-4">
+                  <div className="pt-4 space-y-3">
+                    {errorMsg && (
+                      <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2">
+                        <span>⚠️</span>
+                        <span>{errorMsg}</span>
+                      </div>
+                    )}
                     <button
                       type="submit"
-                      disabled={
-                        !score ||
-                        isNaN(parseFloat(score)) ||
-                        parseFloat(score) < 50 ||
-                        parseFloat(score) > 100
-                      }
-                      className="group relative w-full py-4 px-8 rounded-xl bg-[#377ef0] hover:bg-[#2563eb] disabled:bg-slate-200 disabled:cursor-not-allowed text-white disabled:text-slate-400 font-extrabold text-base shadow-xl shadow-blue-500/20 disabled:shadow-none transition-all duration-200 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-3 overflow-hidden min-h-[52px]"
+                      className="group relative w-full py-4 px-8 rounded-xl bg-[#377ef0] hover:bg-[#2563eb] text-white font-extrabold text-base shadow-xl shadow-blue-500/20 transition-all duration-200 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-3 overflow-hidden min-h-[52px]"
                     >
                       <span>ابدأ الآن واستكشف كلياتك</span>
                       <Sparkles className="w-5 h-5 text-amber-300 transition-transform group-hover:scale-110" />

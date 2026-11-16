@@ -108,16 +108,61 @@ export function computePsychometricAffinities(
 // 3. 4-YEAR COMPOUND TCO & GEOGRAPHIC LIVING CALCULATOR
 // ============================================================================
 
-const ADJACENT_DELTA_CAIRO_GOVS = new Set([
-  "المنوفية",
-  "القليوبية",
-  "الغربية",
-  "القاهرة",
-  "الجيزة",
-  "الدقهلية",
-  "الشرقية",
-  "كفر الشيخ",
-]);
+const REGIONAL_CLUSTERS = [
+  // Greater Cairo & Delta
+  new Set([
+    "القاهرة",
+    "الجيزة",
+    "القليوبية",
+    "المنوفية",
+    "الغربية",
+    "الشرقية",
+    "الدقهلية",
+    "كفر الشيخ",
+    "دمياط",
+    "البحيرة",
+    "الإسكندرية",
+  ]),
+  // Canal & Sinai
+  new Set([
+    "الإسماعيلية",
+    "بورسعيد",
+    "السويس",
+    "شمال سيناء",
+    "جنوب سيناء",
+    "الشرقية",
+    "دمياط",
+  ]),
+  // North & Middle Upper Egypt
+  new Set([
+    "الجيزة",
+    "الفيوم",
+    "بني سويف",
+    "المنيا",
+    "أسيوط",
+  ]),
+  // South Upper Egypt
+  new Set([
+    "أسيوط",
+    "سوهاج",
+    "قنا",
+    "الأقصر",
+    "أسوان",
+    "الوادي الجديد",
+    "البحر الأحمر",
+  ]),
+  // North Coast & Matrouh
+  new Set([
+    "الإسكندرية",
+    "مطروح",
+    "البحيرة",
+  ]),
+];
+
+export function isRegionalNeighbor(govA: string, govB: string): boolean {
+  if (!govA || !govB || govA === govB) return false;
+  return REGIONAL_CLUSTERS.some((cluster) => cluster.has(govA) && cluster.has(govB));
+}
 
 export function computeFacultyTcoMetrics(
   f: Faculty,
@@ -129,10 +174,7 @@ export function computeFacultyTcoMetrics(
   const adminFee = f.admin_lab_fee || 900;
   const isRegularPublic = f.type === "حكومي انتظام";
   const isSameGov = f.gov === studentGov;
-  const isRegionalNeighbor =
-    !isSameGov &&
-    ADJACENT_DELTA_CAIRO_GOVS.has(studentGov) &&
-    ADJACENT_DELTA_CAIRO_GOVS.has(f.gov);
+  const isNeighbor = !isSameGov && isRegionalNeighbor(studentGov, f.gov);
 
   let annualLiving: number;
   let geoTierLabel: string;
@@ -142,13 +184,13 @@ export function computeFacultyTcoMetrics(
     annualLiving = 6000;
     geoTierLabel = "نطاق جغرافي (أ) — داخل المحافظة";
     livingDesc = "انتقال يومي محلي (~6,000 ج.م/سنة — بدون سكن)";
-  } else if (livingMode === "commute" && isRegionalNeighbor) {
+  } else if (livingMode === "commute" && isNeighbor) {
     annualLiving = 14500;
     geoTierLabel = "نطاق جغرافي (ب) — محافظات مجاورة";
     livingDesc = "خطوط نقل إقليمية يومية (~14,500 ج.م/سنة)";
   } else {
     annualLiving = 32000;
-    geoTierLabel = isRegionalNeighbor
+    geoTierLabel = isNeighbor
       ? "نطاق جغرافي (ب) — إقامة طلابية"
       : "نطاق جغرافي (ج) — اغتراب كامل";
     livingDesc = "سكن طلابي وإعاشة وانتقالات (~32,000 ج.م/سنة)";
@@ -266,7 +308,7 @@ export function evaluateAndRankFaculties(params: {
   const matched = sectorFiltered.filter((f) => {
     const shiftedCutoff = +(f.cutoff_2026 + tansikShift).toFixed(1);
     const scoreReachable = shiftedCutoff <= score + 0.8;
-    const budgetReachable = f.y1_base_fee <= budget;
+    const budgetReachable = budget === 0 ? f.y1_base_fee <= 3000 : f.y1_base_fee <= budget;
     return scoreReachable && budgetReachable;
   });
 
@@ -291,15 +333,13 @@ export function evaluateAndRankFaculties(params: {
       const quizAffinity = Math.min(100, Math.max(25, Math.round((rawAffinity / 80) * 100)));
 
       // 3. BudgetFit (Weight: 0.15) -> Rewards financial comfort within max budget
-      const feeRatio = f.y1_base_fee / Math.max(1, budget);
+      const effectiveBudget = budget === 0 ? 3000 : budget;
+      const feeRatio = f.y1_base_fee / Math.max(1, effectiveBudget);
       const budgetFit = Math.max(30, Math.round((1 - feeRatio * 0.45) * 100));
 
       // 4. Enforce Geographic Distribution (نطاق أ، نطاق ب، نطاق ج)
       const isLocal = f.gov === gov;
-      const isNeighbor =
-        !isLocal &&
-        ADJACENT_DELTA_CAIRO_GOVS.has(gov) &&
-        ADJACENT_DELTA_CAIRO_GOVS.has(f.gov);
+      const isNeighbor = !isLocal && isRegionalNeighbor(gov, f.gov);
       const geoProximity = isLocal ? 100 : isNeighbor ? 65 : 30;
       const geoZone = isLocal ? "نطاق أ" : isNeighbor ? "نطاق ب" : "نطاق ج";
 
