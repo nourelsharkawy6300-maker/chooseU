@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   AnimatedCounter,
@@ -173,6 +173,30 @@ export function FourStationJourney({
 }: FourStationJourneyProps) {
   // Current Station: 1 (Discover), 2 (Match), 3 (Simulate), 4 (Decide)
   const [station, setStation] = useState<1 | 2 | 3 | 4>(1);
+
+  // Restore current station from sessionStorage to survive page refresh
+  useEffect(() => {
+    try {
+      const savedStation = sessionStorage.getItem("chooseu_current_station");
+      if (savedStation) {
+        const parsed = parseInt(savedStation, 10);
+        if (parsed >= 1 && parsed <= 4) {
+          setStation(parsed as 1 | 2 | 3 | 4);
+        }
+      }
+    } catch {
+      // sessionStorage unavailable or restricted
+    }
+  }, []);
+
+  // Persist station changes to sessionStorage
+  useEffect(() => {
+    try {
+      sessionStorage.setItem("chooseu_current_station", station.toString());
+    } catch {
+      // ignore storage errors
+    }
+  }, [station]);
 
   // Station 1 Internal View: "assessment" | "profile"
   const [station1SubView, setStation1SubView] = useState<"assessment" | "profile">("assessment");
