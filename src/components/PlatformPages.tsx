@@ -385,8 +385,16 @@ export function FutureMeView({
   const activeFaculty = useMemo(() => {
     if (selectedFaculty) return selectedFaculty;
     if (evaluation.allRanked.length > 0) return evaluation.allRanked[0];
-    return FACULTIES_DATABASE[0];
+    return FACULTIES_DATABASE[0] || null;
   }, [selectedFaculty, evaluation.allRanked]);
+
+  if (!activeFaculty) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 lg:px-8 py-12 text-center text-slate-500 font-medium">
+        لا توجد كلية محددة حالياً لاستعراض المسار الوظيفي.
+      </div>
+    );
+  }
 
   const career = activeFaculty.future_career || {
     roles: ["أخصائي في المجال", "مستشار تخصصي"],

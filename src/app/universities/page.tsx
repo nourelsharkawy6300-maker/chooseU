@@ -4,6 +4,7 @@ import React from "react";
 import { DirectoryView } from "@/components/PlatformPages";
 import { useStudent } from "@/context/StudentContext";
 import { useRouter } from "next/navigation";
+import { Faculty } from "@/types/chooseu";
 
 export default function UniversitiesPage() {
   const router = useRouter();
@@ -14,8 +15,8 @@ export default function UniversitiesPage() {
       <DirectoryView
         comparedIds={comparedIds}
         onToggleCompare={toggleComparedId}
-        onSelectFutureCareer={() => {
-          router.push("/future-me");
+        onSelectFutureCareer={(faculty: Faculty) => {
+          router.push(`/future-me?faculty=${encodeURIComponent(faculty.id)}`);
         }}
         onOpenCompareTab={() => {
           router.push("/tco-matrix");

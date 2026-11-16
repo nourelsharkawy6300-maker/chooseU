@@ -1,15 +1,18 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, Suspense } from "react";
 import { FutureMeView, CheckoutModal } from "@/components/PlatformPages";
 import { useStudent } from "@/context/StudentContext";
 import { evaluateAndRankFaculties } from "@/lib/engine";
 import { FACULTIES_DATABASE } from "@/data/faculties-db";
 import { Faculty, PlatformView } from "@/types/chooseu";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function FutureMePage() {
+function FutureMeContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const facultyParam = searchParams.get("faculty");
+
   const {
     studentName,
     setStudentName,
@@ -18,7 +21,24 @@ export default function FutureMePage() {
     annualBudgetEgp,
     governorate,
   } = useStudent();
-  const [selectedFaculty, setSelectedFaculty] = useState<Faculty | null>(() => FACULTIES_DATABASE[0] || null);
+
+  const [selectedFaculty, setSelectedFaculty] = useState<Faculty | null>(() => {
+    if (facultyParam) {
+      const match = FACULTIES_DATABASE.find((f) => f.id === facultyParam);
+      if (match) return match;
+    }
+    return FACULTIES_DATABASE[0] || null;
+  });
+
+  useEffect(() => {
+    if (facultyParam) {
+      const match = FACULTIES_DATABASE.find((f) => f.id === facultyParam);
+      if (match) {
+        setSelectedFaculty(match);
+      }
+    }
+  }, [facultyParam]);
+
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [whatsappPhone, setWhatsappPhone] = useState("");
 
@@ -69,5 +89,13 @@ export default function FutureMePage() {
         }}
       />
     </div>
+  );
+}
+
+export default function FutureMePage() {
+  return (
+    <Suspense fallback={<div className="w-full p-12 text-center text-slate-500 font-medium">جاري تحميل المسار الوظيفي...</div>}>
+      <FutureMeContent />
+    </Suspense>
   );
 }
