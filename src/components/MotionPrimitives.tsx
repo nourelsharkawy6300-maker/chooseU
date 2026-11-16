@@ -77,11 +77,11 @@ export function MaskRevealHeading({
   return (
     <div className="overflow-hidden">
       <motion.div
-        initial={{ y: "105%", rotateZ: 1.2, opacity: 0 }}
-        whileInView={{ y: "0%", rotateZ: 0, opacity: 1 }}
+        initial={{ y: "100%", opacity: 0 }}
+        whileInView={{ y: "0%", opacity: 1 }}
         viewport={{ once: true }}
         transition={{
-          duration: 0.65,
+          duration: 0.55,
           delay,
           ease: [0.16, 1, 0.3, 1],
         }}
@@ -93,7 +93,7 @@ export function MaskRevealHeading({
 }
 
 // ============================================================================
-// 3. SPOTLIGHT CARD (Interactive Cursor Coordinate Tracking & Spring Hover)
+// 3. SPOTLIGHT CARD (UIMaven Curated Gallery Framing & Spring Micro-Feedback)
 // ============================================================================
 interface SpotlightCardProps extends HTMLMotionProps<"div"> {
   children: React.ReactNode;
@@ -103,7 +103,7 @@ interface SpotlightCardProps extends HTMLMotionProps<"div"> {
 
 export function SpotlightCard({
   children,
-  spotlightColor = "rgba(55, 126, 240, 0.10)",
+  spotlightColor = "rgba(55, 126, 240, 0.08)",
   className = "",
   ...props
 }: SpotlightCardProps) {
@@ -130,17 +130,17 @@ export function SpotlightCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ y: -4 }}
-      whileTap={{ scale: 0.985 }}
-      transition={{ type: "spring", stiffness: 380, damping: 26 }}
-      className={`relative overflow-hidden bg-white border border-[#e2e2e2] rounded-xl ${className}`}
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.99 }}
+      transition={{ type: "spring", stiffness: 340, damping: 28 }}
+      className={`uimaven-card overflow-hidden ${className}`}
       {...props}
     >
       <div
-        className="pointer-events-none absolute inset-0 transition-opacity duration-300"
+        className="pointer-events-none absolute inset-0 transition-opacity duration-200 rounded-[inherit]"
         style={{
           opacity: isHovered ? 1 : 0,
-          background: `radial-gradient(450px circle at ${mousePosition.x}px ${mousePosition.y}px, ${spotlightColor}, transparent 60%)`,
+          background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px, ${spotlightColor}, transparent 65%)`,
         }}
       />
       <div className="relative z-10">{children}</div>
@@ -258,5 +258,247 @@ export function ArchitecturalDivider({
         </span>
       )}
     </div>
+  );
+}
+
+// ============================================================================
+// 6. UIMAVEN GALLERY STAGGER VARIANTS (Clean, Zero-Blur, Single Trigger)
+// ============================================================================
+export const uimavenStaggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.04,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+export const uimavenStaggerItem = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.45,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  },
+};
+
+// ============================================================================
+// 7. UIMAVEN DOUBLE-BEZEL GALLERY CARD
+// ============================================================================
+export interface UIMavenCardProps {
+  indexCode: string;
+  badgeText?: string;
+  statusDotColor?: string;
+  children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+}
+
+export function UIMavenCard({
+  indexCode,
+  badgeText,
+  statusDotColor = "bg-[#377ef0]",
+  children,
+  className = "",
+  onClick,
+}: UIMavenCardProps) {
+  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  return (
+    <div
+      onClick={onClick}
+      className={`uimaven-shell group cursor-pointer ${className}`}
+    >
+      {/* Top Metadata Rail */}
+      <div className="px-3 py-1.5 flex items-center justify-between text-xs select-none">
+        <span
+          dir="ltr"
+          className="font-mono tabular-nums font-bold text-slate-600 group-hover:text-[#377ef0] transition-colors"
+        >
+          {indexCode}
+        </span>
+        {badgeText && (
+          <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100/90 border border-slate-200/80 text-[11px] font-semibold text-slate-700">
+            <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${statusDotColor}`} />
+            <span>{badgeText}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Inner White Stage with Radial Spotlight Tracking */}
+      <div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className="uimaven-inner p-5 relative"
+      >
+        <div
+          className="pointer-events-none absolute inset-0 transition-opacity duration-300 rounded-[inherit]"
+          style={{
+            opacity: isHovered ? 1 : 0,
+            background: `radial-gradient(360px circle at ${mousePos.x}px ${mousePos.y}px, rgba(55, 126, 240, 0.08), transparent 45%)`,
+          }}
+        />
+        <div className="relative z-10">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// 8. BLUEPRINT FRAME (Primer Exposed Structural Crosshairs & Coordinate Tag)
+// ============================================================================
+export interface BlueprintFrameProps {
+  children: React.ReactNode;
+  className?: string;
+  label?: string;
+}
+
+export function BlueprintFrame({
+  children,
+  className = "",
+  label,
+}: BlueprintFrameProps) {
+  return (
+    <div
+      className={`relative border border-[#e2e2e2] bg-[#fbfaf6]/90 rounded-2xl p-6 sm:p-8 transition-colors ${className}`}
+    >
+      {/* Corner SVG + Crosshairs */}
+      <svg
+        className="absolute -top-2 -right-2 w-3.5 h-3.5 text-slate-400 pointer-events-none z-10"
+        viewBox="0 0 14 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <path d="M7 1v12M1 7h12" />
+      </svg>
+      <svg
+        className="absolute -top-2 -left-2 w-3.5 h-3.5 text-slate-400 pointer-events-none z-10"
+        viewBox="0 0 14 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <path d="M7 1v12M1 7h12" />
+      </svg>
+      <svg
+        className="absolute -bottom-2 -right-2 w-3.5 h-3.5 text-slate-400 pointer-events-none z-10"
+        viewBox="0 0 14 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <path d="M7 1v12M1 7h12" />
+      </svg>
+      <svg
+        className="absolute -bottom-2 -left-2 w-3.5 h-3.5 text-slate-400 pointer-events-none z-10"
+        viewBox="0 0 14 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <path d="M7 1v12M1 7h12" />
+      </svg>
+
+      {/* Monospace Blueprint Coordinate Tag */}
+      {label && (
+        <div className="absolute top-3 start-4 px-2.5 py-0.5 rounded-md bg-white border border-[#e2e2e2] text-[10px] font-mono font-bold tracking-wider text-slate-500 select-none shadow-2xs z-10">
+          {label}
+        </div>
+      )}
+
+      <div className="relative z-10">{children}</div>
+    </div>
+  );
+}
+
+// ============================================================================
+// 9. ARCHIVAL INDEX BADGE (Dsquared Zero-Padded Tabular Numeral Pill)
+// ============================================================================
+export interface ArchivalIndexBadgeProps {
+  index: number | string;
+  className?: string;
+}
+
+export function ArchivalIndexBadge({ index, className = "" }: ArchivalIndexBadgeProps) {
+  const formatted = typeof index === "number" ? String(index).padStart(3, "0") : index;
+  return (
+    <span
+      dir="ltr"
+      className={`font-mono tabular-nums text-xs font-bold tracking-wider px-2.5 py-1 rounded-md bg-[#fbfaf6] border border-[#e2e2e2] text-slate-700 group-hover:bg-[#377ef0] group-hover:text-white group-hover:border-[#377ef0] transition-colors duration-300 inline-block shrink-0 ${className}`}
+    >
+      {formatted}
+    </span>
+  );
+}
+
+// ============================================================================
+// 10. KINETIC ROLL BUTTON (Primer Curtain Fill Upward Slide)
+// ============================================================================
+export interface KineticRollButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  icon?: React.ReactNode;
+  variant?: "primary" | "accent" | "secondary";
+  className?: string;
+}
+
+export function KineticRollButton({
+  children,
+  icon,
+  variant = "primary",
+  className = "",
+  onClick,
+  ...props
+}: KineticRollButtonProps) {
+  const baseColor =
+    variant === "primary"
+      ? "bg-[#377ef0] text-white border-[#377ef0]"
+      : variant === "accent"
+      ? "bg-[#fe6d2e] text-white border-[#fe6d2e]"
+      : "bg-white text-slate-900 border-[#dedad0]";
+
+  const fillColor =
+    variant === "primary"
+      ? "bg-[#2962be]"
+      : variant === "accent"
+      ? "bg-[#e0591f]"
+      : "bg-[#eaeff8]";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`primer-btn-roll relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 border cursor-pointer select-none group shadow-xs active:scale-[0.98] ${baseColor} ${className}`}
+      {...props}
+    >
+      <span className={`primer-btn-roll-fill ${fillColor}`} />
+      <span className="relative z-10 flex items-center gap-2">
+        <span>{children}</span>
+        {icon && (
+          <span className="transition-transform duration-200 group-hover:-translate-x-1 shrink-0">
+            {icon}
+          </span>
+        )}
+      </span>
+    </button>
   );
 }

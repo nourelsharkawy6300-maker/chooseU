@@ -19,7 +19,7 @@ import {
   computeFacultyTcoMetrics,
   formatFacultyCount,
 } from "../lib/engine";
-import { AnimatedCounter } from "./MotionPrimitives";
+import { AnimatedCounter, UIMavenCard } from "./MotionPrimitives";
 import {
   ArrowLeft,
   ArrowRight,
@@ -210,8 +210,10 @@ export function WorkspaceTabs({
       {/* =====================================================================
           1. RIGHT STICKY CONTROL SIDEBAR (lg:col-span-4)
          ===================================================================== */}
-      <aside className="lg:col-span-4 bg-white border border-slate-200 rounded-xl p-6 lg:sticky lg:top-20 space-y-5 shadow-2xs">
-        <div className="flex items-center justify-between border-b border-slate-200 pb-3.5">
+      <aside className="lg:col-span-4 lg:sticky lg:top-20">
+        <div className="anima-playground-dock">
+          <div className="anima-playground-surface p-6 space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3.5">
           <div className="flex items-center gap-2">
             <Sliders className="w-4 h-4 text-slate-900" strokeWidth={1.5} />
             <h2 className="text-[15px] font-semibold text-slate-900">
@@ -272,7 +274,7 @@ export function WorkspaceTabs({
                   <motion.div
                     layoutId="workspace-stream-pill"
                     className="absolute inset-0 rounded-lg bg-white shadow-2xs border border-slate-200"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
                   />
                 )}
                 <span className="relative z-10">{st.label}</span>
@@ -467,6 +469,8 @@ export function WorkspaceTabs({
           <p className="text-xs text-slate-600 font-medium">
             المسار المتصدر: {TRACK_DETAILS[topTrack]?.title}
           </p>
+        </div>
+        </div>
         </div>
       </aside>
 
@@ -804,7 +808,7 @@ export function WorkspaceTabs({
                       <motion.div
                         layoutId="workspace-sector-pill"
                         className="absolute inset-0 rounded-lg bg-blue-50 border border-blue-300 shadow-2xs"
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 32 }}
                       />
                     )}
                     <span className="relative z-10">{sec}</span>
@@ -862,9 +866,9 @@ export function WorkspaceTabs({
                         <div className="flex items-start gap-3 min-w-0 flex-1">
                           <span
                             dir="ltr"
-                            className="font-mono tabular-nums text-slate-400 text-xs font-semibold pt-1 shrink-0 w-8 text-center"
+                            className="uimaven-index pt-1 shrink-0 w-8 text-center"
                           >
-                            {rowNum}
+                            [{rowNum}]
                           </span>
                           <div className="min-w-0 flex-1 space-y-1">
                             <div className="flex flex-wrap items-center gap-1.5">
@@ -1314,28 +1318,35 @@ export function WorkspaceTabs({
           <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden space-y-6 p-6">
             {/* Explainable AI Best-Fit Verdict Banner */}
             {bestFitComparedFaculty && (
-              <div className="bg-blue-50/70 border border-blue-200 rounded-xl p-4 space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-[12px] font-bold text-blue-900">
-                    الخيار الأنسب لملفك الأكاديمي والمالي
-                  </span>
-                  <span className="text-xs font-semibold text-blue-700 bg-white px-2.5 py-0.5 rounded border border-blue-200 tabular-nums">
-                    الأعلى كفاءة لملفك
-                  </span>
+              <UIMavenCard
+                indexCode="001 // VERDICT"
+                badgeText="الأعلى كفاءة لملفك"
+                statusDotColor="bg-blue-600"
+                className="shadow-2xs text-right"
+              >
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[13px] font-bold text-blue-900">
+                      الخيار الأنسب لملفك الأكاديمي والمالي
+                    </span>
+                    <span className="text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded border border-blue-200 tabular-nums">
+                      الأعلى كفاءة
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-700 leading-relaxed tabular-nums">
+                    بناءً على مقارنة البدائل المختارة مع مجموعك ({score.toFixed(1)}
+                    %) وميزانيتك السنوية ({budget.toLocaleString()} ج.م) في محافظة{" "}
+                    {gov}، يتصدر{" "}
+                    <strong className="text-slate-900">
+                      «{bestFitComparedFaculty.name} —{" "}
+                      {bestFitComparedFaculty.university}»
+                    </strong>{" "}
+                    كأفضل خيار يوازن بين قوة العائد الوظيفي ({
+                      bestFitComparedFaculty.future_career.salary_range_egp
+                    }) وتقليل أعباء الاغتراب والتضخم التراكمي لـ 4 سنوات.
+                  </p>
                 </div>
-                <p className="text-xs text-slate-700 leading-relaxed tabular-nums">
-                  بناءً على مقارنة البدائل المختارة مع مجموعك ({score.toFixed(1)}
-                  %) وميزانيتك السنوية ({budget.toLocaleString()} ج.م) في محافظة{" "}
-                  {gov}، يتصدر{" "}
-                  <strong className="text-slate-900">
-                    «{bestFitComparedFaculty.name} —{" "}
-                    {bestFitComparedFaculty.university}»
-                  </strong>{" "}
-                  كأفضل خيار يوازن بين قوة العائد الوظيفي ({
-                    bestFitComparedFaculty.future_career.salary_range_egp
-                  }) وتقليل أعباء الاغتراب والتضخم التراكمي لـ 4 سنوات.
-                </p>
-              </div>
+              </UIMavenCard>
             )}
 
             {/* 8-Row Side-by-Side Comparison Matrix */}

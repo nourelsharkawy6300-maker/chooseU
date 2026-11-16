@@ -4,7 +4,6 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { ConsultationOrderRow } from "@/types/chooseu";
 import { DataService, SecurityValidator } from "@/lib/security-db";
-import { ChooseULogoMark } from "@/components/ChooseULogoMark";
 import {
   ArrowRight,
   CheckCircle2,
@@ -287,7 +286,9 @@ export default function AdvisorAdminPortalPage() {
         <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden">
           <div className="px-6 py-5 bg-white text-slate-900 flex items-center justify-between border-b border-slate-200">
             <div className="flex items-center gap-3">
-              <ChooseULogoMark className="w-9 h-9" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-base tracking-tight shrink-0 shadow-xs">
+                U
+              </div>
               <div>
                 <h1 className="text-[16px] font-bold">
                   بوابة المستشارين الأكاديميين
@@ -362,7 +363,9 @@ export default function AdvisorAdminPortalPage() {
         <div className="space-y-6">
           <div className="flex items-center justify-between border-b border-slate-200 pb-4">
             <div className="flex items-center gap-3">
-              <ChooseULogoMark className="w-8 h-8" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-sm tracking-tight shrink-0 shadow-xs">
+                U
+              </div>
               <div>
                 <div className="font-bold text-[15px] text-slate-900">ChooseU Staff</div>
                 <div className="text-[11px] text-slate-500">

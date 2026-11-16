@@ -142,40 +142,46 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
           <div className="px-3 pb-2 text-xs font-semibold text-slate-700">
             أقسام المنصة
           </div>
-          {NAVIGATION_ITEMS.map((item) => {
+          {NAVIGATION_ITEMS.map((item, idx) => {
             const IconComponent = item.icon;
             const isActive = pathname === item.href;
+            const indexStr = `0${idx + 1}`;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`group relative flex items-start gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200 ${
+                className={`group relative flex items-start gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors duration-200 ${
                   isActive
-                    ? "text-blue-900 font-semibold"
+                    ? "text-[#1c1736] font-bold"
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >
                 {isActive && (
                   <motion.div
-                    layoutId="sidebar-active-pill"
-                    className="absolute inset-0 rounded-lg bg-blue-50/80 border border-blue-200"
+                    layoutId="active-nav-pill"
+                    className="absolute inset-0 rounded-xl bg-blue-50/90 border border-blue-200/90 shadow-2xs"
                     transition={{
                       type: "spring",
                       stiffness: 380,
-                      damping: 30,
+                      damping: 32,
                     }}
                   />
                 )}
                 <IconComponent
                   className={`relative z-10 mt-0.5 h-4 w-4 shrink-0 transition-colors duration-200 ${
-                    isActive ? "text-blue-600" : "text-slate-400 group-hover:text-blue-600"
+                    isActive ? "text-[#377ef0]" : "text-slate-400 group-hover:text-[#377ef0]"
                   }`}
                 />
                 <div className="relative z-10 min-w-0 flex-1">
-                  <p className={`truncate font-medium transition-colors duration-200 ${isActive ? "text-blue-900" : "text-slate-700 group-hover:text-slate-900"}`}>
-                    {item.label}
-                  </p>
-                  <p className={`truncate text-xs transition-colors duration-200 ${isActive ? "text-blue-600" : "text-slate-500"}`}>
+                  <div className="flex items-center justify-between gap-1">
+                    <p className={`truncate font-semibold transition-colors duration-200 ${isActive ? "text-[#1c1736]" : "text-slate-700 group-hover:text-slate-900"}`}>
+                      {item.label}
+                    </p>
+                    <span dir="ltr" className="font-mono text-[10px] text-slate-400 opacity-60 shrink-0">
+                      {indexStr}
+                    </span>
+                  </div>
+                  <p className={`truncate text-xs transition-colors duration-200 ${isActive ? "text-[#377ef0]" : "text-slate-500"}`}>
                     {item.sublabel}
                   </p>
                 </div>
@@ -221,44 +227,62 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               <Menu className="h-5 w-5" />
             </button>
 
-            {/* Live Student Context Pills with Quick Inline Edit Click */}
+            {/* Live Student Context Telemetry Capsules with UIMaven Mini-Bezel Framing */}
             <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-1">
+              {/* Stream Capsule */}
               <button
                 type="button"
                 onClick={() => setIsEditingProfile(true)}
-                title="اضغط لتعديل الشعبة والمجموع والميزانية"
-                className="flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 hover:border-slate-300 px-3 py-1.5 text-xs transition-colors cursor-pointer"
+                title="اضغط لتعديل الشعبة الدراسية"
+                className="bg-[#f2efe9] p-1 rounded-xl border border-[#dedad0] hover:border-[#377ef0]/50 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs group"
               >
-                <GraduationCap className="h-3.5 w-3.5 text-blue-600 shrink-0" />
-                <span className="text-slate-500 hidden sm:inline">الشعبة:</span>
-                <span className="font-semibold text-slate-900 whitespace-nowrap">
-                  {streamDisplay}
+                <div className="bg-white px-2.5 py-1 rounded-lg border border-[#e6e4dd] flex items-center gap-1.5 text-xs">
+                  <GraduationCap className="h-3.5 w-3.5 text-[#377ef0] shrink-0" />
+                  <span className="text-slate-500 hidden sm:inline">الشعبة:</span>
+                  <span className="font-bold text-slate-900 whitespace-nowrap">
+                    {streamDisplay}
+                  </span>
+                </div>
+                <span className="text-[11px] font-semibold text-slate-500 group-hover:text-[#377ef0] px-1.5 hidden md:inline">
+                  تعديل
                 </span>
               </button>
 
+              {/* Score Capsule */}
               <button
                 type="button"
                 onClick={() => setIsEditingProfile(true)}
                 title="اضغط لتعديل المجموع"
-                className="flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 hover:border-slate-300 px-3 py-1.5 text-xs transition-colors cursor-pointer"
+                className="bg-[#f2efe9] p-1 rounded-xl border border-[#dedad0] hover:border-[#377ef0]/50 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs group"
               >
-                <Percent className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-                <span className="text-slate-500 hidden sm:inline">المجموع:</span>
-                <span className="font-semibold text-slate-900 whitespace-nowrap">
-                  <AnimatedCounter value={scorePercentage} decimals={1} suffix="%" />
+                <div className="bg-white px-2.5 py-1 rounded-lg border border-[#e6e4dd] flex items-center gap-1.5 text-xs">
+                  <Percent className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span className="text-slate-500 hidden sm:inline">المجموع:</span>
+                  <span className="font-bold text-slate-900 whitespace-nowrap">
+                    <AnimatedCounter value={scorePercentage} decimals={1} suffix="%" />
+                  </span>
+                </div>
+                <span className="text-[11px] font-semibold text-slate-500 group-hover:text-[#377ef0] px-1.5 hidden md:inline">
+                  تعديل
                 </span>
               </button>
 
+              {/* Budget Capsule */}
               <button
                 type="button"
                 onClick={() => setIsEditingProfile(true)}
                 title="اضغط لتعديل الميزانية السنوية"
-                className="flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 hover:border-slate-300 px-3 py-1.5 text-xs transition-colors cursor-pointer"
+                className="bg-[#f2efe9] p-1 rounded-xl border border-[#dedad0] hover:border-[#377ef0]/50 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs group"
               >
-                <Wallet className="h-3.5 w-3.5 text-amber-600 shrink-0" />
-                <span className="text-slate-600 hidden md:inline font-medium">الميزانية السنوية:</span>
-                <span className="font-semibold text-slate-900 whitespace-nowrap">
-                  <AnimatedCounter value={annualBudgetEgp} suffix=" ج.م" />
+                <div className="bg-white px-2.5 py-1 rounded-lg border border-[#e6e4dd] flex items-center gap-1.5 text-xs">
+                  <Wallet className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+                  <span className="text-slate-500 hidden lg:inline font-medium">الميزانية:</span>
+                  <span className="font-bold text-slate-900 whitespace-nowrap">
+                    <AnimatedCounter value={annualBudgetEgp} suffix=" ج.م" />
+                  </span>
+                </div>
+                <span className="text-[11px] font-semibold text-slate-500 group-hover:text-[#377ef0] px-1.5 hidden md:inline">
+                  تعديل
                 </span>
               </button>
             </div>
@@ -268,10 +292,10 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
             <button
               type="button"
               onClick={() => setIsEditingProfile(true)}
-              className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-900 cursor-pointer"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#dedad0] bg-[#f2efe9] hover:bg-[#eaeff8] hover:border-[#377ef0]/50 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors cursor-pointer shadow-2xs"
             >
-              <SlidersHorizontal className="h-3.5 w-3.5 text-slate-500" />
-              <span>بياناتي</span>
+              <SlidersHorizontal className="h-3.5 w-3.5 text-[#377ef0]" />
+              <span>تعديل معاييري</span>
             </button>
             <Link
               href="/sample-report"
@@ -339,8 +363,8 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                               className="absolute inset-0 rounded-lg bg-blue-50 border border-blue-200"
                               transition={{
                                 type: "spring",
-                                stiffness: 380,
-                                damping: 30,
+                                stiffness: 400,
+                                damping: 32,
                               }}
                             />
                           )}

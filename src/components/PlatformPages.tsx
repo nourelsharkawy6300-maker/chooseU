@@ -21,6 +21,7 @@ import {
   computeFacultyTcoMetrics,
   formatFacultyCount,
 } from "../lib/engine";
+import { UIMavenCard } from "./MotionPrimitives";
 import { DataService, SecurityValidator } from "../lib/security-db";
 import {
   ArrowLeft,
@@ -695,7 +696,7 @@ export function DirectoryView({
                   <motion.div
                     layoutId="directory-stream-pill"
                     className="absolute inset-0 rounded-lg bg-white shadow-2xs border border-slate-200"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
                   />
                 )}
                 <span className="relative z-10">{st.label}</span>
@@ -755,63 +756,70 @@ export function DirectoryView({
       ) : (
         <div
           key={`${streamFilter}-${categoryFilter}-${searchQuery}`}
-          style={{ animation: "fade-up 220ms var(--ease-out-expo) both" }}
-          className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-200 overflow-hidden shadow-2xs"
+          className="space-y-3.5"
         >
           {filteredFaculties.map((fac, idx) => {
             const isCompared = comparedIds.includes(fac.id);
             const numStr = String(idx + 1).padStart(3, "0");
             return (
-              <div
+              <UIMavenCard
                 key={fac.id}
-                className="p-3.5 sm:px-5 sm:py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/80 transition"
+                indexCode={`${numStr} // DIR`}
+                badgeText={fac.type}
+                statusDotColor={fac.type.includes("حكومي") ? "bg-emerald-500" : "bg-[#377ef0]"}
+                className="shadow-2xs text-right"
               >
-                <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                  <span
-                    dir="ltr"
-                    className="font-mono tabular-nums text-slate-400 text-[12px] font-semibold w-6 shrink-0 text-center"
-                  >
-                    {numStr}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="font-semibold text-slate-900 text-[14px] leading-snug">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span
+                        className={`px-2.5 py-0.5 rounded-md text-xs font-medium border ${getCategoryBadgeStyle(
+                          fac.type
+                        )}`}
+                      >
+                        {fac.type}
+                      </span>
+                      {fac.cutoff_2026 > 0 && (
+                        <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold tabular-nums">
+                          تنسيق {fac.cutoff_2026.toFixed(1)}%
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-semibold text-slate-900 text-[15px] leading-snug">
                       {fac.name}
-                    </div>
-                    <div className="text-xs text-slate-600 font-medium mt-0.5">
+                    </h3>
+                    <p className="text-xs text-slate-600 font-medium">
                       {fac.university} • محافظة {fac.gov}
+                    </p>
+                    {fac.scholarship_rule && (
+                      <p className="text-xs text-blue-700 font-medium">
+                        {fac.scholarship_rule}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                    <div className="text-left shrink-0 min-w-[100px]">
+                      <div className="text-[10px] text-slate-400 font-mono">المصروفات السنوية</div>
+                      <span className="font-bold text-[14px] text-slate-900 font-mono tabular-nums">
+                        {fac.y1_base_fee === 0 ? "مجاني حكومي" : `${fac.y1_base_fee.toLocaleString()} ج.م`}
+                      </span>
                     </div>
+
+                    <button
+                      type="button"
+                      onClick={() => onToggleCompare(fac.id)}
+                      className={`px-3 py-1.5 rounded-lg text-[12px] font-medium border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer shrink-0 ${
+                        isCompared
+                          ? "bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100 font-semibold"
+                          : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"
+                      }`}
+                    >
+                      {isCompared ? "إزالة من مسودة الرغبات" : "+ حفظ في مسودة الرغبات"}
+                    </button>
                   </div>
                 </div>
-
-                <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-5 shrink-0 pr-9 sm:pr-0">
-                  <span
-                    className={`px-2.5 py-0.5 rounded-md text-xs font-medium border shrink-0 ${getCategoryBadgeStyle(
-                      fac.type
-                    )}`}
-                  >
-                    {fac.type}
-                  </span>
-
-                  <div className="text-left shrink-0 tabular-nums min-w-[90px]">
-                    <span className="font-bold text-[13px] text-slate-900">
-                      {fac.y1_base_fee.toLocaleString()}
-                    </span>
-                    <span className="text-xs text-slate-600 font-medium mr-1">ج.م/سنة</span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => onToggleCompare(fac.id)}
-                    className={`px-3 py-1.5 rounded-lg text-[12px] font-medium border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer shrink-0 ${
-                      isCompared
-                        ? "bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100 font-semibold"
-                        : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"
-                    }`}
-                  >
-                    {isCompared ? "إزالة من مسودة الرغبات" : "حفظ في مسودة الرغبات"}
-                  </button>
-                </div>
-              </div>
+              </UIMavenCard>
             );
           })}
         </div>
@@ -1061,10 +1069,10 @@ export function SampleReportView({
             </div>
           </div>
 
-          {/* Internal Bylaw & Freshman GPA Risk Analysis */}
+          {/* Internal Bylaw & Risk Analysis */}
           <div className="space-y-2">
             <h3 className="text-[15px] font-semibold text-slate-900">
-              ثالثاً: تحليل مخاطر السنة التأسيسية الأولى (Freshman GPA Risk) وتوصية المستشار
+              ثالثاً: تحليل مخاطر السنة التأسيسية الأولى وتوصية المستشار
             </h3>
             <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/70 text-[12px] text-slate-700 leading-relaxed space-y-2">
               <p>

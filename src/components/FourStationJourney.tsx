@@ -2,7 +2,12 @@
 
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AnimatedCounter } from "@/components/MotionPrimitives";
+import {
+  AnimatedCounter,
+  BlueprintFrame,
+  UIMavenCard,
+  ArchivalIndexBadge,
+} from "@/components/MotionPrimitives";
 import { useStudent } from "@/context/StudentContext";
 import {
   ArrowLeft,
@@ -141,22 +146,22 @@ const ASSESSMENT_QUESTIONS = [
       {
         label: "نماذج الذكاء الاصطناعي، الحوسبة السحابية وحماية البيانات السيبرانية",
         track: "AI" as TrackKey,
-        badge: "AI & Cloud",
+        badge: "الذكاء الاصطناعي والحوسبة",
       },
       {
         label: "الهندسة الوراثية والبيوتكنولوجي والأجهزة التعويضية الدقيقة",
         track: "Bio_Tech" as TrackKey,
-        badge: "Biotech & Genomics",
+        badge: "التكنولوجيا الحيوية والجينوم",
       },
       {
         label: "المدن الذكية المستدامة، إنترنت الأشياء والروبوتات الصناعية",
         track: "Hardware" as TrackKey,
-        badge: "Robotics & Smart Cities",
+        badge: "الروبوتات والمدن الذكية",
       },
       {
         label: "التكنولوجيا المالية (FinTech) والتجارة الرقمية وسلاسل الإمداد",
         track: "Biz_Fin" as TrackKey,
-        badge: "FinTech & Digital Commerce",
+        badge: "التكنولوجيا المالية والتجارة الرقمية",
       },
     ],
   },
@@ -408,87 +413,91 @@ export function FourStationJourney({
   return (
     <div className="w-full primer-grid-bg bg-[var(--paper)] text-[var(--ink)] pb-24 min-h-screen relative">
       {/* ==================================================================== */}
-      {/* 1. STICKY OBSIDIAN 4-STATION STEPPER BAR                             */}
+      {/* 1. STICKY 4-STATION STEPPER DOCK (BlueprintFrame + Progress Spring)  */}
       {/* ==================================================================== */}
-      <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
-        {/* Continuous Spring Progress Bar at the top edge */}
-        <div className="w-full h-1 bg-slate-200 overflow-hidden">
-          <motion.div
-            className="h-full bg-[#377ef0]"
-            initial={false}
-            animate={{ width: `${(station / 4) * 100}%` }}
-            transition={{ type: "spring", stiffness: 280, damping: 28 }}
-          />
-        </div>
-        <div className="px-4 py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 relative">
-          <span className="grid-crosshair top-0 start-0" />
-          <span className="grid-crosshair top-0 end-0" />
-          {/* Brand & Active Station Indicator */}
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center p-1.5 shrink-0">
-              <Compass className="w-4 h-4 text-[#377ef0] stroke-[1.5]" />
-            </div>
-            <div>
-              <div className="text-[13px] font-bold text-slate-900">
-                المحطة {station} من 4:{" "}
-                <span className="text-[#377ef0]">
-                  {station === 1 && "اكتشف"}
-                  {station === 2 && "طابق"}
-                  {station === 3 && "حاكِ"}
-                  {station === 4 && "قرّر"}
-                </span>
+      <div className="sticky top-0 z-30 bg-[var(--paper)]/95 backdrop-blur-md border-b border-[#e2e2e2] px-4 sm:px-6 py-3 no-print">
+        <BlueprintFrame label="STATION ENGINE // 01 - 04" className="!p-3.5 sm:!p-4 bg-white/90">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            {/* Brand & Active Station Indicator */}
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-200/80 flex items-center justify-center p-1.5 shrink-0 text-[#377ef0] shadow-2xs">
+                <Compass className="w-5 h-5 stroke-[1.75]" />
+              </div>
+              <div>
+                <div className="text-[13px] font-bold text-slate-900">
+                  المحطة {station} من 4:{" "}
+                  <span className="text-[#377ef0]">
+                    {station === 1 && "اكتشف (تقييم الميول)"}
+                    {station === 2 && "طابق (ترشيح الكليات)"}
+                    {station === 3 && "حاكِ (سيناريوهات التنسيق)"}
+                    {station === 4 && "قرّر (القرار النهائي)"}
+                  </span>
+                </div>
+                <div className="text-[11px] text-slate-500 font-mono">
+                  PROGRESS: {((station / 4) * 100).toFixed(0)}% // STEP 0{station}
+                </div>
               </div>
             </div>
+
+            {/* Stepper Buttons (1, 2, 3, 4) with sliding layoutId */}
+            <div className="w-full sm:w-auto grid grid-cols-4 sm:flex sm:items-center gap-1 sm:gap-1.5 bg-[#f2efe9] p-1.5 rounded-xl border border-[#dedad0] text-xs relative">
+              {[
+                { id: 1 as const, title: "01 الاكتشاف", short: "01", icon: Compass },
+                { id: 2 as const, title: "02 المطابقة", short: "02", icon: Layers },
+                { id: 3 as const, title: "03 المحاكاة", short: "03", icon: SlidersHorizontal },
+                { id: 4 as const, title: "04 القرار", short: "04", icon: MessageSquare },
+              ].map((st) => {
+                const isActive = station === st.id;
+                const isPassed = station > st.id;
+                const IconComp = st.icon;
+
+                return (
+                  <button
+                    key={st.id}
+                    type="button"
+                    onClick={() => setStation(st.id)}
+                    className={`relative flex items-center justify-center gap-1 sm:gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-colors cursor-pointer text-center z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                      isActive
+                        ? "text-white font-bold"
+                        : isPassed
+                        ? "text-emerald-700 hover:text-emerald-900"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="active-station-card"
+                        className="absolute inset-0 bg-[#377ef0] rounded-lg shadow-sm -z-10"
+                        transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                      />
+                    )}
+                    {isPassed ? (
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2] shrink-0" />
+                    ) : (
+                      <IconComp
+                        className={`w-3.5 h-3.5 shrink-0 ${
+                          isActive ? "text-white stroke-[2]" : "text-slate-400 stroke-[1.5]"
+                        }`}
+                      />
+                    )}
+                    <span className="hidden sm:inline">{st.title}</span>
+                    <span className="sm:hidden font-mono">{st.short}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Stepper Buttons (1, 2, 3, 4) with sliding layoutId */}
-          <div className="w-full sm:w-auto grid grid-cols-4 sm:flex sm:items-center gap-1 sm:gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs relative">
-            {[
-              { id: 1 as const, title: "01 الاكتشاف", short: "اكتشف", icon: Compass },
-              { id: 2 as const, title: "02 المطابقة", short: "طابق", icon: Layers },
-              { id: 3 as const, title: "03 المحاكاة", short: "حاكِ", icon: SlidersHorizontal },
-              { id: 4 as const, title: "04 القرار", short: "قرّر", icon: MessageSquare },
-            ].map((st) => {
-              const isActive = station === st.id;
-              const isPassed = station > st.id;
-              const IconComp = st.icon;
-
-              return (
-                <button
-                  key={st.id}
-                  type="button"
-                  onClick={() => setStation(st.id)}
-                  className={`relative flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer text-center z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                    isActive
-                      ? "text-white font-bold"
-                      : isPassed
-                      ? "text-emerald-700 hover:text-emerald-900"
-                      : "text-slate-500 hover:text-slate-900"
-                  }`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="active-station-card"
-                      className="absolute inset-0 bg-[#377ef0] rounded-lg shadow-sm -z-10"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                  {isPassed ? (
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2] shrink-0" />
-                  ) : (
-                    <IconComp
-                      className={`w-3.5 h-3.5 shrink-0 ${
-                        isActive ? "text-white stroke-[2]" : "text-slate-400 stroke-[1.5]"
-                      }`}
-                    />
-                  )}
-                  <span className="hidden sm:inline">{st.title}</span>
-                  <span className="sm:hidden">{st.short}</span>
-                </button>
-              );
-            })}
+          {/* Continuous Animated Progress Bar */}
+          <div className="w-full bg-[#dedad0]/60 h-1 rounded-full overflow-hidden mt-3">
+            <motion.div
+              className="h-full bg-gradient-to-r from-[#377ef0] to-[#fe6d2e]"
+              initial={false}
+              animate={{ width: `${(station / 4) * 100}%` }}
+              transition={{ type: "spring", stiffness: 320, damping: 28 }}
+            />
           </div>
-        </div>
+        </BlueprintFrame>
       </div>
 
       {/* ==================================================================== */}
@@ -554,67 +563,72 @@ export function FourStationJourney({
               <div className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {ASSESSMENT_QUESTIONS.map((q, idx) => (
-                    <div
+                    <UIMavenCard
                       key={q.id}
-                      className="bg-white border border-slate-200 rounded-xl p-5 space-y-3 shadow-xs"
+                      indexCode={`0${idx + 1} // QUIZ`}
+                      badgeText={assessmentAnswers[q.id] ? "مكتمل" : "سؤال تفاعلي"}
+                      statusDotColor={assessmentAnswers[q.id] ? "bg-emerald-500" : "bg-[#377ef0]"}
+                      className="shadow-xs text-right"
                     >
-                      <div className="flex items-center justify-between text-xs text-slate-600 font-medium">
-                        <span>السؤال <span dir="ltr" className="font-mono tabular-nums">0{idx + 1} / 04</span></span>
-                        {assessmentAnswers[q.id] && (
-                          <span className="text-emerald-700 flex items-center gap-1">
-                            <CheckCircle2 className="w-3 h-3 stroke-[2]" />
-                            <span>مكتمل</span>
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="text-[13px] font-semibold text-slate-900 leading-relaxed">
-                        {q.question}
-                      </h3>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between text-xs text-slate-600 font-medium">
+                          <span>السؤال <span dir="ltr" className="font-mono tabular-nums">0{idx + 1} / 04</span></span>
+                          {assessmentAnswers[q.id] && (
+                            <span className="text-emerald-700 flex items-center gap-1 font-semibold">
+                              <CheckCircle2 className="w-3.5 h-3.5 stroke-[2]" />
+                              <span>مكتمل</span>
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="text-[13px] font-semibold text-slate-900 leading-relaxed">
+                          {q.question}
+                        </h3>
 
-                      <div className="space-y-2 pt-1">
-                        {q.options.map((opt, optIdx) => {
-                          const isSelected = assessmentAnswers[q.id] === opt.track;
-                          return (
-                            <motion.button
-                              key={optIdx}
-                              type="button"
-                              whileHover={{ y: -2 }}
-                              whileTap={{ scale: 0.985 }}
-                              transition={{ type: "spring", stiffness: 380, damping: 26 }}
-                              onClick={() => handleAnswerQuestion(q.id, opt.track)}
-                              className={`w-full text-right p-3 rounded-lg border text-[12px] transition-colors cursor-pointer flex items-center justify-between gap-3 ${
-                                isSelected
-                                  ? "bg-blue-50/80 border-[#377ef0] text-blue-950 font-medium shadow-xs"
-                                  : "bg-white hover:bg-slate-50 border-slate-200 text-slate-700"
-                              }`}
-                            >
-                              <div className="flex items-center gap-2 leading-snug">
-                                {isSelected && (
-                                  <svg className="w-4 h-4 text-[#377ef0] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <motion.path
-                                      initial={{ pathLength: 0 }}
-                                      animate={{ pathLength: 1 }}
-                                      transition={{ duration: 0.28, ease: "easeOut" }}
-                                      d="M20 6L9 17l-5-5"
-                                    />
-                                  </svg>
-                                )}
-                                <span>{opt.label}</span>
-                              </div>
-                              <span
-                                className={`text-xs px-2.5 py-1 rounded-md border shrink-0 font-medium ${
+                        <div className="space-y-2 pt-1">
+                          {q.options.map((opt, optIdx) => {
+                            const isSelected = assessmentAnswers[q.id] === opt.track;
+                            return (
+                              <motion.button
+                                key={optIdx}
+                                type="button"
+                                whileHover={{ y: -2 }}
+                                whileTap={{ scale: 0.985 }}
+                                transition={{ type: "spring", stiffness: 380, damping: 26 }}
+                                onClick={() => handleAnswerQuestion(q.id, opt.track)}
+                                className={`w-full text-right p-3 rounded-lg border text-[12px] transition-colors cursor-pointer flex items-center justify-between gap-3 ${
                                   isSelected
-                                    ? "bg-[#377ef0] border-[#377ef0] text-white"
-                                    : "bg-slate-100 border-slate-200 text-slate-700"
+                                    ? "bg-blue-50/80 border-[#377ef0] text-blue-950 font-medium shadow-xs"
+                                    : "bg-white hover:bg-slate-50 border-slate-200 text-slate-700"
                                 }`}
                               >
-                                {opt.badge}
-                              </span>
-                            </motion.button>
-                          );
-                        })}
+                                <div className="flex items-center gap-2 leading-snug">
+                                  {isSelected && (
+                                    <svg className="w-4 h-4 text-[#377ef0] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                      <motion.path
+                                        initial={{ pathLength: 0 }}
+                                        animate={{ pathLength: 1 }}
+                                        transition={{ duration: 0.28, ease: "easeOut" }}
+                                        d="M20 6L9 17l-5-5"
+                                      />
+                                    </svg>
+                                  )}
+                                  <span>{opt.label}</span>
+                                </div>
+                                <span
+                                  className={`text-xs px-2.5 py-1 rounded-md border shrink-0 font-medium ${
+                                    isSelected
+                                      ? "bg-[#377ef0] border-[#377ef0] text-white"
+                                      : "bg-slate-100 border-slate-200 text-slate-700"
+                                  }`}
+                                >
+                                  {opt.badge}
+                                </span>
+                              </motion.button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
+                    </UIMavenCard>
                   ))}
                 </div>
 
@@ -644,8 +658,9 @@ export function FourStationJourney({
 
             {/* Sub-View B: Student Profile */}
             {station1SubView === "profile" && (
-              <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-6 shadow-xs">
-                <div className="border-b border-slate-200 pb-4">
+              <div className="anima-playground-dock">
+                <div className="anima-playground-surface p-6 space-y-6">
+                  <div className="border-b border-slate-200 pb-4">
                   <h3 className="text-base font-bold text-slate-900">
                     بيانات الطالب الأكاديمية والمالية
                   </h3>
@@ -876,6 +891,7 @@ export function FourStationJourney({
                   </button>
                 </div>
               </div>
+            </div>
             )}
           </motion.div>
         )}
@@ -960,27 +976,41 @@ export function FourStationJourney({
                 : selectedClusterFilter === "target"
                 ? targetFaculties
                 : fallbackFaculties
-              ).map((fac) => {
+              ).map((fac, idx) => {
                 const isCompared = comparedFacultyIds.includes(fac.id);
                 return (
                   <div
                     key={fac.id}
-                    className="bg-white border border-slate-200 hover:border-slate-300 rounded-xl p-5 flex flex-col justify-between space-y-4 shadow-xs transition-colors"
+                    className="dsquared-row group uimaven-card p-5 flex flex-col justify-between space-y-4 shadow-xs transition-colors"
                   >
-                    <div className="space-y-3">
+                    <div className="space-y-3 relative z-10">
                       <div className="flex items-start justify-between gap-2">
-                        <span
-                          className={`text-xs px-2.5 py-0.5 rounded border font-medium ${fac.safetyBadge.style}`}
-                        >
-                          {fac.safetyBadge.label}
-                        </span>
-                        <span className="text-xs font-bold text-blue-700">
-                          توافق <span dir="ltr" className="font-mono tabular-nums">{fac.matchScore}%</span>
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <ArchivalIndexBadge index={idx + 1} />
+                          <span
+                            className={`text-xs px-2.5 py-0.5 rounded border font-medium ${fac.safetyBadge.style}`}
+                          >
+                            {fac.safetyBadge.label}
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs font-bold text-blue-700">
+                            توافق <span dir="ltr" className="font-mono tabular-nums">{fac.matchScore}%</span>
+                          </span>
+                          <div className="w-20 bg-slate-100 h-1.5 rounded-full overflow-hidden mt-1">
+                            <motion.div
+                              className="h-full bg-blue-600 rounded-full"
+                              initial={{ width: 0 }}
+                              whileInView={{ width: `${fac.matchScore}%` }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                            />
+                          </div>
+                        </div>
                       </div>
 
                       <div>
-                        <h3 className="text-sm font-bold text-slate-900 leading-snug">
+                        <h3 className="text-sm font-bold text-slate-900 leading-snug group-hover:text-blue-900 transition-colors">
                           {fac.name}
                         </h3>
                         <p className="text-xs text-slate-600 mt-0.5">
@@ -1017,7 +1047,7 @@ export function FourStationJourney({
                       </div>
                     </div>
 
-                    <div className="space-y-2 pt-2 border-t border-slate-200">
+                    <div className="space-y-2 pt-2 border-t border-slate-200 relative z-10">
                       {/* Explainable AI Button */}
                       <button
                         type="button"
@@ -1172,7 +1202,7 @@ export function FourStationJourney({
                   المحطة الثالثة: لوحة المحاكاة الموحدة، مستقبلي، وخارطة الطريق
                 </h2>
                 <p className="text-xs text-slate-600">
-                  اختبر سيناريوهات التنسيق (What-If)، استشرف رواتب ووظائف 2030 (Future Me)، واستكشف خارطة السنوات الـ 4.
+                  اختبر سيناريوهات التنسيق، استشرف رواتب ووظائف 2030 (Future Me)، واستكشف خارطة السنوات الـ 4.
                 </p>
               </div>
 
@@ -1197,13 +1227,14 @@ export function FourStationJourney({
               </div>
             </div>
 
-            {/* Module 1: What-If Simulator Bar */}
-            <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-xs">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+            {/* Module 1: Simulator Bar */}
+            <div className="anima-playground-dock">
+              <div className="anima-playground-surface p-6 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal className="w-4 h-4 text-blue-600 stroke-[1.5]" />
                   <h3 className="text-sm font-bold text-slate-900">
-                    محاكي سيناريوهات التنسيق والحد الأدنى (What-If Simulator)
+                    محاكي سيناريوهات التنسيق والحد الأدنى
                   </h3>
                 </div>
                 <div className="text-xs text-slate-600 font-medium">
@@ -1294,6 +1325,7 @@ export function FourStationJourney({
                 </button>
               </div>
             </div>
+          </div>
 
             {/* Module 2 & 3: Future Me & Career Roadmap */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

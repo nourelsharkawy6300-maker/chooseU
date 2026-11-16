@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Compass,
@@ -15,9 +14,9 @@ import {
 import { useStudent } from "@/context/StudentContext";
 import { formatStream } from "@/types/chooseu";
 import {
-  MaskRevealHeading,
-  SpotlightCard,
-  MagneticButton,
+  BlueprintFrame,
+  UIMavenCard,
+  KineticRollButton,
   ArchitecturalDivider,
   AnimatedCounter,
 } from "@/components/MotionPrimitives";
@@ -69,84 +68,122 @@ const MODULES = [
 
 export default function HomePage() {
   const router = useRouter();
-  const { studentName, scorePercentage, stream } = useStudent();
+  const { studentName, scorePercentage, annualBudgetEgp, stream } = useStudent();
   const streamAr = formatStream(stream);
 
   return (
-    <div className="space-y-10">
-      {/* Editorial Hero Header with Primer Blueprint & Mask Reveal */}
-      <div className="relative overflow-hidden rounded-2xl border border-[#e2e2e2] bg-white primer-grid-bg p-8 sm:p-12 text-start shadow-xs">
-        <span className="grid-crosshair top-0 start-0" />
-        <span className="grid-crosshair top-0 end-0" />
-        <span className="grid-crosshair bottom-0 start-0" />
-        <span className="grid-crosshair bottom-0 end-0" />
+    <div className="space-y-12">
+      {/* Editorial Hero Header with Primer Blueprint Frame */}
+      <BlueprintFrame label="CHOOSEU // ARCHIVAL ENGINE 2026" className="primer-grid-bg">
+        <div className="max-w-4xl space-y-6 pt-2 text-start relative z-10">
+          {/* Top Status Ticker Pill */}
+          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white border border-[#dedad0] text-xs font-semibold text-slate-700 shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            <span>نظام التدقيق الأكاديمي والمالي المعتمد للتنسيق المصري 2026</span>
+          </div>
 
-        <div className="max-w-3xl space-y-5 text-start relative z-10">
-          <MaskRevealHeading as="h1" className="text-3xl sm:text-5xl font-black text-[#1c1736] leading-[1.3]">
-            قرارك الأكاديمي والمالي
-          </MaskRevealHeading>
+          <div className="space-y-2">
+            <h1 className="text-[clamp(2.1rem,4.4vw,3.5rem)] font-extrabold text-[#1c1736] leading-[1.2] tracking-tight">
+              قرارك الأكاديمي والمالي
+            </h1>
+            <h2 className="text-[clamp(2.1rem,4.4vw,3.5rem)] font-extrabold text-[#377ef0] leading-[1.2] tracking-tight">
+              مدقق بحسابات حقيقية لسنوات دراستك
+            </h2>
+          </div>
 
-          <MaskRevealHeading as="h2" delay={0.12} className="text-3xl sm:text-5xl font-black text-[#377ef0] leading-[1.3]">
-            مدقق بحسابات حقيقية لسنوات دراستك
-          </MaskRevealHeading>
-
-          <p className="text-sm sm:text-base text-[#48425f] leading-relaxed max-w-2xl pt-2">
-            مرحباً بك {studentName} ({streamAr} — <span dir="ltr" className="font-mono tabular-nums font-bold text-[#377ef0]"><AnimatedCounter value={scorePercentage} />%</span>). اختر القسم الذي ترغب في
-            استكشافه أو ابدأ مباشرة في لوحة التحكم وتنسيق الرغبات لاستكمال الخطوات الأكاديمية.
+          <p className="text-sm sm:text-base text-[#48425f] leading-relaxed max-w-2xl">
+            مرحباً بك {studentName}. منصة معمارية هندسية لطلاب الثانوية العامة وSTEM وأولياء الأمور؛ تفحص التوافق التخصصي الفعلي، تكشف مصاريف الـ 4 سنوات التراكمية، وتبني بطاقة رغباتك الاستراتيجية.
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 pt-3">
-            <MagneticButton
+          {/* 3-Column Live Telemetry Console Bar */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-2xl bg-[#f2efe9] border border-[#dedad0]">
+            <div className="bg-white p-3.5 rounded-xl border border-[#e6e4dd] flex flex-col justify-between shadow-2xs">
+              <span className="text-[11px] font-semibold text-slate-500">الشعبة الدراسية</span>
+              <span className="text-sm font-bold text-slate-900 mt-1">{streamAr}</span>
+            </div>
+            <div className="bg-white p-3.5 rounded-xl border border-[#e6e4dd] flex flex-col justify-between shadow-2xs">
+              <span className="text-[11px] font-semibold text-slate-500">المجموع الفعلي</span>
+              <span className="text-sm font-bold text-[#377ef0] mt-1">
+                <AnimatedCounter value={scorePercentage} suffix="%" />
+              </span>
+            </div>
+            <div className="bg-white p-3.5 rounded-xl border border-[#e6e4dd] flex flex-col justify-between shadow-2xs">
+              <span className="text-[11px] font-semibold text-slate-500">الميزانية السنوية</span>
+              <span className="text-sm font-bold text-emerald-700 mt-1">
+                <AnimatedCounter value={annualBudgetEgp} suffix=" ج.م" />
+              </span>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <KineticRollButton
               variant="primary"
               onClick={() => router.push("/workspace")}
               icon={<ArrowRight className="h-4 w-4" />}
             >
-              ابدأ التنسيق
-            </MagneticButton>
+              ابدأ التنسيق الهندسي
+            </KineticRollButton>
 
-            <MagneticButton
+            <KineticRollButton
               variant="secondary"
               onClick={() => router.push("/sample-report")}
             >
               معاينة نموذج التقرير A4
-            </MagneticButton>
+            </KineticRollButton>
           </div>
         </div>
-      </div>
+      </BlueprintFrame>
 
       <ArchitecturalDivider />
 
-      {/* Grid of Platform Modules Wrapped in Interactive Spotlight Cards */}
+      {/* Grid of Platform Modules Wrapped in UIMaven Double-Bezel Cards */}
       <div className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {MODULES.map((m) => {
+        <div className="flex items-center justify-between border-b border-[#dedad0] pb-3">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#377ef0]" />
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono">
+              SYSTEM MODULES // معمارية الأدوات الست
+            </h2>
+          </div>
+          <span className="text-xs font-mono text-slate-500">INDEX: 001 - 006</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {MODULES.map((m, idx) => {
             const Icon = m.icon;
             return (
-              <Link key={m.href} href={m.href} className="block group">
-                <SpotlightCard className="p-5 h-full transition-all group-hover:border-[#377ef0]/40 shadow-2xs flex flex-col justify-between">
+              <UIMavenCard
+                key={m.href}
+                indexCode={`00${idx + 1} // SYS`}
+                badgeText={m.badge}
+                onClick={() => router.push(m.href)}
+                className="h-full"
+              >
+                <div className="space-y-4 flex flex-col justify-between h-full min-h-[175px]">
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-200/60 flex items-center justify-center text-[#377ef0] group-hover:bg-[#377ef0] group-hover:text-white transition-colors">
-                        <Icon className="h-4 w-4 stroke-[1.75]" />
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-blue-50/80 border border-blue-200/80 flex items-center justify-center text-[#377ef0] group-hover:bg-[#377ef0] group-hover:text-white transition-colors duration-300 shrink-0">
+                        <Icon className="h-5 w-5 stroke-[1.75]" />
                       </div>
-                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-                        {m.badge}
-                      </span>
-                    </div>
-                    <div className="space-y-1.5 min-w-0">
-                      <h3 className="text-[15px] font-bold text-[#1c1736] group-hover:text-[#377ef0] transition-colors">
+                      <h3 className="text-base font-bold text-[#1c1736] group-hover:text-[#377ef0] transition-colors leading-[1.4]">
                         {m.title}
                       </h3>
-                      <p className="text-xs text-[#48425f] leading-relaxed line-clamp-2">
-                        {m.desc}
-                      </p>
+                    </div>
+                    <p className="text-xs text-[#48425f] leading-relaxed line-clamp-2">
+                      {m.desc}
+                    </p>
+                  </div>
+
+                  {/* 1px Dashed Architectural Divider & Action Rail */}
+                  <div className="space-y-3 pt-2">
+                    <div className="border-t border-dashed border-[#dedad0]" />
+                    <div className="flex items-center justify-between text-xs font-semibold text-slate-500 group-hover:text-[#377ef0] transition-colors">
+                      <span>فتح الأداة الهندسية</span>
+                      <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-[#377ef0] group-hover:-translate-x-1.5 transition-transform duration-200 shrink-0" />
                     </div>
                   </div>
-                  <div className="flex items-center justify-end pt-3">
-                    <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-[#377ef0] group-hover:-translate-x-1 transition-all shrink-0" />
-                  </div>
-                </SpotlightCard>
-              </Link>
+                </div>
+              </UIMavenCard>
             );
           })}
         </div>
