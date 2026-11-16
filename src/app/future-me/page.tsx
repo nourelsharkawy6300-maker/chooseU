@@ -40,7 +40,9 @@ function FutureMeContent() {
     if (facultyParam) {
       const match = FACULTIES_DATABASE.find((f) => f.id === facultyParam);
       if (match) {
-        setSelectedFaculty(match);
+        setTimeout(() => {
+          setSelectedFaculty(match);
+        }, 0);
       }
     }
   }, [facultyParam]);

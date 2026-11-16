@@ -182,7 +182,9 @@ export function FourStationJourney({
       if (savedStation) {
         const parsed = parseInt(savedStation, 10);
         if (parsed >= 1 && parsed <= 4) {
-          setStation(parsed as 1 | 2 | 3 | 4);
+          setTimeout(() => {
+            setStation(parsed as 1 | 2 | 3 | 4);
+          }, 0);
         }
       }
     } catch {
