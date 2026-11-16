@@ -36,7 +36,7 @@ import {
   RankedFaculty,
   formatStream,
 } from "@/types/chooseu";
-import { FACULTIES_DATABASE, EGYPT_GOVERNORATES, TRACK_DETAILS } from "@/data/faculties-db";
+import { FACULTIES_DATABASE, EGYPT_GOVERNORATES, TRACK_DETAILS, STREAM_QUIZ_BANKS } from "@/data/faculties-db";
 import { computeFacultyTcoMetrics } from "@/lib/engine";
 
 // ============================================================================
@@ -223,7 +223,14 @@ export function FourStationJourney({
     setAssessmentAnswers,
   } = useStudent();
 
-  const hasCompletedAssessment = Object.keys(assessmentAnswers || {}).length >= 4;
+  const activeQuestions = useMemo(() => {
+    if (STREAM_QUIZ_BANKS && STREAM_QUIZ_BANKS[stream] && STREAM_QUIZ_BANKS[stream].length > 0) {
+      return STREAM_QUIZ_BANKS[stream];
+    }
+    return ASSESSMENT_QUESTIONS;
+  }, [stream]);
+
+  const hasCompletedAssessment = Object.keys(assessmentAnswers || {}).length >= activeQuestions.length;
 
   // Local string states for non-hostile input typing (FIX 2: Destroy Hostile Input Clamping)
   const [scoreInputStr, setScoreInputStr] = useState<string>(score.toString());
@@ -283,21 +290,23 @@ export function FourStationJourney({
   // DERIVED DATA & COMPUTATIONS
   // ============================================================================
 
-  // Dominant track calculated from assessment answers
-  const dominantTrack = useMemo<TrackKey>(() => {
+  // Dominant track calculated from assessment answers (null until answered)
+  const dominantTrack = useMemo<TrackKey | null>(() => {
+    const answered = Object.values(assessmentAnswers || {});
+    if (answered.length === 0) return null;
     const counts: Record<string, number> = {};
-    Object.values(assessmentAnswers).forEach((t) => {
+    answered.forEach((t) => {
       counts[t] = (counts[t] || 0) + 1;
     });
-    let top = "AI";
+    let top: TrackKey | null = null;
     let max = 0;
     Object.entries(counts).forEach(([t, c]) => {
       if (c > max) {
         max = c;
-        top = t;
+        top = t as TrackKey;
       }
     });
-    return top as TrackKey;
+    return top;
   }, [assessmentAnswers]);
 
   const budgetTiers = useMemo(() => {
@@ -370,13 +379,15 @@ export function FourStationJourney({
       let matchScore = 70;
       if (margin >= 0) matchScore += Math.min(15, margin * 4);
       if (f.gov === governorate) matchScore += 10;
-      if (f.tracks.includes(dominantTrack)) matchScore += 15;
+      if (dominantTrack && f.tracks.includes(dominantTrack)) matchScore += 15;
       if (f.y1_base_fee <= budget) matchScore += 5;
       matchScore = Math.min(99, Math.max(50, Math.round(matchScore)));
 
-      const whyMatch = `توافق بنسبة ${matchScore}% بناءً على مجموعك (${effectiveScore}%) مقارنة بتنسيقها (${shiftedCutoff}%)، ومطابقتها لميولك في مسار ${
-        TRACK_DETAILS[dominantTrack]?.title || "الذكاء الاصطناعي"
-      }، ونطاقك الجغرافي (${f.gov}).`;
+      const trackMatchText =
+        dominantTrack && TRACK_DETAILS[dominantTrack]
+          ? `، ومطابقتها لميولك في مسار ${TRACK_DETAILS[dominantTrack].title}`
+          : "";
+      const whyMatch = `توافق بنسبة ${matchScore}% بناءً على مجموعك (${effectiveScore}%) مقارنة بتنسيقها (${shiftedCutoff}%)${trackMatchText}، ونطاقك الجغرافي (${f.gov}).`;
 
       return {
         ...f,
@@ -416,7 +427,7 @@ export function FourStationJourney({
       const next = { ...prev, [qId]: track };
       // Check if all 4 questions are answered
       const answeredCount = Object.keys(next).length;
-      if (answeredCount >= 4) {
+      if (answeredCount >= activeQuestions.length) {
         // Immediate deterministic view transition
         setStation1SubView("profile");
       }
@@ -437,7 +448,11 @@ export function FourStationJourney({
 
     const streamTitle = formatStream(stream);
 
-    let reply = `بناءً على ملفك الأكاديمي (مجموع ${score}% بشعبة ${streamTitle}) وميولك في ${TRACK_DETAILS[dominantTrack]?.title}: `;
+    const trackIntro =
+      dominantTrack && TRACK_DETAILS[dominantTrack]
+        ? ` وميولك في ${TRACK_DETAILS[dominantTrack].title}`
+        : "";
+    let reply = `بناءً على ملفك الأكاديمي (مجموع ${score}% بشعبة ${streamTitle})${trackIntro}: `;
 
     if (userText.includes("ساعات معتمدة") || userText.includes("أهلي")) {
       reply += `البرامج الأهلية والساعات المعتمدة توفر لك نفس الاعتماد الأكاديمي بحدود قبول أقل، مع ميزة الأعداد الأقل وتحديث اللوائح (مثل إمكانية التخرج في 4 سنوات لبعض كليات الهندسة)، وتكلفتها السنوية ضمن حدود ميزانيتك المقدرة بـ ${budget.toLocaleString()} ج.م.`;
@@ -579,7 +594,7 @@ export function FourStationJourney({
                   المحطة الأولى: تقييم الميول وتوثيق الملف الأكاديمي
                 </h2>
                 <p className="text-xs text-slate-600">
-                  حل الأسئلة الأربعة لتحديد سماتك الأكاديمية بدقة، وتنتقل تلقائياً لملفك الشخصي وبيانات التنسيق.
+                  حل أسئلة الميول لتحديد سماتك الأكاديمية بدقة، وتنتقل تلقائياً لملفك الشخصي وبيانات التنسيق.
                 </p>
               </div>
 
@@ -609,7 +624,7 @@ export function FourStationJourney({
                         : "text-slate-600 hover:text-slate-900"
                     }`}
                   >
-                    1. اختبار الميول (4 أسئلة)
+                    1. اختبار الميول ({activeQuestions.length} أسئلة)
                   </button>
                   <button
                     type="button"
@@ -630,7 +645,7 @@ export function FourStationJourney({
             {station1SubView === "assessment" && (
               <div className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {ASSESSMENT_QUESTIONS.map((q, idx) => (
+                  {activeQuestions.map((q, idx) => (
                     <UIMavenCard
                       key={q.id}
                       indexCode={`0${idx + 1} // QUIZ`}
@@ -640,7 +655,7 @@ export function FourStationJourney({
                     >
                       <div className="space-y-3">
                         <div className="flex items-center justify-between text-xs text-slate-600 font-medium">
-                          <span>السؤال <span dir="ltr" className="font-mono tabular-nums">0{idx + 1} / 04</span></span>
+                          <span>السؤال <span dir="ltr" className="font-mono tabular-nums">0{idx + 1} / 0{activeQuestions.length}</span></span>
                           {assessmentAnswers[q.id] && (
                             <span className="text-emerald-700 flex items-center gap-1 font-semibold">
                               <CheckCircle2 className="w-3.5 h-3.5 stroke-[2]" />
@@ -689,7 +704,9 @@ export function FourStationJourney({
                                       : "bg-slate-100 border-slate-200 text-slate-700"
                                   }`}
                                 >
-                                  {opt.badge}
+                                  {(opt as { label: string; track: TrackKey; badge?: string }).badge ||
+                                    TRACK_DETAILS[opt.track]?.title ||
+                                    "مسار تخصصي"}
                                 </span>
                               </motion.button>
                             );
@@ -708,7 +725,9 @@ export function FourStationJourney({
                       <span>
                         اكتمل التقييم بنجاح! المسار الأنسب لشغفك:{" "}
                         <strong className="text-emerald-950 font-bold">
-                          {TRACK_DETAILS[dominantTrack]?.title || "علوم البيانات والذكاء الاصطناعي"}
+                          {dominantTrack && TRACK_DETAILS[dominantTrack]
+                            ? TRACK_DETAILS[dominantTrack].title
+                            : "المسار الأكاديمي المختار"}
                         </strong>
                       </span>
                     </div>
@@ -1861,8 +1880,9 @@ export function FourStationJourney({
                   <span className="text-blue-700">تطابق <span dir="ltr" className="font-mono tabular-nums">{explainFaculty.matchScore}%</span></span>
                 </div>
                 <p className="text-xs text-slate-700 leading-relaxed font-medium">
-                  إجاباتك في اختبار الميول أظهرت تفضيلاً استثنائياً لحل المشكلات البرمجية ومسار{" "}
-                  {TRACK_DETAILS[dominantTrack]?.title}.
+                  {dominantTrack && TRACK_DETAILS[dominantTrack]
+                    ? `إجاباتك في اختبار الميول أظهرت تفضيلاً لمسار ${TRACK_DETAILS[dominantTrack].title}.`
+                    : "اختبار الميول يقيس مدى توافق اهتماماتك العملية مع متطلبات هذه الكلية."}
                 </p>
               </div>
 
@@ -1958,7 +1978,9 @@ export function FourStationJourney({
               <div>
                 <span className="text-slate-600 text-xs font-medium block">المسار الأكاديمي الموصى به:</span>
                 <span className="font-bold text-emerald-700">
-                  {TRACK_DETAILS[dominantTrack]?.title || "علوم البيانات والذكاء الاصطناعي"}
+                  {dominantTrack && TRACK_DETAILS[dominantTrack]
+                    ? TRACK_DETAILS[dominantTrack].title
+                    : "قيد التحديد عبر التقييم"}
                 </span>
               </div>
             </div>
