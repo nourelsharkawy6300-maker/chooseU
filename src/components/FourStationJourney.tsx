@@ -36,6 +36,7 @@ import {
   formatStream,
 } from "@/types/chooseu";
 import { FACULTIES_DATABASE, EGYPT_GOVERNORATES, TRACK_DETAILS } from "@/data/faculties-db";
+import { computeFacultyTcoMetrics } from "@/lib/engine";
 
 // ============================================================================
 // TYPES & PROPS
@@ -175,8 +176,6 @@ export function FourStationJourney({
 
   // Station 1 Internal View: "assessment" | "profile"
   const [station1SubView, setStation1SubView] = useState<"assessment" | "profile">("assessment");
-  const [assessmentAnswers, setAssessmentAnswers] = useState<Record<number, TrackKey>>({});
-  const [hasCompletedAssessment, setHasCompletedAssessment] = useState(false);
 
   // Student Profile State from Global StudentContext (FIX 1: Un-Break State)
   const {
@@ -195,7 +194,11 @@ export function FourStationJourney({
     comparedIds: comparedFacultyIds,
     setComparedIds: setComparedFacultyIds,
     toggleComparedId: handleToggleCompare,
+    assessmentAnswers = {},
+    setAssessmentAnswers,
   } = useStudent();
+
+  const hasCompletedAssessment = Object.keys(assessmentAnswers || {}).length >= 4;
 
   // Local string states for non-hostile input typing (FIX 2: Destroy Hostile Input Clamping)
   const [scoreInputStr, setScoreInputStr] = useState<string>(score.toString());
@@ -287,6 +290,16 @@ export function FourStationJourney({
     const effectiveScore = +(score + scoreTweak).toFixed(2);
 
     return FACULTIES_DATABASE.filter((f) => {
+      if (stream === "stem") {
+        return f.stream === "Science" || f.stream === "Math" || f.stream === "Both";
+      }
+      if (stream === "Arts") {
+        if (f.stream === "Arts") return true;
+        if (f.stream === "Both") {
+          return f.tracks.some((t) => ["Biz_Fin", "Econ_Pol", "Lang_Trans", "Media_Law", "Edu_Human"].includes(t));
+        }
+        return false;
+      }
       if (f.stream !== "Both" && f.stream !== stream) return false;
       return true;
     }).map((f) => {
@@ -364,7 +377,6 @@ export function FourStationJourney({
       // Check if all 4 questions are answered
       const answeredCount = Object.keys(next).length;
       if (answeredCount >= 4) {
-        setHasCompletedAssessment(true);
         // Immediate deterministic view transition
         setStation1SubView("profile");
       }
@@ -1156,7 +1168,7 @@ export function FourStationJourney({
                       <tr>
                         <td className="py-2.5 px-3 text-slate-500">تقدير تكلفة الـ 4 سنوات (TCO)</td>
                         {comparedFaculties.map((f) => {
-                          const tcoEst = f.y1_base_fee * 4 + 20000;
+                          const tcoEst = computeFacultyTcoMetrics(f, governorate, livingMode, 15).total4Yr;
                           return (
                             <td key={f.id} className="py-2.5 px-3 text-slate-700">
                               <span dir="ltr" className="font-mono tabular-nums">{tcoEst.toLocaleString()}</span> ج.م

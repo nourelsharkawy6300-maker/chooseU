@@ -129,10 +129,10 @@ export function computeFacultyTcoMetrics(
     livingDesc = "سكن طلابي وإعاشة وانتقالات (~32,000 ج.م/سنة)";
   }
 
-  // Duration in academic years: Support 4-year credit hour bylaw or degree specification
-  const years = f.credit_hour_bylaw
-    ? 4
-    : f.duration_years || (f.name.includes("هندسة") ? 5 : f.name.includes("طب") ? 5 : 4);
+  // Duration in academic years: Prioritize specified duration_years or standard professional degrees (5 years for Engineering/Medicine)
+  const defaultProfessionalYears =
+    f.name.includes("هندسة") || f.name.includes("طب") ? 5 : 4;
+  const years = f.duration_years || defaultProfessionalYears;
 
   const rate = Math.max(0, inflationRatePct) / 100;
   // Compute tuition compounding over the actual program duration (4 or 5 years)
@@ -176,7 +176,6 @@ const ARTS_COMPATIBLE_TRACKS = new Set<TrackKey>([
   "Lang_Trans",
   "Media_Law",
   "Edu_Human",
-  "Data",
 ]);
 
 function isFacultyEligibleForStream(f: Faculty, stream: StreamType): boolean {
@@ -252,8 +251,11 @@ export function evaluateAndRankFaculties(params: {
       const margin = +(score - shiftedCutoff).toFixed(1);
       const scoreGap = Math.abs(score - shiftedCutoff);
 
-      // 1. ScoreProximity (Weight: 0.40) -> Peaks when cutoff is close to student's score
-      const scoreProximity = Math.max(10, 100 - scoreGap * 4.6);
+      // 1. ScoreProximity (Weight: 0.40) -> 100% when student qualifies (score >= cutoff); penalizes only if score < cutoff
+      const scoreProximity =
+        score >= shiftedCutoff
+          ? 100
+          : Math.max(10, Math.round(100 - (shiftedCutoff - score) * 12.0));
 
       // 2. QuizAffinity (Weight: 0.35) -> Matches student's psychometric track counts
       let rawAffinity = 0;
@@ -298,25 +300,25 @@ export function evaluateAndRankFaculties(params: {
       let groupKey: "target" | "safe" | "fallback";
       let safetyBadge: { label: string; style: string };
 
-      if (margin >= -0.8 && margin < 2.0 && f.type === "حكومي انتظام") {
+      const formattedMargin =
+        margin >= 0 ? `+${margin.toFixed(1)}%` : `${margin.toFixed(1)}%`;
+
+      if (margin >= -0.8 && margin < 2.0) {
         groupKey = "target";
         safetyBadge = {
-          label:
-            margin >= 0
-              ? `نطاق مستهدف (+${margin.toFixed(1)}%)`
-              : `نطاق مستهدف (${margin.toFixed(1)}%)`,
+          label: `نطاق مستهدف (${formattedMargin})`,
           style: "bg-blue-50 text-blue-800 border-blue-200",
         };
-      } else if (margin >= 2.0 && scoreGap <= 11.0 && f.type === "حكومي انتظام") {
+      } else if (margin >= 2.0 && scoreGap <= 11.0) {
         groupKey = "safe";
         safetyBadge = {
-          label: `نطاق آمن (+${margin.toFixed(1)}%)`,
+          label: `نطاق آمن (${formattedMargin})`,
           style: "bg-emerald-50 text-emerald-800 border-emerald-200",
         };
       } else {
         groupKey = "fallback";
         safetyBadge = {
-          label: `بديل استراتيجي (+${margin.toFixed(1)}%)`,
+          label: `بديل استراتيجي (${formattedMargin})`,
           style: "bg-slate-100 text-slate-700 border-slate-300",
         };
       }

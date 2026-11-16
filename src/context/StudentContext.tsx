@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
-import { StreamType, LivingMode } from "@/types/chooseu";
+import { StreamType, LivingMode, TrackKey } from "@/types/chooseu";
 
 export interface StudentProfile {
   studentName: string;
@@ -12,6 +12,7 @@ export interface StudentProfile {
   livingMode: LivingMode;
   inflationScenario: number;
   comparedIds: string[];
+  assessmentAnswers: Record<number, TrackKey>;
 }
 
 export interface StudentContextType extends StudentProfile {
@@ -24,6 +25,11 @@ export interface StudentContextType extends StudentProfile {
   setInflationScenario: (scenario: number) => void;
   setComparedIds: (ids: string[]) => void;
   toggleComparedId: (id: string) => void;
+  setAssessmentAnswers: (
+    answers:
+      | Record<number, TrackKey>
+      | ((prev: Record<number, TrackKey>) => Record<number, TrackKey>)
+  ) => void;
   updateStudent: (patch: Partial<StudentProfile>) => void;
   resetStudent: () => void;
 }
@@ -39,6 +45,7 @@ const DEFAULT_PROFILE: StudentProfile = {
   livingMode: "commute",
   inflationScenario: 12,
   comparedIds: [],
+  assessmentAnswers: {},
 };
 
 const StudentContext = createContext<StudentContextType | undefined>(undefined);
@@ -95,6 +102,18 @@ export function StudentProvider({ children }: { children: React.ReactNode }) {
             ? [...prev, id]
             : prev;
           return { ...p, comparedIds: next };
+        }),
+      setAssessmentAnswers: (
+        answers:
+          | Record<number, TrackKey>
+          | ((prev: Record<number, TrackKey>) => Record<number, TrackKey>)
+      ) =>
+        setProfile((p) => {
+          const next =
+            typeof answers === "function"
+              ? answers(p.assessmentAnswers || {})
+              : answers;
+          return { ...p, assessmentAnswers: next };
         }),
       updateStudent: (patch: Partial<StudentProfile>) => setProfile((p) => ({ ...p, ...patch })),
       resetStudent: () => setProfile(DEFAULT_PROFILE),

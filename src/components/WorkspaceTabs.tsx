@@ -835,14 +835,12 @@ export function WorkspaceTabs({
                 <button
                   type="button"
                   onClick={() => {
-                    setBudget(Math.max(budget, evaluation.minNeededBudget));
                     setSectorFilter("الكل");
                     setTansikShift(0);
                   }}
                   className="bg-[#377ef0] hover:bg-[#2962be] text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold cursor-pointer tabular-nums shadow-sm"
                 >
-                  ضبط الميزانية تلقائياً إلى{" "}
-                  {evaluation.minNeededBudget.toLocaleString()} ج.م
+                  إعادة ضبط المرشحات واستكشاف كافة القطاعات المتاحة
                 </button>
               </div>
             ) : (
@@ -1342,7 +1340,7 @@ export function WorkspaceTabs({
                       {bestFitComparedFaculty.university}»
                     </strong>{" "}
                     كأفضل خيار يوازن بين قوة العائد الوظيفي ({
-                      bestFitComparedFaculty.future_career.salary_range_egp
+                      bestFitComparedFaculty.future_career?.salary_range_egp || "متوسط رواتب تنافسي"
                     }) وتقليل أعباء الاغتراب والتضخم التراكمي لـ 4 سنوات.
                   </p>
                 </div>
@@ -1500,13 +1498,13 @@ export function WorkspaceTabs({
                         className="py-3 px-4 text-xs space-y-1"
                       >
                         <div className="font-semibold text-emerald-800">
-                          الطلب: {fac.future_career.market_demand}
+                          الطلب: {fac.future_career?.market_demand || "متوسط"}
                         </div>
                         <div className="font-medium text-slate-900">
-                          {fac.future_career.salary_range_egp}
+                          {fac.future_career?.salary_range_egp || "15,000 - 30,000 ج.م"}
                         </div>
                         <div className="text-xs text-slate-600 font-medium">
-                          {fac.future_career.roles.slice(0, 2).join(" • ")}
+                          {fac.future_career?.roles?.slice(0, 2)?.join(" • ") || "مسارات وظيفية متعددة"}
                         </div>
                       </td>
                     ))}
@@ -1634,17 +1632,17 @@ export function WorkspaceTabs({
                   <div className="flex justify-between">
                     <span className="text-slate-500">الطلب في سوق العمل:</span>
                     <strong className="text-emerald-700">
-                      {auditedFaculty.future_career.market_demand}
+                      {auditedFaculty.future_career?.market_demand || "واعد"}
                     </strong>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">متوسط الرواتب:</span>
                     <strong className="text-slate-900">
-                      {auditedFaculty.future_career.salary_range_egp}
+                      {auditedFaculty.future_career?.salary_range_egp || "15,000 - 30,000 ج.م"}
                     </strong>
                   </div>
                   <div className="pt-1 text-slate-600">
-                    {auditedFaculty.future_career.progression}
+                    {auditedFaculty.future_career?.progression || "تدرج وظيفي تصاعدي مع اكتساب الخبرة العملية"}
                   </div>
                 </div>
               </div>

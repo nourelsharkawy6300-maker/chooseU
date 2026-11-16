@@ -388,7 +388,16 @@ export function FutureMeView({
     return FACULTIES_DATABASE[0];
   }, [selectedFaculty, evaluation.allRanked]);
 
-  const career = activeFaculty.future_career;
+  const career = activeFaculty.future_career || {
+    roles: ["أخصائي في المجال", "مستشار تخصصي"],
+    market_demand: "مرتفع" as const,
+    salary_range_egp: "15,000 - 30,000 ج.م",
+    progression: "تدرج وظيفي تصاعدي مع اكتساب الخبرة العملية",
+    roadmap_year1: "التأسيس الأكاديمي والمفاهيم الأساسية",
+    roadmap_year2: "التطبيقات العملية والمشاريع الميدانية",
+    roadmap_year3: "التدريب المتقدم والشهادات المهنية",
+    roadmap_year4: "مشروع التخرج والجاهزية لسوق العمل",
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8 space-y-6">

@@ -17,9 +17,9 @@ const CreateOrderSchema = z.object({
   whatsapp_phone: z
     .string()
     .regex(/^01[0125][0-9]{8}$/, "رقم هاتف مصري غير صحيح (01XXXXXXXXX)"),
-  academic_stream: z.enum(["Science", "Math", "Arts", "Undecided"]),
+  academic_stream: z.enum(["Science", "Math", "Arts", "stem", "Undecided"]),
   score_percentage: z.number().min(50).max(100),
-  max_budget: z.number().min(5000).max(500000),
+  max_budget: z.number().min(0).max(5000000),
   governorate: z.string().refine((g) => EGYPT_GOVERNORATES.includes(g), {
     message: "محافظة غير صالحة",
   }),
@@ -121,17 +121,28 @@ export async function POST(req: NextRequest) {
           }
         );
 
-        if (response.ok) {
-          const rows = (await response.json()) as ConsultationOrderRow[];
-          if (Array.isArray(rows) && rows.length > 0) {
-            return NextResponse.json({
-              success: true,
-              order: rows[0],
-            });
-          }
+        if (!response.ok) {
+          const errText = await response.text();
+          console.error("Supabase order insert error:", errText);
+          return NextResponse.json(
+            { success: false, error: "فشل حفظ الطلب في قاعدة البيانات. يرجى التحقق من صحة البيانات والمحاولة مجدداً." },
+            { status: 500 }
+          );
         }
-      } catch {
-        // Fall back to returning sanitized order
+
+        const rows = (await response.json()) as ConsultationOrderRow[];
+        if (Array.isArray(rows) && rows.length > 0) {
+          return NextResponse.json({
+            success: true,
+            order: rows[0],
+          });
+        }
+      } catch (err) {
+        console.error("Supabase order fetch exception:", err);
+        return NextResponse.json(
+          { success: false, error: "حدث خطأ في الاتصال بقاعدة البيانات لتسجيل الطلب." },
+          { status: 500 }
+        );
       }
     }
 
