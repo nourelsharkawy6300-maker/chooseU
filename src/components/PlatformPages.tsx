@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import { useStudent } from "../context/StudentContext";
 import { motion } from "framer-motion";
 import {
   ConsultationOrderRow,
   EvaluationResult,
   Faculty,
+  LivingMode,
   PlatformView,
   StreamType,
   TrackKey,
@@ -1182,6 +1184,16 @@ export function TrackOrderView({
     }
   };
 
+  const student = useStudent();
+  const effectiveLivingMode: LivingMode =
+    (orderResult?.quiz_results?.livingMode as LivingMode) ||
+    student?.livingMode ||
+    "commute";
+  const effectiveInflation: number =
+    Number(orderResult?.quiz_results?.inflationScenario) ||
+    student?.inflationScenario ||
+    15;
+
   const matchedOrderFaculties = useMemo(() => {
     const ids: string[] = orderResult?.quiz_results?.eligibleIds || [];
     if (ids.length > 0) {
@@ -1446,8 +1458,8 @@ export function TrackOrderView({
                         const m = computeFacultyTcoMetrics(
                           f,
                           orderResult.governorate,
-                          "commute",
-                          15
+                          effectiveLivingMode,
+                          effectiveInflation
                         );
                         return (
                           <tr key={f.id}>
@@ -1483,6 +1495,19 @@ export function TrackOrderView({
                     </tbody>
                   </table>
                 </div>
+                <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
+                  * التقديرات المالية أعلاه محسوبة بافتراض نمط إقامة:{" "}
+                  <span className="font-semibold text-slate-700">
+                    {effectiveLivingMode === "dorm"
+                      ? "سكن طلابي واغتراب"
+                      : "ذهاب وعودة (Commute)"}
+                  </span>{" "}
+                  ومعدل تضخم سنوي{" "}
+                  <span dir="ltr" className="font-mono tabular-nums font-semibold text-slate-700">
+                    {effectiveInflation}%
+                  </span>
+                  . قد تختلف التكلفة الفعلية حسب أسعار السكن ومصروفات الانتقال الشخصية.
+                </p>
               </div>
             </div>
           )}
