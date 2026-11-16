@@ -26,6 +26,7 @@ import {
   Send,
   X,
   ExternalLink,
+  RotateCcw,
 } from "lucide-react";
 import {
   StreamType,
@@ -582,30 +583,46 @@ export function FourStationJourney({
                 </p>
               </div>
 
-              {/* Toggle Sub-View within Station 1 */}
-              <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-medium shrink-0">
-                <button
-                  type="button"
-                  onClick={() => setStation1SubView("assessment")}
-                  className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
-                    station1SubView === "assessment"
-                      ? "bg-blue-600 text-white font-bold"
-                      : "text-slate-600 hover:text-slate-900"
-                  }`}
-                >
-                  1. اختبار الميول (4 أسئلة)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setStation1SubView("profile")}
-                  className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
-                    station1SubView === "profile"
-                      ? "bg-blue-600 text-white font-bold"
-                      : "text-slate-600 hover:text-slate-900"
-                  }`}
-                >
-                  2. ملف الطالب والتنسيق
-                </button>
+              {/* Toggle Sub-View within Station 1 + Retake Button */}
+              <div className="flex flex-wrap items-center gap-2">
+                {Object.keys(assessmentAnswers || {}).length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAssessmentAnswers({});
+                      setStation1SubView("assessment");
+                    }}
+                    className="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>إعادة الاختبار</span>
+                  </button>
+                )}
+
+                <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-medium shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setStation1SubView("assessment")}
+                    className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                      station1SubView === "assessment"
+                        ? "bg-blue-600 text-white font-bold"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    1. اختبار الميول (4 أسئلة)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setStation1SubView("profile")}
+                    className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                      station1SubView === "profile"
+                        ? "bg-blue-600 text-white font-bold"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    2. ملف الطالب والتنسيق
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -695,13 +712,26 @@ export function FourStationJourney({
                         </strong>
                       </span>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => setStation1SubView("profile")}
-                      className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
-                    >
-                      استكمال ملف الطالب ←
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAssessmentAnswers({});
+                          setStation1SubView("assessment");
+                        }}
+                        className="px-3 py-1.5 bg-white border border-emerald-300 hover:bg-emerald-100 text-emerald-800 rounded-lg font-medium text-xs transition-colors cursor-pointer flex items-center gap-1"
+                      >
+                        <RotateCcw className="w-3.5 h-3.5" />
+                        <span>إعادة الاختبار</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setStation1SubView("profile")}
+                        className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
+                      >
+                        استكمال ملف الطالب ←
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
