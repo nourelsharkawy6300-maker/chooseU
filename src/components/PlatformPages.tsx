@@ -817,14 +817,22 @@ export function DirectoryView({
 
                     <button
                       type="button"
+                      disabled={!isCompared && comparedIds.length >= 4}
+                      title={!isCompared && comparedIds.length >= 4 ? "الحد الأقصى للمقارنة هو 4 كليات" : undefined}
                       onClick={() => onToggleCompare(fac.id)}
-                      className={`px-3 py-1.5 rounded-lg text-[12px] font-medium border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer shrink-0 ${
+                      className={`px-3 py-1.5 rounded-lg text-[12px] font-medium border transition-all duration-150 shrink-0 ${
                         isCompared
-                          ? "bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100 font-semibold"
-                          : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"
+                          ? "bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100 font-semibold hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer"
+                          : comparedIds.length >= 4
+                          ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed opacity-75"
+                          : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer"
                       }`}
                     >
-                      {isCompared ? "إزالة من مسودة الرغبات" : "+ حفظ في مسودة الرغبات"}
+                      {isCompared
+                        ? "إزالة من مسودة الرغبات"
+                        : comparedIds.length >= 4
+                        ? "الحد الأقصى 4 كليات"
+                        : "+ حفظ في مسودة الرغبات"}
                     </button>
                   </div>
                 </div>

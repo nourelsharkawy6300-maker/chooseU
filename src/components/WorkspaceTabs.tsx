@@ -955,18 +955,30 @@ export function WorkspaceTabs({
                             </button>
                           )}
 
-                          <label className={`flex items-center gap-1.5 text-xs font-medium cursor-pointer select-none border px-2.5 py-1.5 rounded-lg transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] ${
-                            isCompared
-                              ? "bg-rose-50 border-rose-300 text-rose-700 font-semibold"
-                              : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50"
-                          }`}>
+                          <label
+                            title={!isCompared && comparedIds.length >= 4 ? "الحد الأقصى للمقارنة هو 4 كليات" : undefined}
+                            className={`flex items-center gap-1.5 text-xs font-medium select-none border px-2.5 py-1.5 rounded-lg transition-all duration-150 ${
+                              isCompared
+                                ? "bg-rose-50 border-rose-300 text-rose-700 font-semibold cursor-pointer hover:-translate-y-0.5 active:scale-[0.98]"
+                                : comparedIds.length >= 4
+                                ? "bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed opacity-75"
+                                : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50 cursor-pointer hover:-translate-y-0.5 active:scale-[0.98]"
+                            }`}
+                          >
                             <input
                               type="checkbox"
                               checked={isCompared}
+                              disabled={!isCompared && comparedIds.length >= 4}
                               onChange={() => onToggleCompare(fac.id)}
-                              className="rounded border-slate-300 text-blue-600"
+                              className="rounded border-slate-300 text-blue-600 disabled:opacity-50"
                             />
-                            <span>{isCompared ? "إلغاء الحفظ من المسودة" : "حفظ في مسودة الرغبات"}</span>
+                            <span>
+                              {isCompared
+                                ? "إلغاء الحفظ من المسودة"
+                                : comparedIds.length >= 4
+                                ? "الحد الأقصى 4 كليات"
+                                : "حفظ في مسودة الرغبات"}
+                            </span>
                           </label>
                         </div>
                       </div>

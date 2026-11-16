@@ -1074,14 +1074,22 @@ export function FourStationJourney({
                       <div className="flex items-center gap-2 text-xs">
                         <button
                           type="button"
+                          disabled={!isCompared && comparedFacultyIds.length >= 4}
+                          title={!isCompared && comparedFacultyIds.length >= 4 ? "الحد الأقصى للمقارنة هو 4 كليات" : undefined}
                           onClick={() => handleToggleCompare(fac.id)}
-                          className={`flex-1 py-1.5 rounded-lg border transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer text-center font-medium ${
+                          className={`flex-1 py-1.5 rounded-lg border transition-all duration-150 text-center font-medium ${
                             isCompared
-                              ? "bg-rose-50 border-rose-300 text-rose-700 font-semibold"
-                              : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                              ? "bg-rose-50 border-rose-300 text-rose-700 font-semibold hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer"
+                              : comparedFacultyIds.length >= 4
+                              ? "bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed opacity-75"
+                              : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer"
                           }`}
                         >
-                          {isCompared ? "إزالة من مسودة الرغبات" : "+ حفظ في مسودة الرغبات"}
+                          {isCompared
+                            ? "إزالة من مسودة الرغبات"
+                            : comparedFacultyIds.length >= 4
+                            ? "الحد الأقصى 4 كليات"
+                            : "+ حفظ في مسودة الرغبات"}
                         </button>
 
                         {onOpenFacultyDrawer && (
