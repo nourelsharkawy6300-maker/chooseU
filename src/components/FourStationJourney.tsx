@@ -247,6 +247,21 @@ export function FourStationJourney({
   // Station 3 State (Simulate)
   const [tansikShift, setTansikShift] = useState<number>(0.0);
   const [scoreTweak, setScoreTweak] = useState<number>(0.0);
+  const [tansikShiftInputStr, setTansikShiftInputStr] = useState<string>("0");
+  const [scoreTweakInputStr, setScoreTweakInputStr] = useState<string>("0");
+  const [prevTansikShift, setPrevTansikShift] = useState(0.0);
+  const [prevScoreTweak, setPrevScoreTweak] = useState(0.0);
+
+  if (tansikShift !== prevTansikShift) {
+    setPrevTansikShift(tansikShift);
+    setTansikShiftInputStr(tansikShift.toString());
+  }
+
+  if (scoreTweak !== prevScoreTweak) {
+    setPrevScoreTweak(scoreTweak);
+    setScoreTweakInputStr(scoreTweak.toString());
+  }
+
   const [activeRoadmapYear, setActiveRoadmapYear] = useState<number>(1);
 
   // Station 4 State (Decide - Chat & Report)
@@ -1303,15 +1318,41 @@ export function FourStationJourney({
                       <span dir="ltr" className="font-mono tabular-nums">{tansikShift > 0 ? `+${tansikShift}%` : `${tansikShift}%`}</span> {tansikShift > 0 ? "(ارتفاع)" : "(انخفاض)"}
                     </span>
                   </div>
-                  <input
-                    type="range"
-                    min={-2.0}
-                    max={2.0}
-                    step={0.25}
-                    value={tansikShift}
-                    onChange={(e) => setTansikShift(parseFloat(e.target.value))}
-                    className="w-full cursor-pointer"
-                  />
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="range"
+                      min={-2.0}
+                      max={2.0}
+                      step={0.25}
+                      value={tansikShift}
+                      onChange={(e) => setTansikShift(parseFloat(e.target.value))}
+                      className="flex-1 cursor-pointer"
+                    />
+                    <input
+                      type="number"
+                      step={0.1}
+                      min={-2.0}
+                      max={2.0}
+                      dir="ltr"
+                      inputMode="decimal"
+                      value={tansikShiftInputStr}
+                      onChange={(e) => setTansikShiftInputStr(e.target.value)}
+                      onBlur={() => {
+                        const val = parseFloat(tansikShiftInputStr);
+                        if (isNaN(val)) {
+                          setTansikShiftInputStr(tansikShift.toString());
+                        } else {
+                          const clamped = +(Math.min(2.0, Math.max(-2.0, val))).toFixed(2);
+                          setTansikShift(clamped);
+                          setTansikShiftInputStr(clamped.toString());
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                      }}
+                      className="w-20 px-2 py-1 text-center font-mono text-xs border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 bg-white tabular-nums"
+                    />
+                  </div>
                   <div className="flex justify-between text-xs text-slate-600 font-medium">
                     <span>انخفاض التنسيق (<span dir="ltr" className="font-mono tabular-nums">-2%</span>)</span>
                     <span>تنسيق <span dir="ltr" className="font-mono tabular-nums">2025</span> (ثابت)</span>
@@ -1327,15 +1368,41 @@ export function FourStationJourney({
                       <span dir="ltr" className="font-mono tabular-nums">{scoreTweak > 0 ? `+${scoreTweak}%` : "0.0%"}</span> (المجموع الفعلي: <span dir="ltr" className="font-mono tabular-nums">{(score + scoreTweak).toFixed(1)}%</span>)
                     </span>
                   </div>
-                  <input
-                    type="range"
-                    min={0.0}
-                    max={2.5}
-                    step={0.25}
-                    value={scoreTweak}
-                    onChange={(e) => setScoreTweak(parseFloat(e.target.value))}
-                    className="w-full cursor-pointer"
-                  />
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="range"
+                      min={0.0}
+                      max={2.5}
+                      step={0.25}
+                      value={scoreTweak}
+                      onChange={(e) => setScoreTweak(parseFloat(e.target.value))}
+                      className="flex-1 cursor-pointer"
+                    />
+                    <input
+                      type="number"
+                      step={0.1}
+                      min={0.0}
+                      max={2.5}
+                      dir="ltr"
+                      inputMode="decimal"
+                      value={scoreTweakInputStr}
+                      onChange={(e) => setScoreTweakInputStr(e.target.value)}
+                      onBlur={() => {
+                        const val = parseFloat(scoreTweakInputStr);
+                        if (isNaN(val)) {
+                          setScoreTweakInputStr(scoreTweak.toString());
+                        } else {
+                          const clamped = +(Math.min(2.5, Math.max(0.0, val))).toFixed(2);
+                          setScoreTweak(clamped);
+                          setScoreTweakInputStr(clamped.toString());
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                      }}
+                      className="w-20 px-2 py-1 text-center font-mono text-xs border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 bg-white tabular-nums"
+                    />
+                  </div>
                   <div className="flex justify-between text-xs text-slate-600 font-medium">
                     <span>بدون تعديل</span>
                     <span><span dir="ltr" className="font-mono tabular-nums">+1.0%</span></span>
