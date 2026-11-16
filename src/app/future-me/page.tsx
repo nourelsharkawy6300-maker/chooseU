@@ -88,7 +88,7 @@ function FutureMeContent() {
         score={scorePercentage}
         budget={annualBudgetEgp}
         gov={governorate}
-        topTrack={topTrack || "AI"}
+        topTrack={topTrack}
         evaluation={evaluation}
         onOrderCreated={() => {}}
         onNavigateToTrackOrder={() => {
