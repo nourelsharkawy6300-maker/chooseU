@@ -27,6 +27,7 @@ export default function TcoMatrixPage() {
     setInflationScenario,
     comparedIds,
     toggleComparedId,
+    assessmentAnswers,
   } = useStudent();
 
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceSubTab>("tco_table");
@@ -41,9 +42,18 @@ export default function TcoMatrixPage() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [whatsappPhone, setWhatsappPhone] = useState("");
 
+  const mergedAnswersByStream = useMemo(() => {
+    return {
+      Science: stream === "Science" ? assessmentAnswers || {} : answersByStream.Science,
+      Math: stream === "Math" ? assessmentAnswers || {} : answersByStream.Math,
+      Arts: stream === "Arts" ? assessmentAnswers || {} : answersByStream.Arts,
+      stem: stream === "stem" ? assessmentAnswers || {} : answersByStream.stem,
+    };
+  }, [stream, assessmentAnswers, answersByStream]);
+
   const psych = useMemo(() => {
-    return computePsychometricAffinities(stream, answersByStream);
-  }, [stream, answersByStream]);
+    return computePsychometricAffinities(stream, mergedAnswersByStream);
+  }, [stream, mergedAnswersByStream]);
 
   const evaluation = useMemo(() => {
     return evaluateAndRankFaculties({

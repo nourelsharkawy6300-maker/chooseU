@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect, Suspense } from "react";
 import { FutureMeView, CheckoutModal } from "@/components/PlatformPages";
 import { useStudent } from "@/context/StudentContext";
-import { evaluateAndRankFaculties } from "@/lib/engine";
+import { evaluateAndRankFaculties, computeDominantTrackFromAnswers } from "@/lib/engine";
 import { FACULTIES_DATABASE } from "@/data/faculties-db";
 import { Faculty, PlatformView } from "@/types/chooseu";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -20,7 +20,13 @@ function FutureMeContent() {
     scorePercentage,
     annualBudgetEgp,
     governorate,
+    assessmentAnswers,
   } = useStudent();
+
+  const { topTrack, trackCounts } = useMemo(
+    () => computeDominantTrackFromAnswers(assessmentAnswers),
+    [assessmentAnswers]
+  );
 
   const [selectedFaculty, setSelectedFaculty] = useState<Faculty | null>(() => {
     if (facultyParam) {
@@ -50,9 +56,9 @@ function FutureMeContent() {
       gov: governorate,
       tansikShift: 0,
       sectorFilter: "all",
-      trackCounts: {},
+      trackCounts,
     });
-  }, [stream, scorePercentage, annualBudgetEgp, governorate]);
+  }, [stream, scorePercentage, annualBudgetEgp, governorate, trackCounts]);
 
   return (
     <div className="w-full">
@@ -80,7 +86,7 @@ function FutureMeContent() {
         score={scorePercentage}
         budget={annualBudgetEgp}
         gov={governorate}
-        topTrack="AI"
+        topTrack={topTrack || "AI"}
         evaluation={evaluation}
         onOrderCreated={() => {}}
         onNavigateToTrackOrder={() => {

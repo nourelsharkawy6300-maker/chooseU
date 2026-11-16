@@ -865,7 +865,7 @@ interface SampleReportViewProps {
   gov: string;
   livingMode: "commute" | "dorm";
   inflationScenario: number;
-  topTrack: TrackKey;
+  topTrack?: TrackKey | null;
   evaluation: EvaluationResult;
   onOpenCheckout: () => void;
 }
@@ -979,7 +979,9 @@ export function SampleReportView({
             <div>
               <span className="text-slate-500 block">المسار المتصدر</span>
               <strong className="text-blue-700 font-semibold">
-                {TRACK_DETAILS[topTrack]?.title}
+                {topTrack && TRACK_DETAILS[topTrack]
+                  ? TRACK_DETAILS[topTrack].title
+                  : "قيد التحديد عبر التقييم"}
               </strong>
             </div>
           </div>
@@ -1505,7 +1507,7 @@ interface CheckoutModalProps {
   score: number;
   budget: number;
   gov: string;
-  topTrack: TrackKey;
+  topTrack?: TrackKey | null;
   evaluation: EvaluationResult;
   onOrderCreated: (order: ConsultationOrderRow) => void;
   onNavigateToTrackOrder: (order: ConsultationOrderRow) => void;

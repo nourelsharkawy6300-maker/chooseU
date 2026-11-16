@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { SampleReportView, CheckoutModal } from "@/components/PlatformPages";
 import { useStudent } from "@/context/StudentContext";
-import { evaluateAndRankFaculties } from "@/lib/engine";
+import { evaluateAndRankFaculties, computeDominantTrackFromAnswers } from "@/lib/engine";
 import { useRouter } from "next/navigation";
 
 export default function SampleReportPage() {
@@ -17,9 +17,15 @@ export default function SampleReportPage() {
     governorate,
     livingMode,
     inflationScenario,
+    assessmentAnswers,
   } = useStudent();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [whatsappPhone, setWhatsappPhone] = useState("");
+
+  const { topTrack, trackCounts } = useMemo(
+    () => computeDominantTrackFromAnswers(assessmentAnswers),
+    [assessmentAnswers]
+  );
 
   const evaluation = useMemo(() => {
     return evaluateAndRankFaculties({
@@ -29,9 +35,9 @@ export default function SampleReportPage() {
       gov: governorate,
       tansikShift: 0,
       sectorFilter: "all",
-      trackCounts: {},
+      trackCounts,
     });
-  }, [stream, scorePercentage, annualBudgetEgp, governorate]);
+  }, [stream, scorePercentage, annualBudgetEgp, governorate, trackCounts]);
 
   return (
     <div className="w-full">
@@ -43,7 +49,7 @@ export default function SampleReportPage() {
         gov={governorate}
         livingMode={livingMode}
         inflationScenario={inflationScenario}
-        topTrack="AI"
+        topTrack={topTrack}
         evaluation={evaluation}
         onOpenCheckout={() => setIsCheckoutOpen(true)}
       />
@@ -58,7 +64,7 @@ export default function SampleReportPage() {
         score={scorePercentage}
         budget={annualBudgetEgp}
         gov={governorate}
-        topTrack="AI"
+        topTrack={topTrack || "AI"}
         evaluation={evaluation}
         onOrderCreated={() => {}}
         onNavigateToTrackOrder={() => {

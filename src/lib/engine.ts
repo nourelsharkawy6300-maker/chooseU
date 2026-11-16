@@ -28,6 +28,31 @@ export function formatFacultyCount(n: number): string {
 // 2. PSYCHOMETRIC AFFINITY ENGINE
 // ============================================================================
 
+export function computeDominantTrackFromAnswers(
+  assessmentAnswers?: Record<number, TrackKey>
+): {
+  topTrack: TrackKey | null;
+  trackCounts: Partial<Record<TrackKey, number>>;
+} {
+  const answered = Object.values(assessmentAnswers || {});
+  const trackCounts: Partial<Record<TrackKey, number>> = {};
+  if (answered.length === 0) {
+    return { topTrack: null, trackCounts: {} };
+  }
+  answered.forEach((t) => {
+    trackCounts[t] = (trackCounts[t] || 0) + 1;
+  });
+  let top: TrackKey | null = null;
+  let max = 0;
+  Object.entries(trackCounts).forEach(([t, c]) => {
+    if (c && c > max) {
+      max = c;
+      top = t as TrackKey;
+    }
+  });
+  return { topTrack: top, trackCounts };
+}
+
 export function computePsychometricAffinities(
   stream: StreamType,
   answersByStream: Record<StreamType, Record<number, TrackKey>>
