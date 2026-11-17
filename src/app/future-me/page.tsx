@@ -11,7 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 function FutureMeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const facultyParam = searchParams.get("faculty");
+  const facultyParam = searchParams ? searchParams.get("faculty") : null;
 
   const {
     studentName,
