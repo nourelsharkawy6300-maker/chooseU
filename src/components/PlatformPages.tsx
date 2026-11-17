@@ -1258,7 +1258,8 @@ export function TrackOrderView({
                   سجل الطلب المسترجع
                 </span>
                 <h2 className="text-[16px] font-bold text-slate-900 mt-0.5 tabular-nums">
-                  {orderResult.order_code} — الطالب: {orderResult.student_name}
+                  {orderResult.order_code}
+                  {orderResult.student_name ? ` — الطالب: ${orderResult.student_name}` : ""}
                 </h2>
               </div>
               <span
@@ -1406,8 +1407,8 @@ export function TrackOrderView({
               <div className="border-b-2 border-slate-900 pb-4 flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <h3 className="text-[18px] font-bold text-slate-900">
-                    التقرير الاستشاري المالي والأكاديمي المعتمد —{" "}
-                    {orderResult.student_name}
+                    التقرير الاستشاري المالي والأكاديمي المعتمد
+                    {orderResult.student_name ? ` — ${orderResult.student_name}` : ""}
                   </h3>
                   <p className="text-xs text-slate-600 font-medium mt-0.5 tabular-nums">
                     كود الطلب: {orderResult.order_code} • المجموع:{" "}

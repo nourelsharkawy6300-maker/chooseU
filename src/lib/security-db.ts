@@ -234,7 +234,13 @@ export const DataService = {
   ): Promise<ConsultationOrderRow> {
     const cleanOrderCode =
       payload.order_code?.trim().toUpperCase() ||
-      `ORD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      (() => {
+        const suffix = Array.from(crypto.getRandomValues(new Uint8Array(8)))
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("")
+          .toUpperCase();
+        return `ORD-2026-${Math.floor(1000 + Math.random() * 9000)}-${suffix}`;
+      })();
 
     const sanitizedOrder: ConsultationOrderRow = {
       order_code: cleanOrderCode,

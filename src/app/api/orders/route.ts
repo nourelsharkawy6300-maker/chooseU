@@ -61,7 +61,9 @@ export async function POST(req: NextRequest) {
     const data = parsed.data;
 
     // Server-enforced Order Code & Official Pricing
-    const orderCode = `ORD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    // Format: ORD-2026-NNNN-XXXXXXXXXXXXXXXX (sequential prefix + 16-char random hex suffix)
+    const randomSuffix = crypto.randomUUID().replace(/-/g, "").slice(0, 16).toUpperCase();
+    const orderCode = `ORD-2026-${Math.floor(1000 + Math.random() * 9000)}-${randomSuffix}`;
     const OFFICIAL_REPORT_PRICE_EGP = 150; // Strictly enforced server-side
 
     const sanitizedOrder: ConsultationOrderRow & { amount_egp: number } = {
@@ -146,8 +148,8 @@ export async function GET(req: NextRequest) {
 
     if (!query || query.length < 3) {
       return NextResponse.json(
-        { success: false, error: "يرجى إدخال كود الطلب أو رقم الهاتف." },
-        { status: 400 }
+        { success: false, error: "لم يتم العثور على الطلب." },
+        { status: 404 }
       );
     }
 
@@ -155,30 +157,42 @@ export async function GET(req: NextRequest) {
     const upperCode = cleanQuery.toUpperCase();
 
     const supabase = getSupabaseClient();
+    // Minimal fields only — never expose phone/name/internal notes to public lookup
+    const PUBLIC_FIELDS =
+      "order_code,order_status,academic_stream,score_percentage,max_budget,governorate,quiz_results,advisor_notes,voice_note_url,created_at";
 
     if (supabase) {
       try {
-        let queryBuilder = supabase
-          .from("consultation_orders")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(1);
+        let row: ConsultationOrderRow | null = null;
 
-        if (upperCode.startsWith("ORD-")) {
-          queryBuilder = queryBuilder.ilike("order_code", upperCode);
-        } else {
-          queryBuilder = queryBuilder.or(
-            `order_code.ilike.${upperCode},whatsapp_phone.eq.${cleanQuery}`
-          );
+        if (/^ORD-2026-[0-9A-Z\-]+$/.test(upperCode)) {
+          // Order code lookup — exact match only (parameterized .eq)
+          const { data: rows, error } = await supabase
+            .from("consultation_orders")
+            .select(PUBLIC_FIELDS)
+            .eq("order_code", upperCode)
+            .limit(1);
+          if (!error && Array.isArray(rows) && rows.length > 0) {
+            row = rows[0] as ConsultationOrderRow;
+          }
+        } else if (/^01[0125][0-9]{8}$/.test(cleanQuery)) {
+          // Phone number lookup — exact match only
+          const { data: rows, error } = await supabase
+            .from("consultation_orders")
+            .select(PUBLIC_FIELDS)
+            .eq("whatsapp_phone", cleanQuery)
+            .order("created_at", { ascending: false })
+            .limit(1);
+          if (!error && Array.isArray(rows) && rows.length > 0) {
+            row = rows[0] as ConsultationOrderRow;
+          }
         }
 
-        const { data: rows, error } = await queryBuilder;
-
-        if (!error && Array.isArray(rows) && rows.length > 0) {
-          return NextResponse.json({ success: true, order: rows[0] as ConsultationOrderRow });
+        if (row) {
+          return NextResponse.json({ success: true, order: row });
         }
       } catch {
-        // Fall through
+        // Fall through to generic not-found
       }
     }
 
@@ -188,8 +202,8 @@ export async function GET(req: NextRequest) {
     );
   } catch {
     return NextResponse.json(
-      { success: false, error: "خطأ في البحث عن الطلب." },
-      { status: 500 }
+      { success: false, error: "لم يتم العثور على الطلب." },
+      { status: 404 }
     );
   }
 }
