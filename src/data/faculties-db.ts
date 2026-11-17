@@ -5,6 +5,9 @@ import {
   TrackKey,
 } from "../types/chooseu";
 
+export const DATA_LAST_UPDATED = "[تاريخ]";
+export const INDICATIVE_DISCLAIMER = "الأرقام استرشادية وتحتاج مراجعة مع مكتب التنسيق والجامعة";
+
 export const EGYPT_GOVERNORATES: string[] = [
   "القاهرة",
   "الجيزة",

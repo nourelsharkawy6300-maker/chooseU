@@ -58,7 +58,7 @@ const NAVIGATION_ITEMS: NavItem[] = [
   },
   {
     label: "تقريري (A4)",
-    sublabel: "النسخة المعتمدة والمراجعة الأكاديمية",
+    sublabel: "التقرير الاسترشادي والمراجعة الأكاديمية",
     href: "/sample-report",
     icon: FileCheck2,
   },

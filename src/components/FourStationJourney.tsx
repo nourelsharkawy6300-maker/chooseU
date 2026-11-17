@@ -36,7 +36,13 @@ import {
   RankedFaculty,
   formatStream,
 } from "@/types/chooseu";
-import { FACULTIES_DATABASE, TRACK_DETAILS, STREAM_QUIZ_BANKS } from "@/data/faculties-db";
+import {
+  FACULTIES_DATABASE,
+  TRACK_DETAILS,
+  STREAM_QUIZ_BANKS,
+  DATA_LAST_UPDATED,
+  INDICATIVE_DISCLAIMER,
+} from "@/data/faculties-db";
 import { computeFacultyTcoMetrics } from "@/lib/engine";
 
 // ============================================================================
@@ -319,7 +325,7 @@ export function FourStationJourney({
       if (margin >= 1.5) {
         groupKey = "safe";
         safetyBadge = {
-          label: "فرصة مضمونة (آمنة)",
+          label: "فرصة آمنة (استرشادية)",
           style: "bg-emerald-50 text-emerald-800 border-emerald-200",
         };
       } else if (margin < -1.0) {
@@ -727,7 +733,7 @@ export function FourStationJourney({
               <span className="text-slate-600 text-xs shrink-0 font-medium">تصنيف الكليات:</span>
               {[
                 { id: "all", label: "الكل" },
-                { id: "safe", label: `فرص مضمونة (${safeFaculties.length})` },
+                { id: "safe", label: `فرص آمنة (${safeFaculties.length})` },
                 { id: "target", label: `خيارات واقعية (${targetFaculties.length})` },
                 { id: "fallback", label: `خيارات طموحة / بدائل (${fallbackFaculties.length})` },
               ].map((pill) => (
@@ -744,6 +750,17 @@ export function FourStationJourney({
                   {pill.label}
                 </button>
               ))}
+            </div>
+
+            {/* Indicative Disclaimer Banner */}
+            <div className="bg-slate-50 border border-slate-200/80 rounded-xl px-4 py-2.5 text-xs text-slate-600 flex flex-wrap items-center justify-between gap-2">
+              <span className="flex items-center gap-1.5 font-medium">
+                <span className="text-blue-600">ℹ️</span>
+                <span>{INDICATIVE_DISCLAIMER}</span>
+              </span>
+              <span className="text-slate-500 font-mono text-[11px] tabular-nums">
+                آخر تحديث للبيانات: {DATA_LAST_UPDATED}
+              </span>
             </div>
 
             {/* Major Recommendations Cards Grid */}
@@ -1156,7 +1173,7 @@ export function FourStationJourney({
                 <div className="text-slate-700">
                   النتيجة في هذا السيناريو: أصبح لديك{" "}
                   <strong className="text-emerald-700 font-bold tabular-nums">
-                    {safeFaculties.length} كليات مضمونة
+                    {safeFaculties.length} كليات آمنة استرشادياً
                   </strong>{" "}
                   و{" "}
                   <strong className="text-blue-700 font-bold tabular-nums">
@@ -1522,7 +1539,7 @@ export function FourStationJourney({
                 className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-[13px] transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-sm shrink-0"
               >
                 <FileText className="w-4 h-4 stroke-[2]" />
-                <span>إصدار وثيقة القرار النهائي الرسمية ←</span>
+                <span>إصدار وثيقة القرار النهائي الاسترشادية ←</span>
               </button>
             </div>
           </motion.div>
@@ -1652,14 +1669,14 @@ export function FourStationJourney({
             {/* Report Header Bar */}
             <div className="flex items-start justify-between border-b border-slate-200 pb-4">
               <div>
-                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold">
-                  <span>وثيقة القرار النهائي المعتمدة • تنسيق 2026</span>
+                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-slate-100 text-slate-800 border border-slate-200 text-xs font-semibold">
+                  <span>وثيقة القرار النهائي الاسترشادية</span>
                 </div>
                 <h2 className="text-xl font-bold text-slate-900 mt-1 leading-[1.45]">
                   وثيقة القرار النهائي لبطاقة الرغبات والمسار الجامعي
                 </h2>
                 <p className="text-xs text-slate-600 mt-0.5">
-                  الرقم المرجعي المعتمد: CU-2026-{Math.floor(score * 100)}-{stream.toUpperCase()}
+                  الرقم المرجعي الاسترشادي: CU-2026-{Math.floor(score * 100)}-{stream.toUpperCase()}
                 </p>
               </div>
 
@@ -1728,9 +1745,9 @@ export function FourStationJourney({
                   <div className="text-xs font-bold text-emerald-700">
                     <span dir="ltr" className="font-mono tabular-nums">51 - 75</span> (<span dir="ltr" className="font-mono tabular-nums">25</span> رغبة)
                   </div>
-                  <div className="font-bold text-emerald-900">شبكة الأمان والضمان الأكيد</div>
+                  <div className="font-bold text-emerald-900">شبكة الأمان الاسترشادية</div>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    كليات مضمونة 100% يقل تنسيقها عن مجموعك بـ 2% فأكثر لضمان عدم استنفاد الرغبات تحت أي ظرف.
+                    كليات استرشادية يقل حدها الأدنى السابق عن مجموعك بـ 2% فأكثر للمساعدة في تجنب استنفاد الرغبات.
                   </p>
                 </div>
               </div>
@@ -1778,7 +1795,7 @@ export function FourStationJourney({
             {/* Print & Action Controls */}
             <div className="border-t border-slate-200 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
               <div className="text-slate-600 text-xs font-medium">
-                وثيقة استرشادية معتمدة تم إنشاؤها وفقاً لخوارزميات التنسيق التنبؤية لعام 2026.
+                {INDICATIVE_DISCLAIMER} • آخر تحديث للبيانات: {DATA_LAST_UPDATED}
               </div>
 
               <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">

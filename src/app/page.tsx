@@ -79,7 +79,7 @@ export default function HomePage() {
           {/* Top Status Ticker Pill */}
           <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white border border-[#dedad0] text-xs font-semibold text-slate-700 shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-            <span>نظام التدقيق الأكاديمي والمالي المعتمد للتنسيق المصري 2026</span>
+            <span>نظام التوجيه الأكاديمي والمالي الاسترشادي للجامعات المصرية</span>
           </div>
 
           <div className="space-y-2">

@@ -256,7 +256,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
             <div className="space-y-0.5">
               <h4 className="text-xs font-bold text-white">دليل استرشادي لتوزيع الـ 75 رغبة</h4>
               <p className="text-[11px] text-slate-400 leading-relaxed">
-                تقسيم استراتيجي بين الرغبات الطموحة والواقعية والمضمونة لحمايتك من استنفاد الرغبات.
+                تقسيم استراتيجي بين الرغبات الطموحة والواقعية والآمنة لحمايتك من استنفاد الرغبات.
               </p>
             </div>
           </div>
@@ -264,7 +264,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
 
         {/* Footer Meta */}
         <div className="relative z-10 pt-4 border-t border-slate-800 text-[11px] font-mono text-slate-500 flex items-center justify-between">
-          <span>DATA LAYER: VERIFIED 2026 BYLAWS</span>
+          <span>DATA LAYER: INDICATIVE BYLAWS</span>
           <span>100% PRIVATE & CLIENT-FIRST</span>
         </div>
       </div>
@@ -405,7 +405,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                     أهلاً يا {name.trim()}، أنت في أي شعبة؟
                   </h2>
                   <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    اضغط على شعبتك لتفعيل بنك أسئلة الميول المخصص وقواعد التنسيق الرسمية فوراً:
+                    اضغط على شعبتك لتفعيل بنك أسئلة الميول المخصص وقواعد التنسيق الاسترشادية فوراً:
                   </p>
                 </div>
 

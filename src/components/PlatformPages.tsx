@@ -18,6 +18,8 @@ import {
   EGYPT_GOVERNORATES,
   FACULTIES_DATABASE,
   TRACK_DETAILS,
+  DATA_LAST_UPDATED,
+  INDICATIVE_DISCLAIMER,
 } from "../data/faculties-db";
 import {
   computeFacultyTcoMetrics,
@@ -211,8 +213,8 @@ export function LandingView({
           {[
             {
               icon: Building2,
-              title: "1. +140 كلية وبرنامج معتمد",
-              desc: "قاعدة بيانات موثقة تضم الكليات الحكومية (انتظام)، برامج الساعات المعتمدة، الجامعات الأهلية، والجامعات الخاصة والتكنولوجية.",
+              title: "1. كليات وبرامج دراسية استرشادية",
+              desc: "قاعدة بيانات استرشادية تضم الكليات الحكومية (انتظام)، برامج الساعات المعتمدة، الجامعات الأهلية، والجامعات الخاصة والتكنولوجية.",
               metric: "تغطية كافة الشعب والقطاعات",
             },
             {
@@ -330,7 +332,7 @@ export function LandingView({
                 "جدول التدفقات المالية التفصيلي تحت 3 سيناريوهات تضخم + تكلفة السكن",
                 "تحليل مخاطر الـ GPA في السنة التأسيسية الأولى وخارطة طريق التفوق",
                 "مراجعة بشرية من مستشار مختص + مذكرة صوتية مخصصة للأسرة عبر واتساب",
-                "نسخة A4 رسمية قابلة للطباعة والتحميل المباشر كملف PDF",
+                "نسخة A4 استرشادية قابلة للطباعة والتحميل المباشر كملف PDF",
               ].map((feat) => (
                 <li key={feat} className="flex items-center gap-2.5">
                   <Check
@@ -941,7 +943,7 @@ export function SampleReportView({
                 التقرير الاستشاري المعتمد لتنسيق الجامعات والتدفق المالي لسنوات الدراسة بالكامل
               </h2>
               <p className="text-xs text-slate-600 font-medium mt-1 tabular-nums">
-                وثيقة استشارية مدققة وفق حدود القبول الرسمية ولوائح المصروفات الجامعية (أكتوبر 2026)
+                وثيقة استشارية استرشادية وفق الحدود الدنيا ولوائح المصروفات الجامعية المعلنة
               </p>
             </div>
 
@@ -1017,7 +1019,7 @@ export function SampleReportView({
 
               <div className="border border-slate-200 rounded-xl p-4 bg-white space-y-2.5">
                 <div className="text-[12px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded inline-block">
-                  البدائل الاستراتيجية المضمونة (تأمين التخصص)
+                  البدائل الاستراتيجية الآمنة (تأمين التخصص استرشادياً)
                 </div>
                 <ul className="space-y-2 text-[12px] text-slate-700 tabular-nums">
                   {sampleFaculties.slice(3, 6).map((f, i) => (
@@ -1111,6 +1113,12 @@ export function SampleReportView({
                 • <strong>التوصية المالية والجغرافية:</strong> أولوية القبول داخل محافظة {gov} توفر على الأسرة ما يقارب 24,000 إلى 32,000 ج.م سنوياً من نفقات السكن الطلابي المغترب والإعاشة.
               </p>
             </div>
+          </div>
+
+          {/* Indicative Disclaimer Bar */}
+          <div className="border-t border-slate-200 pt-3 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
+            <span>{INDICATIVE_DISCLAIMER}</span>
+            <span className="font-mono text-[11px] tabular-nums">آخر تحديث للبيانات: {DATA_LAST_UPDATED}</span>
           </div>
         </div>
       </div>
