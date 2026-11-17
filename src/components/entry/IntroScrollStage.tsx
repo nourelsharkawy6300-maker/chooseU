@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import { LazyMotion, domAnimation, useScroll } from "framer-motion";
 import { ChooseULogoSplit } from "./ChooseULogoSplit";
 import { IntroBackground } from "./IntroBackground";
 import { IntroControls } from "./IntroControls";
 import {
-  hasSeenIntroThisSession,
   markIntroAsSeen,
   useAccessibilityPreferences,
+  useIsMobile,
+  useIntroSeen,
 } from "@/hooks/useEntryScroll";
 import { INTRO_SCROLL_MILESTONES } from "@/lib/motion-tokens";
 
@@ -23,9 +24,8 @@ interface IntroScrollStageProps {
 
 export function IntroScrollStage({ children, onIntroComplete }: IntroScrollStageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [introSeen, setIntroSeen] = useState(false);
+  const isMobile = useIsMobile();
+  const introSeen = useIntroSeen();
 
   const { prefersReducedMotion, prefersReducedTransparency } =
     useAccessibilityPreferences();
@@ -35,24 +35,9 @@ export function IntroScrollStage({ children, onIntroComplete }: IntroScrollStage
     offset: ["start start", "end end"],
   });
 
-  // Track responsive screen width
-  useEffect(() => {
-    setMounted(true);
-    setIntroSeen(hasSeenIntroThisSession());
-
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
   // Skip handler: scrolls straight to the login area & marks session
   const handleSkip = useCallback(() => {
     markIntroAsSeen();
-    setIntroSeen(true);
 
     if (containerRef.current) {
       const targetTop =
@@ -72,7 +57,7 @@ export function IntroScrollStage({ children, onIntroComplete }: IntroScrollStage
 
   // If already seen this session or prefers-reduced-motion, jump to bottom on initial mount
   useEffect(() => {
-    if (mounted && (introSeen || prefersReducedMotion)) {
+    if (introSeen || prefersReducedMotion) {
       if (containerRef.current) {
         const targetTop =
           containerRef.current.offsetTop +
@@ -84,15 +69,17 @@ export function IntroScrollStage({ children, onIntroComplete }: IntroScrollStage
         });
       }
     }
-  }, [mounted, introSeen, prefersReducedMotion]);
+  }, [introSeen, prefersReducedMotion]);
+
+  const shouldBypassIntro = introSeen || prefersReducedMotion;
 
   return (
     <LazyMotion features={domAnimation}>
       <div
         ref={containerRef}
         style={{
-          // On reduced motion, keep a compact container; otherwise 300vh for kinetic scroll
-          height: prefersReducedMotion || introSeen ? "100vh" : `${INTRO_SCROLL_MILESTONES.containerHeightVh}vh`,
+          // On reduced motion or returning sessions, keep a compact 100vh container; otherwise 300vh for kinetic scroll
+          height: shouldBypassIntro ? "100vh" : `${INTRO_SCROLL_MILESTONES.containerHeightVh}vh`,
         }}
         className="relative w-full bg-[#0F172A]"
       >
@@ -102,7 +89,7 @@ export function IntroScrollStage({ children, onIntroComplete }: IntroScrollStage
           <IntroBackground scrollYProgress={scrollYProgress} />
 
           {/* Centered Animatable Wordmark (Only if not already skipped/seen) */}
-          {!introSeen && !prefersReducedMotion && (
+          {!shouldBypassIntro && (
             <ChooseULogoSplit
               scrollYProgress={scrollYProgress}
               isMobile={isMobile}
@@ -110,7 +97,7 @@ export function IntroScrollStage({ children, onIntroComplete }: IntroScrollStage
           )}
 
           {/* Interactive Controls (Skip & Scroll Hint) */}
-          {!introSeen && !prefersReducedMotion && (
+          {!shouldBypassIntro && (
             <IntroControls
               scrollYProgress={scrollYProgress}
               onSkip={handleSkip}

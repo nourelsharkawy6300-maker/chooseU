@@ -1,10 +1,10 @@
 # ChooseU Entry Experience - Progress Tracker
 
 ## Session Metadata
-- **Current Phase**: Phase 3 (Login Redesign) — Completed -> Ready for Phase 4
+- **Current Phase**: Phase 4 (Routing & Handoff) — Completed -> Ready for Phase 5
 - **Active Branch**: `entry-experience`
-- **Last File Touched**: `src/app/login/page.tsx`
-- **Next Step**: Phase 4: Routing & Handoff (Task 4.1: Unified entry scroll container at "/")
+- **Last File Touched**: `src/app/page.tsx`
+- **Next Step**: Phase 5: Performance, QA & Final Handover (Task 5.1: Performance verification, mobile, check:terms, build)
 - **Open Blockers**: None
 
 ---
@@ -42,11 +42,11 @@
 - [x] Task 3.5: Verify WCAG AA contrast on glass, run tsc, commit Phase 3.
 
 ### Phase 4: Routing & Handoff
-- [ ] Task 4.1: Seamless scroll handoff: 60-100% scroll transition from dispersing logo to rising login card.
-- [ ] Task 4.2: Move/preserve marketing landing page to `/discover` without loss of functionality.
-- [ ] Task 4.3: Configure `/` entry route (authenticated bypass, return-to query param support).
-- [ ] Task 4.4: Keyboard focus handoff (auto-focus first login field upon intro completion).
-- [ ] Task 4.5: Run tsc, lint, commit Phase 4.
+- [x] Task 4.1: Seamless scroll handoff: 60-100% scroll transition from dispersing logo to rising login card.
+- [x] Task 4.2: Move/preserve marketing landing page to `/discover` without loss of functionality.
+- [x] Task 4.3: Configure `/` entry route (authenticated bypass, return-to query param support).
+- [x] Task 4.4: Keyboard focus handoff (auto-focus first login field upon intro completion).
+- [x] Task 4.5: Run tsc, lint, commit Phase 4.
 
 ### Phase 5: Performance, QA & Final Handover
 - [ ] Task 5.1: Performance audit: 60fps verification under 4x CPU throttle simulation, CLS < 0.1.
