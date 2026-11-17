@@ -321,11 +321,8 @@ export default function AdvisorAdminPortalPage() {
                 placeholder="أدخل رمز المرور..."
                 className="w-full border border-slate-300 focus:border-blue-600 rounded-xl px-3.5 py-2.5 text-[13px] dir-ltr text-left focus:outline-none disabled:bg-slate-100"
               />
-              <p className="text-[11px] text-slate-500 mt-1.5 tabular-nums">
-                رمز المرور الافتراضي للمراجعة:{" "}
-                <code className="font-mono font-semibold text-slate-700">
-                  admin2026
-                </code>
+              <p className="text-[11px] text-slate-500 mt-1.5">
+                أدخل رمز المرور الخاص بالمستشار الأكاديمي.
               </p>
             </div>
 

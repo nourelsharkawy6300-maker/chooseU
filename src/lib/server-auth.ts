@@ -47,9 +47,22 @@ export function verifyPasscode(
 // 2. CRYPTOGRAPHIC HMAC SESSION TOKENS (ROLE-BASED ACCESS CONTROL)
 // ============================================================================
 
-const SESSION_SECRET =
-  process.env.ADMIN_SESSION_SECRET ||
-  "chooseu_super_secure_session_secret_change_in_production_2026_key";
+// In production, ADMIN_SESSION_SECRET MUST be set. The app fails closed if it is missing.
+// In development (NODE_ENV !== "production"), a warning is printed and a placeholder is used
+// only so the dev server can start — never deploy without setting this variable.
+const _rawSecret = process.env.ADMIN_SESSION_SECRET;
+if (!_rawSecret) {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "[server-auth] ADMIN_SESSION_SECRET is not set. The application cannot start in production without it."
+    );
+  } else {
+    console.warn(
+      "[server-auth] WARNING: ADMIN_SESSION_SECRET is not set. Using an insecure placeholder for development only. DO NOT deploy without this variable."
+    );
+  }
+}
+const SESSION_SECRET = _rawSecret || "dev-only-insecure-placeholder";
 
 export interface AdminSessionPayload {
   role: "admin";

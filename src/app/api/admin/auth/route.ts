@@ -39,9 +39,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const expectedHash =
-      process.env.ADMIN_PASSCODE_HASH ||
-      "9c283d99c379b04d37eb5387bb610f26ff9a49ceb44eb7db29838c30e6d6229cfa4a558450428cd0c9d37434c60f739713da3cd550770da53506c0cd1594b9e7";
+    const expectedHash = process.env.ADMIN_PASSCODE_HASH;
+
+    if (!expectedHash) {
+      console.error("[admin/auth] ADMIN_PASSCODE_HASH is not set.");
+      return NextResponse.json(
+        { success: false, error: "خطأ في إعداد الخادم. يرجى التواصل مع المسؤول." },
+        { status: 500 }
+      );
+    }
 
     const isValid = verifyPasscode(parsed.data.passcode, expectedHash);
 
