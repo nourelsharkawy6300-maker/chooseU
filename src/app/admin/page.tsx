@@ -22,10 +22,10 @@ import {
 } from "lucide-react";
 
 const DEFAULT_ADVISOR_NOTES = `1. الأولوية الأكاديمية والمالية الأولى:
-البدء بالكليات الحكومية (انتظام) وبرامج الساعات المعتمدة المتخصصة داخل نطاق محافظتك نظراً لتقارب مجموعك الفعلي مع حدود القبول لعام 2026 وتوفير نفقات السكن الطلابي المغترب.
+البدء بالكليات الحكومية (انتظام) وبرامج الساعات المعتمدة المتخصصة داخل نطاق محافظتك نظراً لتقارب مجموعك المدخل مع حدود القبول الاسترشادية وتوفير نفقات السكن الطلابي المغترب.
 
 2. خطة التأمين والبدائل الاستراتيجية:
-إدراج الجامعات الأهلية في النطاق الجغرافي الأقرب كرغبات تالية مضمونة القبول، مع الالتزام الكامل بتحقيق معدل تراكمي (GPA >= 2.7) في نهاية السنة التأسيسية الأولى لضمان التخصص في قسم الذكاء الاصطناعي أو الأمن السيبراني.`;
+إدراج الجامعات الأهلية في النطاق الجغرافي الأقرب كرغبات تالية آمنة استرشادياً، مع الالتزام بتحقيق معدل تراكمي (GPA >= 2.7) في نهاية السنة التأسيسية الأولى للتأهل للتخصص في قسم الذكاء الاصطناعي أو الأمن السيبراني.`;
 
 export default function AdvisorAdminPortalPage() {
   // Security Passcode Gate State
@@ -198,7 +198,7 @@ export default function AdvisorAdminPortalPage() {
             )
           );
           setStatusBanner(
-            `تم اعتماد الطلب (${data.order.order_code}) للطالب «${selectedOrder.student_name}» وفتح التقرير الكامل في قاعدة البيانات فوراً.`
+            `تم تأكيد الطلب (${data.order.order_code}) للطالب «${selectedOrder.student_name}» وفتح التقرير الكامل في قاعدة البيانات فوراً.`
           );
           setIsApproving(false);
           return;
@@ -223,7 +223,7 @@ export default function AdvisorAdminPortalPage() {
         )
       );
       setStatusBanner(
-        `تم اعتماد الطلب (${updated.order_code}) للطالب «${updated.student_name}» وفتح التقرير الكامل في قاعدة البيانات فوراً.`
+        `تم تأكيد الطلب (${updated.order_code}) للطالب «${updated.student_name}» وفتح التقرير الكامل في قاعدة البيانات فوراً.`
       );
     }
   };
@@ -246,11 +246,11 @@ export default function AdvisorAdminPortalPage() {
   const ADVISOR_TEMPLATES = [
     {
       label: "الأولوية الحكومية",
-      text: "1. الأولوية الأكاديمية والمالية الأولى:\nالبدء بالكليات الحكومية (انتظام) وبرامج الساعات المعتمدة المتخصصة داخل نطاق محافظتك نظراً لتقارب مجموعك الفعلي مع مؤشرات القبول وتوفير نفقات السكن الطلابي المغترب.\n\n2. خطة التأمين والبدائل الاستراتيجية:\nإدراج الجامعات الأهلية في النطاق الجغرافي الأقرب كرغبات تالية آمنة استرشادياً.",
+      text: "1. الأولوية الأكاديمية والمالية الأولى:\nالبدء بالكليات الحكومية (انتظام) وبرامج الساعات المعتمدة المتخصصة داخل نطاق محافظتك نظراً لتقارب مجموعك المدخل مع مؤشرات القبول وتوفير نفقات السكن الطلابي المغترب.\n\n2. خطة التأمين والبدائل الاستراتيجية:\nإدراج الجامعات الأهلية في النطاق الجغرافي الأقرب كرغبات تالية آمنة استرشادياً.",
     },
     {
       label: "التميز الأكاديمي",
-      text: "1. بناءً على مجموعك المرتفع، تُعدّ كليات الذكاء الاصطناعي وعلوم الحاسب بالجامعات الأهلية خياراً استراتيجياً لضمان التخصص الدقيق.\n\n2. الالتزام بتحقيق GPA >= 3.0 في السنة التأسيسية الأولى لفتح منح التفوق الداخلية.",
+      text: "1. بناءً على مجموعك المرتفع، تُعدّ كليات الذكاء الاصطناعي وعلوم الحاسب بالجامعات الأهلية خياراً استراتيجياً للتأهل للتخصص الدقيق.\n\n2. الالتزام بتحقيق GPA >= 3.0 في السنة التأسيسية الأولى لفتح منح التفوق الداخلية.",
     },
     {
       label: "البدائل الآمنة",
@@ -267,9 +267,9 @@ export default function AdvisorAdminPortalPage() {
       ? `2${normalizedPhone}`
       : normalizedPhone;
     const msg = `مرحباً ${selectedOrder.student_name}،
-تمت مراجعة واعتماد تقريرك المالي والأكاديمي الشامل لسنوات دراستك بالكامل في منصة ChooseU بنجاح.
-• رقم الطلب المعتمد: ${selectedOrder.order_code}
-• حالة التقرير: تم الاعتماد والفتح (Approved)
+تمت مراجعة وتأكيد تقريرك المالي والأكاديمي الاسترشادي لسنوات دراستك بالكامل في منصة ChooseU بنجاح.
+• رقم الطلب: ${selectedOrder.order_code}
+• حالة التقرير: مكتمل ومتاح للاستعراض (Verified)
 يمكنك الآن الدخول إلى قسم «متابعة حالة الطلب» على المنصة وإدخال كود الطلب (${selectedOrder.order_code}) لاستعراض الجدول الكامل، الاستماع للمذكرة الصوتية، وتحميل نسخة الـ PDF.`;
     return `https://wa.me/${intlPhone}?text=${encodeURIComponent(msg)}`;
   }, [selectedOrder]);
@@ -423,7 +423,7 @@ export default function AdvisorAdminPortalPage() {
                   strokeWidth={1.5}
                 />
                 <h1 className="text-[19px] font-bold text-slate-900">
-                  غرفة عمليات التدقيق واعتماد التقارير
+                  غرفة مراجعة وتأكيد التقارير
                 </h1>
               </div>
               <p className="text-[12px] text-slate-500 mt-0.5">
@@ -468,7 +468,7 @@ export default function AdvisorAdminPortalPage() {
 
             <div className="bg-emerald-50/60 border border-emerald-200 rounded-xl p-4">
               <span className="text-[11px] text-emerald-800 block">
-                التقارير المعتمدة
+                التقارير المكتملة
               </span>
               <strong className="text-[20px] font-bold text-emerald-900 mt-0.5 block">
                 {approvedOrdersCount}
@@ -478,7 +478,7 @@ export default function AdvisorAdminPortalPage() {
             <div className="bg-blue-50/60 border border-blue-200 rounded-xl p-4">
               <span className="text-[11px] text-blue-800 flex items-center gap-1">
                 <Wallet className="w-3.5 h-3.5" strokeWidth={1.5} />
-                <span>إجمالي الإيرادات المعتمدة</span>
+                <span>إجمالي الإيرادات المؤكدة</span>
               </span>
               <strong className="text-[20px] font-bold text-blue-900 mt-0.5 block">
                 {totalRevenueEgp.toLocaleString()} ج.م
@@ -527,7 +527,7 @@ export default function AdvisorAdminPortalPage() {
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                   >
-                    {f === "all" ? `الكل (${totalOrdersCount})` : f === "pending" ? `قيد المراجعة (${pendingOrdersCount})` : `معتمد (${approvedOrdersCount})`}
+                    {f === "all" ? `الكل (${totalOrdersCount})` : f === "pending" ? `قيد المراجعة (${pendingOrdersCount})` : `مكتمل (${approvedOrdersCount})`}
                   </button>
                 ))}
               </div>
@@ -624,7 +624,7 @@ export default function AdvisorAdminPortalPage() {
                                   className="w-3 h-3"
                                   strokeWidth={1.5}
                                 />
-                                <span>معتمد</span>
+                                <span>مكتمل</span>
                               </>
                             ) : (
                               <>
@@ -651,7 +651,7 @@ export default function AdvisorAdminPortalPage() {
                     {selectedOrder.order_code}
                   </span>
                   <h3 className="text-[16px] font-bold text-slate-900 mt-1.5">
-                    فحص واعتماد طلب: {selectedOrder.student_name}
+                    فحص وتأكيد طلب: {selectedOrder.student_name}
                   </h3>
                   <p className="text-[12px] text-slate-500 mt-0.5 tabular-nums">
                     مرجع InstaPay: <strong>{selectedOrder.instapay_ref}</strong>{" "}
@@ -720,7 +720,7 @@ export default function AdvisorAdminPortalPage() {
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
                   <label className="block text-[12px] font-semibold text-slate-700">
-                    التوجيه الأكاديمي والمالي المعتمد للأسرة (`advisor_notes`)
+                    التوجيه الأكاديمي والمالي الاسترشادي للأسرة (`advisor_notes`)
                   </label>
                   {/* Quick Template Buttons */}
                   <div className="flex flex-wrap gap-1.5">
@@ -777,7 +777,7 @@ export default function AdvisorAdminPortalPage() {
                   ) : (
                     <FileCheck className="w-4 h-4" strokeWidth={1.5} />
                   )}
-                  <span>اعتماد التحويل وفتح التقرير للطالب فوراً</span>
+                  <span>تأكيد التحويل وفتح التقرير للطالب فوراً</span>
                 </button>
 
                 <a
@@ -787,7 +787,7 @@ export default function AdvisorAdminPortalPage() {
                   className="w-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 py-2.5 px-4 rounded-xl text-[12px] font-semibold flex items-center justify-center gap-2 transition"
                 >
                   <Send className="w-4 h-4 text-emerald-600" strokeWidth={1.5} />
-                  <span>إرسال إشعار الاعتماد عبر واتساب للطالب</span>
+                  <span>إرسال إشعار التأكيد عبر واتساب للطالب</span>
                 </a>
               </div>
             </div>

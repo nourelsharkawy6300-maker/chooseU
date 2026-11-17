@@ -411,13 +411,13 @@ export function FourStationJourney({
     let reply = `بناءً على ملفك الأكاديمي (مجموع ${score}% بشعبة ${streamTitle})${trackIntro}: `;
 
     if (userText.includes("ساعات معتمدة") || userText.includes("أهلي")) {
-      reply += `البرامج الأهلية والساعات المعتمدة توفر لك نفس الاعتماد الأكاديمي بحدود قبول أقل، مع ميزة الأعداد الأقل وتحديث اللوائح (مثل إمكانية التخرج في 4 سنوات لبعض كليات الهندسة)، وتكلفتها السنوية ضمن حدود ميزانيتك المقدرة بـ ${budget.toLocaleString()} ج.م.`;
+      reply += `البرامج الأهلية والساعات المعتمدة توفر لك نفس الاعتراف الأكاديمي بحدود قبول أقل، مع ميزة الأعداد الأقل وتحديث اللوائح (مثل إمكانية التخرج في 4 سنوات لبعض كليات الهندسة)، وتكلفتها السنوية ضمن حدود ميزانيتك المقدرة بـ ${budget.toLocaleString()} ج.م.`;
     } else if (userText.includes("ترتيب") || userText.includes("رغبات")) {
       reply += `كدليل استرشادي لتنسيق الـ 75 رغبة، ننصحك بالبدء بـ 15 رغبة طموحة تليها 35 رغبة واقعية متوازنة تناسب مجموعك، ثم 25 رغبة كشبكة أمان في نطاقك الجغرافي (${governorate}).`;
     } else if (userText.includes("سفر") || userText.includes("دول") || userText.includes("مرتب")) {
       reply += `المسارات التقنية والهندسية توفر فرص عمل واعدة في السوق المحلي والإقليمي، بمتوسط رواتب أولية تتراوح بين 15,000 و 30,000 ج.م شهرياً مع إمكانية التدرج للعمل مع شركات إقليمية ودولية.`;
     } else {
-      reply += `اختيارك لكلية تقع في نطاقك الجغرافي (نطاق أ) يوفر عليك ما يقارب 30,000 إلى 40,000 ج.م سنوياً من تكلفة السكن الجامعي والاغتراب، مما يتيح لك استثمار هذا الفائض في التدريب والشهادات المهنية المعتمدة.`;
+      reply += `اختيارك لكلية تقع في نطاقك الجغرافي (نطاق أ) يوفر عليك ما يقارب 30,000 إلى 40,000 ج.م سنوياً من تكلفة السكن الجامعي والاغتراب، مما يتيح لك استثمار هذا الفائض في التدريب والشهادات المهنية الدولية.`;
     }
 
     setChatMessages((prev) => [
@@ -846,7 +846,7 @@ export function FourStationJourney({
                           if (fac.y1_base_fee <= budget && y1Actual > budget && budget > 0) {
                             return (
                               <div className="col-span-2 text-[10px] text-amber-800 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5 font-medium leading-tight mt-1">
-                                الرسوم الأساسية ضمن ميزانيتك، لكن التكلفة الفعلية للسنة الأولى أعلى
+                                الرسوم الأساسية ضمن ميزانيتك، لكن التكلفة التقديرية للسنة الأولى أعلى
                               </div>
                             );
                           }
@@ -914,7 +914,7 @@ export function FourStationJourney({
                       مقارنة الكليات والبرامج المختارة ({comparedFaculties.length} كليات)
                     </h3>
                     <p className="text-xs text-slate-600">
-                      مقارنة جنباً إلى جنب في التنسيق، المصروفات، واعتمادات الجودة.
+                      مقارنة جنباً إلى جنب في التنسيق، المصروفات، ومعايير الجودة.
                     </p>
                   </div>
                   <button
@@ -1122,7 +1122,7 @@ export function FourStationJourney({
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-slate-700 font-medium">إضافة درجات تظلم أو اختبار قدرات:</span>
                     <span className="font-bold text-blue-700">
-                      <span dir="ltr" className="font-mono tabular-nums">{scoreTweak > 0 ? `+${scoreTweak}%` : "0.0%"}</span> (المجموع الفعلي: <span dir="ltr" className="font-mono tabular-nums">{(score + scoreTweak).toFixed(1)}%</span>)
+                      <span dir="ltr" className="font-mono tabular-nums">{scoreTweak > 0 ? `+${scoreTweak}%` : "0.0%"}</span> (المجموع المدخل: <span dir="ltr" className="font-mono tabular-nums">{(score + scoreTweak).toFixed(1)}%</span>)
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
@@ -1313,7 +1313,7 @@ export function FourStationJourney({
                     {
                       year: 3,
                       title: "التدريب الميداني والشهادات المهنية",
-                      desc: "قضاء تدريب صيفي معتمد (Internship) في جهة عمل حقيقية، واجتياز الشهادات المهنية المعتمدة في مجالك.",
+                      desc: "قضاء تدريب صيفي تخصصي (Internship) في بيئة عمل متقدمة، واجتياز الشهادات المهنية في مجالك.",
                     },
                     {
                       year: 4,
@@ -1399,10 +1399,10 @@ export function FourStationJourney({
             <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
               <div className="space-y-1">
                 <h2 className="text-xl font-bold text-slate-900 leading-[1.45]">
-                  المحطة الرابعة: الاستشارة الأكاديمية وتقرير القرار النهائي المعتمد
+                  المحطة الرابعة: الاستشارة الأكاديمية وتقرير القرار الاسترشادي الشامل
                 </h2>
                 <p className="text-[12px] text-slate-600">
-                  استعرض التوجيهات الأكاديمية لترتيب رغباتك، ثم أصدر وثيقة القرار النهائي الرسمية لبطاقة رغباتك.
+                  استعرض التوجيهات الأكاديمية لترتيب رغباتك، ثم استخرج وثيقة التقرير الاسترشادي الشامل لبطاقة رغباتك.
                 </p>
               </div>
 
@@ -1526,7 +1526,7 @@ export function FourStationJourney({
             <div className="bg-white border border-slate-200 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
               <div className="space-y-1">
                 <h3 className="text-base font-bold text-slate-900">
-                  أكملت المحطات الأربع بنجاح! جاهز لطباعة بطاقة الرغبات والتقرير المعتمد
+                  أكملت المحطات الأربع بنجاح! جاهز لطباعة بطاقة الرغبات والتقرير الاسترشادي
                 </h3>
                 <p className="text-[12px] text-slate-600">
                   تحتوي وثيقة القرار على أفضل ترشيحاتك حسب المتاح في قاعدة البيانات، مع دليل توزيع استرشادي للـ 75 رغبة، تحليل التكلفة الإجمالية TCO، وخطة العمل.
@@ -1627,7 +1627,7 @@ export function FourStationJourney({
                   if (explainFaculty.y1_base_fee <= budget && ey1 > budget && budget > 0) {
                     return (
                       <div className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded p-1.5 font-medium mt-1">
-                        الرسوم الأساسية ضمن ميزانيتك، لكن التكلفة الفعلية للسنة الأولى أعلى
+                        الرسوم الأساسية ضمن ميزانيتك، لكن التكلفة التقديرية للسنة الأولى أعلى
                       </div>
                     );
                   }
@@ -1718,7 +1718,7 @@ export function FourStationJourney({
             {/* Strategic 75-Desire Distribution Breakdown (Guidance) */}
             <div className="space-y-3">
               <h3 className="text-sm font-bold text-slate-900">
-                دليل استرشادي لتوزيع الـ 75 رغبة في التنسيق الرسمي:
+                دليل استرشادي لتوزيع الـ 75 رغبة في التنسيق الحكومي:
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                 <div className="bg-purple-50/70 border border-purple-200 p-3.5 rounded-xl space-y-1">
@@ -1824,7 +1824,7 @@ export function FourStationJourney({
 
                 <a
                   href={`https://wa.me/?text=${encodeURIComponent(
-                    `تقرير قراري الجامعي المعتمد من منصة ChooseU 2026 - الطالب: ${studentName} - المجموع: ${score}%`
+                    `تقرير قراري الجامعي الاسترشادي من منصة ChooseU 2026 - الطالب: ${studentName} - المجموع: ${score}%`
                   )}`}
                   target="_blank"
                   rel="noreferrer"

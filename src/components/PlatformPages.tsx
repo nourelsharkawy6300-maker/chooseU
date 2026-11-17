@@ -105,7 +105,7 @@ export function LandingView({
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-[12px] font-medium text-slate-700">
             <span className="w-2 h-2 rounded-full bg-blue-600" />
             <span>
-              مدقق وفق الحدود الدنيا لتنسيق القبول ولوائح الجامعات المصرية 2026
+              محدث استرشادياً وفق الحدود الدنيا لتنسيق القبول ولوائح الجامعات المصرية 2026
             </span>
           </div>
           <h1 className="text-[26px] sm:text-[34px] font-bold text-slate-900 leading-[1.45]">
@@ -317,14 +317,14 @@ export function LandingView({
             </span>
             <div className="flex items-baseline justify-between">
               <h3 className="text-[20px] font-bold text-slate-900">
-                التقرير الاستشاري المعتمد + المذكرة الصوتية
+                التقرير الاستشاري الشامل + المذكرة الصوتية
               </h3>
               <span className="text-[20px] font-bold text-blue-600 tabular-nums">
                 150 ج.م
               </span>
             </div>
             <p className="text-[13px] text-slate-600">
-              وثيقة تنفيذية معتمدة تفتح كافة البدائل وتوفر مراجعة بشرية ومذكرة صوتية تلخيصية لولي الأمر.
+              وثيقة استرشادية شاملة تفتح كافة البدائل وتوفر مراجعة استشارية ومذكرة صوتية تلخيصية لولي الأمر.
             </p>
             <ul className="space-y-2.5 pt-2 text-[13px] text-slate-700">
               {[
@@ -351,7 +351,7 @@ export function LandingView({
               onClick={onOpenCheckout}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl text-[13px] font-semibold transition cursor-pointer tabular-nums shadow-sm"
             >
-              إصدار التقرير المعتمد — 150 ج.م
+              إصدار التقرير الاستشاري — 150 ج.م
             </button>
             <button
               type="button"
@@ -567,7 +567,7 @@ export function FutureMeView({
               خارطة المهارات والتأهيل العملي خلال سنوات الدراسة (4-Year Practical Roadmap)
             </h3>
             <p className="text-[12px] text-slate-500 mt-0.5">
-              المهارات التقنية والعملية المطلوب إتقانها في كل عام جامعي لضمان الجاهزية الفورية لسوق العمل.
+              المهارات التقنية والعملية المطلوب إتقانها في كل عام جامعي لتعزيز الجاهزية الفورية لسوق العمل.
             </p>
           </div>
           <span className="text-[12px] font-medium text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-xl">
@@ -858,7 +858,7 @@ export function DirectoryView({
 }
 
 // ============================================================================
-// 4. SAMPLE REPORT VIEW (`عينة التقرير المعتمد والمذكرة الصوتية`)
+// 4. SAMPLE REPORT VIEW (`عينة التقرير الاستشاري والمذكرة الصوتية`)
 // ============================================================================
 
 interface SampleReportViewProps {
@@ -897,7 +897,7 @@ export function SampleReportView({
       <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4 shadow-2xs no-print">
         <div>
           <h1 className="text-[18px] font-bold text-slate-900 leading-[1.45]">
-            عينة التقرير الاستشاري المعتمد
+            عينة التقرير الاستشاري
           </h1>
           <p className="text-[12px] text-slate-500 mt-0.5">
             نموذج استرشادي يوضح هيكل الوثيقة التنفيذية وقائمة الرغبات التي تستلمها الأسرة بعد المراجعة الأكاديمية.
@@ -940,7 +940,7 @@ export function SampleReportView({
                 وثيقة التقييم الأكاديمي والمالي الشامل — ChooseU Advisory
               </div>
               <h2 className="text-[20px] font-bold text-slate-900 mt-1 leading-[1.45]">
-                التقرير الاستشاري المعتمد لتنسيق الجامعات والتدفق المالي لسنوات الدراسة بالكامل
+                التقرير الاستشاري لتنسيق الجامعات والتدفق المالي لسنوات الدراسة بالكامل
               </h2>
               <p className="text-xs text-slate-600 font-medium mt-1 tabular-nums">
                 وثيقة استشارية استرشادية وفق الحدود الدنيا ولوائح المصروفات الجامعية المعلنة
@@ -952,7 +952,7 @@ export function SampleReportView({
                 REF: ORD-2026-SAMPLE
               </div>
               <div className="text-emerald-700 font-medium">
-                مراجعة المستشار المختص: معتمدة
+                مراجعة المستشار المختص: مؤكدة
               </div>
             </div>
           </div>
@@ -961,8 +961,11 @@ export function SampleReportView({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-50 border border-slate-200 rounded-xl p-4 text-[12px] tabular-nums">
             <div>
               <span className="text-slate-500 block">اسم الطالب</span>
-              <strong className="text-slate-900 font-semibold">
-                {studentName.trim() || "نموذج طالب ثانوية عامة"}
+              <strong className="text-slate-900 font-semibold flex items-center gap-1.5 flex-wrap">
+                <span>{studentName.trim() || "طالب تجريبي"}</span>
+                <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-normal">
+                  نموذج توضيحي
+                </span>
               </strong>
             </div>
             <div>
@@ -1219,7 +1222,7 @@ export function TrackOrderView({
       <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs space-y-5 no-print">
         <div>
           <h1 className="text-[20px] font-bold text-slate-900 leading-[1.45]">
-            متابعة حالة الطلب واستلام التقرير المعتمد
+            متابعة حالة الطلب واستلام التقرير الاستشاري
           </h1>
           <p className="text-[13px] text-slate-500 mt-1">
             أدخل رقم الطلب أو رقم الواتساب المسجل للاستعلام المباشر من قاعدة البيانات.
@@ -1278,7 +1281,7 @@ export function TrackOrderView({
                 }`}
               >
                 {orderResult.order_status === "approved"
-                  ? "تم الاعتماد والفتح"
+                  ? "مكتمل ومتاح للاستعراض"
                   : "قيد المراجعة وتأكيد التحويل"}
               </span>
             </div>
@@ -1302,17 +1305,17 @@ export function TrackOrderView({
                   title: "3. مراجعة المستشار المختص",
                   desc:
                     orderResult.order_status === "approved"
-                      ? "تمت المراجعة البشرية وإعداد التوصية"
+                      ? "تمت المراجعة الاستشارية وإعداد التوصية"
                       : "جاري التحقق من مرجع التحويل (15–60 دقيقة)",
                   done: orderResult.order_status === "approved",
                 },
                 {
                   num: 4,
-                  title: "4. التقرير المعتمد جاهز",
+                  title: "4. التقرير الاستشاري جاهز",
                   desc:
                     orderResult.order_status === "approved"
                       ? "متاح للطباعة والاستماع للمذكرة الصوتية"
-                      : "يُفتح فور اعتماد المستشار",
+                      : "يُفتح فور تأكيد المستشار",
                   done: orderResult.order_status === "approved",
                 },
               ].map((st) => (
@@ -1376,7 +1379,7 @@ export function TrackOrderView({
                   </button>
                   <a
                     href={`https://wa.me/201066594552?text=${encodeURIComponent(
-                      `مرحباً ChooseU، قمت بتحويل رسوم التقرير المعتمد (150 ج.م). رقم الطلب: ${orderResult.order_code} - اسم الطالب: ${orderResult.student_name} - رقم العملية في إنستاباي: ${orderResult.instapay_ref}`
+                      `مرحباً ChooseU، قمت بتحويل رسوم التقرير الاستشاري (150 ج.م). رقم الطلب: ${orderResult.order_code} - اسم الطالب: ${orderResult.student_name} - رقم العملية في إنستاباي: ${orderResult.instapay_ref}`
                     )}`}
                     target="_blank"
                     rel="noreferrer"
@@ -1391,7 +1394,7 @@ export function TrackOrderView({
               <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
                 <div className="space-y-1 text-[12px] text-emerald-950">
                   <div className="font-semibold">
-                    تم اعتماد تقريرك بالكامل وفتح جميع الجداول والمذكرة الصوتية
+                    تم تأكيد تقريرك بالكامل وفتح جميع الجداول والمذكرة الصوتية
                   </div>
                   <p className="text-emerald-800">
                     يمكنك الآن الاستماع للمذكرة الصوتية وقراءة توجيه المستشار أو طباعة التقرير النهائي كملف PDF.
@@ -1403,7 +1406,7 @@ export function TrackOrderView({
                   className="bg-[#377ef0] hover:bg-[#2962be] text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 transition cursor-pointer shadow-sm"
                 >
                   <Printer className="w-4 h-4" strokeWidth={1.5} />
-                  <span>طباعة وتحميل التقرير المعتمد النهائي (PDF)</span>
+                  <span>طباعة وتحميل التقرير الاستشاري النهائي (PDF)</span>
                 </button>
               </div>
             )}
@@ -1415,7 +1418,7 @@ export function TrackOrderView({
               <div className="border-b-2 border-slate-900 pb-4 flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <h3 className="text-[18px] font-bold text-slate-900">
-                    التقرير الاستشاري المالي والأكاديمي المعتمد
+                    التقرير الاستشاري المالي والأكاديمي الشامل
                     {orderResult.student_name ? ` — ${orderResult.student_name}` : ""}
                   </h3>
                   <p className="text-xs text-slate-600 font-medium mt-0.5 tabular-nums">
@@ -1426,7 +1429,7 @@ export function TrackOrderView({
                   </p>
                 </div>
                 <span className="px-3 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
-                  نسخة أصلية معتمدة (Approved)
+                  نسخة استرشادية مؤكدة (Verified)
                 </span>
               </div>
 
@@ -1437,7 +1440,7 @@ export function TrackOrderView({
                 </h4>
                 <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/50 text-[13px] text-slate-800 whitespace-pre-line leading-relaxed">
                   {orderResult.advisor_notes ||
-                    "1. الأولوية الأولى للكليات الحكومية وبرامج الساعات المعتمدة داخل نطاق محافظتك لتقليل تكلفة الإقامة.\n2. الالتزام بتحقيق معدل تراكمي GPA >= 2.7 في السنة التأسيسية الأولى لضمان التخصص المطلوب."}
+                    "1. الأولوية الأولى للكليات الحكومية وبرامج الساعات المعتمدة داخل نطاق محافظتك لتقليل تكلفة الإقامة.\n2. الالتزام بتحقيق معدل تراكمي GPA >= 2.7 في السنة التأسيسية الأولى للتأهل للتخصص المطلوب."}
                 </div>
               </div>
 
@@ -1515,7 +1518,7 @@ export function TrackOrderView({
                   <span dir="ltr" className="font-mono tabular-nums font-semibold text-slate-700">
                     {effectiveInflation}%
                   </span>
-                  . قد تختلف التكلفة الفعلية حسب أسعار السكن ومصروفات الانتقال الشخصية.
+                  . قد تختلف التكلفة التقديرية حسب أسعار السكن ومصروفات الانتقال الشخصية.
                 </p>
               </div>
             </div>
@@ -1527,7 +1530,7 @@ export function TrackOrderView({
 }
 
 // ============================================================================
-// 6. CHECKOUT MODAL (`نافذة إصدار التقرير المعتمد — 150 ج.م`)
+// 6. CHECKOUT MODAL (`نافذة إصدار التقرير الاستشاري — 150 ج.م`)
 // ============================================================================
 
 interface CheckoutModalProps {
@@ -1622,7 +1625,7 @@ export function CheckoutModal({
 
   const whatsappMsgBody = createdOrder
     ? [
-        "مرحباً ChooseU، قمت بتحويل رسوم التقرير المعتمد (150 ج.م).",
+        "مرحباً ChooseU، قمت بتحويل رسوم التقرير الاستشاري (150 ج.م).",
         "• رقم الطلب: " + createdOrder.order_code,
         "• اسم الطالب: " + createdOrder.student_name,
         "• الشعبة والمجموع: " + streamLabel + " (" + score.toFixed(1) + "%)",
@@ -1640,7 +1643,7 @@ export function CheckoutModal({
         <div className="flex items-center justify-between border-b border-slate-200 pb-4">
           <div>
             <h3 className="text-[17px] font-bold text-slate-900">
-              نافذة إصدار التقرير المعتمد — 150 ج.م
+              نافذة إصدار التقرير الاستشاري — 150 ج.م
             </h3>
             <p className="text-[12px] text-slate-500 mt-0.5">
               فتح جميع البدائل + جدول التدفق المالي الكامل + المذكرة الصوتية للمستشار
@@ -1818,7 +1821,7 @@ export function CheckoutModal({
               className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition shadow-sm"
             >
               <Send className="w-4 h-4" strokeWidth={1.5} />
-              <span>إرسال ملخص الطلب عبر WhatsApp لتسريع الاعتماد</span>
+              <span>إرسال ملخص الطلب عبر WhatsApp لتسريع المراجعة الاسترشادية</span>
             </a>
 
             <button

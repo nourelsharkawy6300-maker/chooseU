@@ -920,7 +920,7 @@ export function WorkspaceTabs({
                             </div>
                             {fac.y1_base_fee <= budget && m.y1Base + m.adminFee + m.annualLiving > budget && budget > 0 && (
                               <div className="text-[10px] text-amber-800 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5 mt-1 font-medium leading-tight text-center sm:text-start">
-                                الرسوم الأساسية ضمن ميزانيتك، لكن التكلفة الفعلية للسنة الأولى أعلى
+                                الرسوم الأساسية ضمن ميزانيتك، لكن التكلفة التقديرية للسنة الأولى أعلى
                               </div>
                             )}
                           </div>
@@ -1297,7 +1297,7 @@ export function WorkspaceTabs({
                         onClick={onOpenCheckout}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl text-[13px] font-semibold transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer tabular-nums shadow-sm"
                       >
-                        فتح التقرير المقارن الكامل واعتماد المستشار — 150 ج.م
+                        فتح التقرير المقارن الكامل ومراجعة المستشار الاسترشادية — 150 ج.م
                       </button>
                     </div>
                   )}
@@ -1624,7 +1624,7 @@ export function WorkspaceTabs({
                   if (auditedFaculty.y1_base_fee <= budget && am.y1Base + am.adminFee + am.annualLiving > budget && budget > 0) {
                     return (
                       <div className="col-span-2 text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-2 font-medium">
-                        الرسوم الأساسية ضمن ميزانيتك، لكن التكلفة الفعلية للسنة الأولى أعلى
+                        الرسوم الأساسية ضمن ميزانيتك، لكن التكلفة التقديرية للسنة الأولى أعلى
                       </div>
                     );
                   }
@@ -1692,7 +1692,7 @@ export function WorkspaceTabs({
                 }}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-[12px] font-medium cursor-pointer tabular-nums shadow-sm transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
               >
-                إصدار التقرير المعتمد الكامل — 150 ج.م
+                إصدار التقرير الاستشاري الكامل — 150 ج.م
               </button>
             </div>
           </motion.div>
