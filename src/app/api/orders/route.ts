@@ -1,11 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { checkStrictLimit, checkGlobalLimit, rateLimitExceededResponse } from "@/lib/security/ratelimit";
+import { checkStrictLimit, rateLimitExceededResponse } from "@/lib/security/ratelimit";
 import { sanitizeInput } from "@/lib/security/sanitize";
 import { getSupabaseServerClient } from "@/lib/supabase";
 import { getClientIp } from "@/lib/server-auth";
 import { ConsultationOrderRow } from "@/types/chooseu";
 import { EGYPT_GOVERNORATES } from "@/data/faculties-db";
+
+// ============================================================================
+// 1. CROCKFORD BASE32 CSPRNG GENERATOR (80-bit Entropy)
+// ============================================================================
+const CROCKFORD_ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+
+/**
+ * Generates an 80-bit CSPRNG order code formatted with Crockford Base32.
+ * 80 bits = 10 bytes = 16 characters (2^80 combinations ~ 1.2e24 space).
+ * Output format: ORD-2026-XXXX-XXXX-XXXX-XXXX
+ */
+function generateCrockfordOrderCode(): string {
+  const bytes = new Uint8Array(10);
+  crypto.getRandomValues(bytes);
+
+  function chunkToBase32(chunk: Uint8Array): string {
+    let val = 0;
+    for (let i = 0; i < 5; i++) {
+      val = val * 256 + chunk[i];
+    }
+    let res = "";
+    for (let i = 7; i >= 0; i--) {
+      const idx = Math.floor(val / Math.pow(32, i)) % 32;
+      res += CROCKFORD_ALPHABET[idx];
+    }
+    return res;
+  }
+
+  const part1 = chunkToBase32(bytes.subarray(0, 5));
+  const part2 = chunkToBase32(bytes.subarray(5, 10));
+  const full = part1 + part2;
+  return `ORD-2026-${full.slice(0, 4)}-${full.slice(4, 8)}-${full.slice(8, 12)}-${full.slice(12, 16)}`;
+}
+
+/**
+ * Enforces uniform timing across hits and misses to defeat timing side-channel attacks.
+ */
+async function normalizeTiming(startTime: number, targetMs = 250): Promise<void> {
+  const elapsed = Date.now() - startTime;
+  if (elapsed < targetMs) {
+    await new Promise((resolve) => setTimeout(resolve, targetMs - elapsed));
+  }
+}
 
 // Server-side strict validation schema (Hard-fail on unknown fields)
 const CreateOrderSchema = z
@@ -60,10 +103,8 @@ export async function POST(req: NextRequest) {
 
     const data = parsed.data;
 
-    // Server-enforced Order Code & Official Pricing
-    // Format: ORD-2026-NNNN-XXXXXXXXXXXXXXXX (sequential prefix + 16-char random hex suffix)
-    const randomSuffix = crypto.randomUUID().replace(/-/g, "").slice(0, 16).toUpperCase();
-    const orderCode = `ORD-2026-${Math.floor(1000 + Math.random() * 9000)}-${randomSuffix}`;
+    // Server-enforced Order Code (80-bit Crockford Base32 CSPRNG) & Official Pricing
+    const orderCode = generateCrockfordOrderCode();
     const OFFICIAL_REPORT_PRICE_EGP = 150; // Strictly enforced server-side
 
     const sanitizedOrder: ConsultationOrderRow & { amount_egp: number } = {
@@ -135,20 +176,39 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
+  const startTime = Date.now();
   try {
     const ip = getClientIp(req.headers);
-    // Global rate limit: 50 requests per 10 seconds
-    const rateLimit = await checkGlobalLimit(`order_query_${ip}`);
-    if (!rateLimit.success) {
-      return rateLimitExceededResponse(rateLimit.reset);
+
+    // 1. Strict rate limit check per IP (5 requests / 60 seconds, fail-closed)
+    try {
+      const ipLimit = await checkStrictLimit(`order_query_ip_${ip}`);
+      if (!ipLimit.success) {
+        return rateLimitExceededResponse(ipLimit.reset);
+      }
+    } catch {
+      return rateLimitExceededResponse(Date.now() + 60_000);
     }
 
     const { searchParams } = new URL(req.url);
     const rawParam = searchParams.get("code") || searchParams.get("q") || "";
     const cleanCode = sanitizeInput(rawParam).trim().toUpperCase();
 
-    // Reject missing, non-code, or invalid format queries uniformly (no phone lookups allowed)
+    // 2. Strict rate limit check per queried identifier (5 requests / 60 seconds, fail-closed)
+    if (cleanCode) {
+      try {
+        const idLimit = await checkStrictLimit(`order_query_id_${cleanCode}`);
+        if (!idLimit.success) {
+          return rateLimitExceededResponse(idLimit.reset);
+        }
+      } catch {
+        return rateLimitExceededResponse(Date.now() + 60_000);
+      }
+    }
+
+    // 3. Reject missing, non-code, or invalid format queries uniformly (no phone lookups permitted)
     if (!cleanCode || !/^ORD-[0-9A-Z\-]+$/i.test(cleanCode)) {
+      await normalizeTiming(startTime, 250);
       return NextResponse.json(
         { error: "لم يتم العثور على الطلب." },
         { status: 404 }
@@ -157,13 +217,14 @@ export async function GET(req: NextRequest) {
 
     const supabase = getSupabaseServerClient();
     if (!supabase) {
+      await normalizeTiming(startTime, 250);
       return NextResponse.json(
         { error: "لم يتم العثور على الطلب." },
         { status: 404 }
       );
     }
 
-    // Query strictly order_code and order_status using parameterized SDK call
+    // 4. Query strictly order_code and order_status using parameterized SDK call
     const { data, error } = await supabase
       .from("consultation_orders")
       .select("order_code, order_status")
@@ -171,19 +232,22 @@ export async function GET(req: NextRequest) {
       .maybeSingle();
 
     if (error || !data) {
+      await normalizeTiming(startTime, 250);
       return NextResponse.json(
         { error: "لم يتم العثور على الطلب." },
         { status: 404 }
       );
     }
 
-    // Derive progress label
+    // 5. Derive progress label
     let progress_label = "قيد المراجعة وتأكيد التحويل";
     if (data.order_status === "approved") {
       progress_label = "مكتمل ومتاح للاستعراض";
     } else if (data.order_status === "rejected") {
       progress_label = "تم رفض الطلب";
     }
+
+    await normalizeTiming(startTime, 250);
 
     // STRICT REQUIREMENT: Return ONLY { order_code, order_status, progress_label }. No other fields.
     return NextResponse.json({
@@ -192,6 +256,7 @@ export async function GET(req: NextRequest) {
       progress_label,
     });
   } catch {
+    await normalizeTiming(startTime, 250);
     return NextResponse.json(
       { error: "لم يتم العثور على الطلب." },
       { status: 404 }
