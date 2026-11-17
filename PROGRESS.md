@@ -1,10 +1,10 @@
 # ChooseU Entry Experience - Progress Tracker
 
 ## Session Metadata
-- **Current Phase**: Phase 1 (Foundations) — Completed -> Ready for Phase 2
+- **Current Phase**: Phase 2 (Intro Sequence) — Completed -> Ready for Phase 3
 - **Active Branch**: `entry-experience`
-- **Last File Touched**: `src/lib/copy-registry.ts`
-- **Next Step**: Phase 2: Intro Sequence (Task 2.1: Pinned scroll container and stage)
+- **Last File Touched**: `src/components/entry/IntroScrollStage.tsx`
+- **Next Step**: Phase 3: Login Redesign (Task 3.1: Build Obsidian glass card container & redesign login forms)
 - **Open Blockers**: None
 
 ---
@@ -28,11 +28,11 @@
 - [x] Task 1.5: Micro-step verification (tsc) and commit Phase 1.
 
 ### Phase 2: Intro Sequence
-- [ ] Task 2.1: Implement pinned scroll container (~250-350vh sticky stage) with Obsidian ambient glow.
-- [ ] Task 2.2: Implement symmetric letter dispersion choreography (0-70% scroll).
-- [ ] Task 2.3: Implement scroll hint ("اسحب للأسفل"), skip button ("تخطي"), and keyboard controls.
-- [ ] Task 2.4: Implement session storage flag ("intro-seen") and prefers-reduced-motion bypass.
-- [ ] Task 2.5: Verify 360px mobile responsive touch behavior, run tsc, commit Phase 2.
+- [x] Task 2.1: Implement pinned scroll container (~250-350vh sticky stage) with Obsidian ambient glow.
+- [x] Task 2.2: Implement symmetric letter dispersion choreography (0-70% scroll).
+- [x] Task 2.3: Implement scroll hint ("اسحب للأسفل"), skip button ("تخطي"), and keyboard controls.
+- [x] Task 2.4: Implement session storage flag ("intro-seen") and prefers-reduced-motion bypass.
+- [x] Task 2.5: Verify 360px mobile responsive touch behavior, run tsc, commit Phase 2.
 
 ### Phase 3: Login Redesign
 - [ ] Task 3.1: Build Obsidian glass card container with layered shadows and glowing borders.
