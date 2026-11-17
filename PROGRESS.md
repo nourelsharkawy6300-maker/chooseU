@@ -1,10 +1,10 @@
 # ChooseU Entry Experience - Progress Tracker
 
 ## Session Metadata
-- **Current Phase**: Phase 2 (Intro Sequence) — Completed -> Ready for Phase 3
+- **Current Phase**: Phase 3 (Login Redesign) — Completed -> Ready for Phase 4
 - **Active Branch**: `entry-experience`
-- **Last File Touched**: `src/components/entry/IntroScrollStage.tsx`
-- **Next Step**: Phase 3: Login Redesign (Task 3.1: Build Obsidian glass card container & redesign login forms)
+- **Last File Touched**: `src/app/login/page.tsx`
+- **Next Step**: Phase 4: Routing & Handoff (Task 4.1: Unified entry scroll container at "/")
 - **Open Blockers**: None
 
 ---
@@ -35,11 +35,11 @@
 - [x] Task 2.5: Verify 360px mobile responsive touch behavior, run tsc, commit Phase 2.
 
 ### Phase 3: Login Redesign
-- [ ] Task 3.1: Build Obsidian glass card container with layered shadows and glowing borders.
-- [ ] Task 3.2: Rebuild Tab 1: Phone / Order-code login form with RTL logical styling and LTR input dir.
-- [ ] Task 3.3: Rebuild Tab 2: Email & Password form with toggle visibility and dark autofill styling.
-- [ ] Task 3.4: Integrate calm state feedback (loading, 429 rate limit, network failure, generic error).
-- [ ] Task 3.5: Verify WCAG AA contrast on glass, run tsc, commit Phase 3.
+- [x] Task 3.1: Build Obsidian glass card container with layered shadows and glowing borders.
+- [x] Task 3.2: Rebuild Tab 1: Phone / Order-code login form with RTL logical styling and LTR input dir.
+- [x] Task 3.3: Rebuild Tab 2: Email & Password form with toggle visibility and dark autofill styling.
+- [x] Task 3.4: Integrate calm state feedback (loading, 429 rate limit, network failure, generic error).
+- [x] Task 3.5: Verify WCAG AA contrast on glass, run tsc, commit Phase 3.
 
 ### Phase 4: Routing & Handoff
 - [ ] Task 4.1: Seamless scroll handoff: 60-100% scroll transition from dispersing logo to rising login card.
