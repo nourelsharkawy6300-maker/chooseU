@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# chooseU (تطبيق توجيه تنسيق الجامعات المصرية)
 
-## Getting Started
+منصة استشارية لمساعدة طلاب الثانوية العامة وأولياء الأمور في مصر على استكشاف بدائل تنسيق الجامعات (حكومية، أهلية، خاصة، ساعات معتمدة) وحساب التكلفة التقديرية لسنوات الدراسة بالكامل (TCO).
 
-First, run the development server:
+---
 
+## متطلبات التشغيل (Requirements)
+- **Node.js**: v18.17 أو أحدث
+- **npm**: v9 أو أحدث
+
+---
+
+## التشغيل المحلي والتطوير (How to Run)
+
+1. تثبيت الحزم:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. نسخ ملف المتغيرات البيئية وتعبئته:
+```bash
+cp .env.example .env.local
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. تشغيل خادم التطوير:
+```bash
+npm run dev
+```
+افتح المتصفح على: `http://localhost:3000`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## الفحص والبناء (Build & Lint)
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# فحص الكود والأنماط
+npm run lint
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# فحص توافق TypeScript
+npx tsc --noEmit
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# بناء النسخة الإنتاجية
+npm run build
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## النشر في بيئة الإنتاج (Deployment)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+يتم نشر التطبيق على أي منصة استضافة تدعم Next.js App Router (مثل Vercel أو Node.js Server):
+1. ضبط كافة المتغيرات البيئية المطلوبة في لوحة تحكم الاستضافة (Environment Variables).
+2. التأكد من تعيين `NODE_ENV=production`.
+3. تنفيذ أمر البناء: `npm run build`.
+4. بدء الخادم: `npm run start`.
+
+---
+
+## المتغيرات البيئية المطلوبة (Required Environment Variables)
+
+(يتم توفير الأسماء فقط — انظر ملف `.env.example` للتوثيق الكامل):
+- `NEXT_PUBLIC_APP_URL`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
+- `ADMIN_PASSCODE_HASH`
+- `ADMIN_SESSION_SECRET`
+
+---
+
+## تدوير الأسرار والمفاتيح (Secret Rotation Procedures)
+
+### 1. تدوير رمز مرور لوحة الإدارة (`ADMIN_PASSCODE_HASH`)
+لتغيير رمز مرور المستشار الأكاديمي، قم بتوليد تجزئة Scrypt جديدة باستخدام الأمر التالي في الطرفية:
+```bash
+node -e "console.log(require('crypto').scryptSync('NEW_PASSCODE', 'chooseu_enterprise_salt_2026', 64).toString('hex'))"
+```
+ثم قم بتحديث المتغير البيئي `ADMIN_PASSCODE_HASH` في خادم الإنتاج دون الحاجة لإعادة بناء الكود.
+
+### 2. تدوير مفتاح الجلسة (`ADMIN_SESSION_SECRET`)
+لتوليد مفتاح HMAC جديد لجلسات الإدارة (سيبطل الجلسات النشطة فورياً):
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+قم بتحديث المتغير البيئي `ADMIN_SESSION_SECRET` في خادم الإنتاج. لاحظ أن التطبيق يفشل إغلاقياً (fail-closed) ويرفض بدء التشغيل في بيئة الإنتاج إذا لم يتم ضبط هذا المتغير.
+
+---
+
+## خطة التراجع السريع عند الطوارئ (Rollback Note)
+
+في حال حدوث أي خطأ في بيئة الإنتاج، يتم التراجع فوراً بإعادة نشر الـ commit السابق المستقر:
+- عبر Vercel: اضغط **Redeploy** على آخر عملية نشر ناجحة سابقة من قسم Deployments.
+- عبر Git / Docker:
+```bash
+git checkout <PREVIOUS_COMMIT_SHA>
+npm run build
+npm run start
+```
