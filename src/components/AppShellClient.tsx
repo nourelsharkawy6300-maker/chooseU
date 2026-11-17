@@ -210,6 +210,16 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
             </span>
             <span dir="ltr" className="font-mono text-xs text-slate-600">/admin</span>
           </Link>
+
+          <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500 pt-1">
+            <Link href="/privacy" className="hover:text-slate-900 transition-colors">
+              سياسة الخصوصية
+            </Link>
+            <span>•</span>
+            <Link href="/terms" className="hover:text-slate-900 transition-colors">
+              الشروط والأحكام
+            </Link>
+          </div>
         </div>
       </aside>
 
@@ -382,7 +392,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                     })}
                   </nav>
                 </div>
-                <div className="border-t border-slate-200 pt-3">
+                <div className="border-t border-slate-200 pt-3 space-y-2">
                   <Link
                     href="/admin"
                     onClick={() => setIsMobileNavOpen(false)}
@@ -391,6 +401,24 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                     <ShieldCheck className="h-4 w-4 text-[#377ef0]" />
                     <span>دخول الإدارة</span>
                   </Link>
+
+                  <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500 pt-1">
+                    <Link
+                      href="/privacy"
+                      onClick={() => setIsMobileNavOpen(false)}
+                      className="hover:text-slate-900 transition-colors"
+                    >
+                      سياسة الخصوصية
+                    </Link>
+                    <span>•</span>
+                    <Link
+                      href="/terms"
+                      onClick={() => setIsMobileNavOpen(false)}
+                      className="hover:text-slate-900 transition-colors"
+                    >
+                      الشروط والأحكام
+                    </Link>
+                  </div>
                 </div>
               </motion.div>
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { useStudent } from "@/context/StudentContext";
 import { StreamType } from "@/types/chooseu";
@@ -79,6 +80,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
   const [score, setScore] = useState<string>("");
   const [budget, setBudget] = useState<string>("");
   const [gov, setGov] = useState<string>("القاهرة");
+  const [consentAgreed, setConsentAgreed] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
   if (!hydrated) {
@@ -142,6 +144,11 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
       return;
     }
 
+    if (!consentAgreed) {
+      setErrorMsg("يجب الموافقة على سياسة الخصوصية والشروط للمتابعة.");
+      return;
+    }
+
     setErrorMsg("");
     updateStudent({
       studentName: cleanName,
@@ -150,6 +157,8 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
       annualBudgetEgp: parsedBudget,
       governorate: gov || "القاهرة",
       hasCompletedOnboarding: true,
+      privacyConsent: true,
+      privacyConsentTimestamp: new Date().toISOString(),
     });
   };
 
@@ -585,6 +594,41 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                         </option>
                       ))}
                     </select>
+                  </div>
+
+                  {/* Consent Checkbox */}
+                  <div className="pt-2">
+                    <label className="flex items-start gap-3 cursor-pointer group select-none">
+                      <input
+                        type="checkbox"
+                        checked={consentAgreed}
+                        onChange={(e) => {
+                          setConsentAgreed(e.target.checked);
+                          if (e.target.checked && errorMsg.includes("الخصوصية")) {
+                            setErrorMsg("");
+                          }
+                        }}
+                        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#377ef0] focus:ring-[#377ef0] cursor-pointer shrink-0"
+                      />
+                      <span className="text-xs text-slate-600 leading-relaxed">
+                        أوافق على{" "}
+                        <Link
+                          href="/privacy"
+                          target="_blank"
+                          className="text-[#377ef0] font-bold hover:underline"
+                        >
+                          سياسة الخصوصية
+                        </Link>{" "}
+                        و{" "}
+                        <Link
+                          href="/terms"
+                          target="_blank"
+                          className="text-[#377ef0] font-bold hover:underline"
+                        >
+                          الشروط
+                        </Link>
+                      </span>
+                    </label>
                   </div>
 
                   {/* Submit Button */}

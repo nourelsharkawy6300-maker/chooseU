@@ -14,6 +14,8 @@ export interface StudentProfile {
   comparedIds: string[];
   assessmentAnswers: Record<number, TrackKey>;
   hasCompletedOnboarding?: boolean;
+  privacyConsent?: boolean;
+  privacyConsentTimestamp?: string;
 }
 
 export interface StudentContextType extends StudentProfile {
@@ -50,6 +52,8 @@ const DEFAULT_PROFILE: StudentProfile = {
   comparedIds: [],
   assessmentAnswers: {},
   hasCompletedOnboarding: false,
+  privacyConsent: false,
+  privacyConsentTimestamp: "",
 };
 
 const StudentContext = createContext<StudentContextType | undefined>(undefined);
