@@ -26,7 +26,7 @@ import {
   formatFacultyCount,
 } from "../lib/engine";
 import { UIMavenCard } from "./MotionPrimitives";
-import { DataService, SecurityValidator } from "../lib/security-db";
+import { DataService, SecurityValidator, TrackOrderResult } from "../lib/security-db";
 import {
   ArrowLeft,
   Briefcase,
@@ -1133,9 +1133,13 @@ export function SampleReportView({
 // 5. TRACK ORDER VIEW (`متابعة حالة الطلب واستلام التقرير`)
 // ============================================================================
 
+type InitialOrderType =
+  | (Partial<ConsultationOrderRow> & { order_code: string })
+  | TrackOrderResult;
+
 interface TrackOrderViewProps {
-  initialOrder?: ConsultationOrderRow | null;
-  onOrderLoaded?: (ord: ConsultationOrderRow) => void;
+  initialOrder?: InitialOrderType | null;
+  onOrderLoaded?: (ord: TrackOrderResult | ConsultationOrderRow) => void;
 }
 
 export function TrackOrderView({
@@ -1146,9 +1150,9 @@ export function TrackOrderView({
     initialOrder?.order_code || ""
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [orderResult, setOrderResult] = useState<ConsultationOrderRow | null>(
-    initialOrder || null
-  );
+  const [orderResult, setOrderResult] = useState<
+    TrackOrderResult | ConsultationOrderRow | (Partial<ConsultationOrderRow> & { order_code: string }) | null
+  >(initialOrder || null);
   const [prevOrderCode, setPrevOrderCode] = useState<string | undefined>(
     initialOrder?.order_code
   );
@@ -1158,55 +1162,98 @@ export function TrackOrderView({
   if (initialOrder && initialOrder.order_code !== prevOrderCode) {
     setPrevOrderCode(initialOrder.order_code);
     setOrderResult(initialOrder);
-    setQueryInput(initialOrder.order_code);
+    setQueryInput(initialOrder.order_code || "");
   }
 
   const orderStatus = orderResult?.order_status;
   const orderCode = orderResult?.order_code;
 
+  // Initial load if provided initialOrder has order_code but not full status
+  useEffect(() => {
+    if (initialOrder?.order_code && !("progress_label" in (initialOrder || {}))) {
+      void (async () => {
+        try {
+          const res = await fetch(`/api/orders?code=${encodeURIComponent(initialOrder.order_code!)}`);
+          if (res.ok) {
+            const data: TrackOrderResult = await res.json();
+            setOrderResult(data);
+            onOrderLoaded?.(data);
+          }
+        } catch {
+          // Ignore
+        }
+      })();
+    }
+  }, [initialOrder, onOrderLoaded]);
+
   // Phase 4: Auto-poll every 15 s while order is pending
   useEffect(() => {
     if (!orderCode || orderStatus !== "pending") return;
     const interval = setInterval(async () => {
-      const refreshed = await DataService.getOrderByCodeOrPhone(orderCode);
-      if (refreshed) {
-        setOrderResult(refreshed);
-        onOrderLoaded?.(refreshed);
-        if (refreshed.order_status !== "pending") clearInterval(interval);
+      try {
+        const res = await fetch(`/api/orders?code=${encodeURIComponent(orderCode)}`);
+        if (res.ok) {
+          const refreshed: TrackOrderResult = await res.json();
+          setOrderResult(refreshed);
+          onOrderLoaded?.(refreshed);
+          if (refreshed.order_status !== "pending") clearInterval(interval);
+        }
+      } catch {
+        // Suppress network polling errors
       }
     }, 15000);
     return () => clearInterval(interval);
   }, [orderStatus, orderCode, onOrderLoaded]);
 
   const handleSearchOrder = async () => {
-    const clean = queryInput.trim();
+    const clean = queryInput.trim().toUpperCase();
     if (!clean) return;
     setIsLoading(true);
     setNotFound(false);
-    const found = await DataService.getOrderByCodeOrPhone(clean);
-    setIsLoading(false);
-
-    if (found) {
-      setOrderResult(found);
-      if (onOrderLoaded) onOrderLoaded(found);
-    } else {
-      setOrderResult(null);
-      setNotFound(true);
+    try {
+      const res = await fetch(`/api/orders?code=${encodeURIComponent(clean)}`);
+      if (res.ok) {
+        const found: TrackOrderResult = await res.json();
+        setOrderResult(found);
+        if (onOrderLoaded) onOrderLoaded(found);
+      } else {
+        // Fall back to DataService local cache (offline mirror)
+        const localFound = await DataService.getOrderByCodeOrPhone(clean);
+        if (localFound) {
+          setOrderResult(localFound);
+          if (onOrderLoaded) onOrderLoaded(localFound);
+        } else {
+          setOrderResult(null);
+          setNotFound(true);
+        }
+      }
+    } catch {
+      // Fall back to DataService local cache (offline mirror)
+      const localFound = await DataService.getOrderByCodeOrPhone(clean);
+      if (localFound) {
+        setOrderResult(localFound);
+        if (onOrderLoaded) onOrderLoaded(localFound);
+      } else {
+        setOrderResult(null);
+        setNotFound(true);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const student = useStudent();
   const effectiveLivingMode: LivingMode =
-    (orderResult?.quiz_results?.livingMode as LivingMode) ||
+    ((orderResult as any)?.quiz_results?.livingMode as LivingMode) ||
     student?.livingMode ||
     "commute";
   const effectiveInflation: number =
-    Number(orderResult?.quiz_results?.inflationScenario) ||
+    Number((orderResult as any)?.quiz_results?.inflationScenario) ||
     student?.inflationScenario ||
     15;
 
   const matchedOrderFaculties = useMemo(() => {
-    const ids: string[] = orderResult?.quiz_results?.eligibleIds || [];
+    const ids: string[] = (orderResult as any)?.quiz_results?.eligibleIds || [];
     if (ids.length > 0) {
       const mapped = ids
         .map((id) => FACULTIES_DATABASE.find((f) => f.id === id))
@@ -1225,7 +1272,7 @@ export function TrackOrderView({
             متابعة حالة الطلب واستلام التقرير الاستشاري
           </h1>
           <p className="text-[13px] text-slate-500 mt-1">
-            أدخل رقم الطلب أو رقم الواتساب المسجل للاستعلام المباشر من قاعدة البيانات.
+            أدخل كود الطلب المسجل (مثال: ORD-2026-...) للاستعلام المباشر عن حالة التقرير.
           </p>
         </div>
 
@@ -1234,7 +1281,7 @@ export function TrackOrderView({
             type="text"
             value={queryInput}
             onChange={(e) => setQueryInput(e.target.value)}
-            placeholder="أدخل رقم الطلب أو رقم الواتساب..."
+            placeholder="أدخل كود الطلب (ORD-2026-...)"
             className="flex-1 border border-slate-200 focus:border-slate-900 rounded-xl px-4 py-2.5 text-[13px] font-mono dir-ltr text-left tabular-nums focus:outline-none"
           />
           <button
@@ -1268,9 +1315,9 @@ export function TrackOrderView({
                 <span className="text-[12px] text-slate-500">
                   سجل الطلب المسترجع
                 </span>
-                <h2 className="text-[16px] font-bold text-slate-900 mt-0.5 tabular-nums">
+                <h2 className="text-[16px] font-bold text-slate-900 mt-0.5 tabular-nums dir-ltr">
                   {orderResult.order_code}
-                  {orderResult.student_name ? ` — الطالب: ${orderResult.student_name}` : ""}
+                  {"student_name" in orderResult && orderResult.student_name ? ` — الطالب: ${orderResult.student_name}` : ""}
                 </h2>
               </div>
               <span
@@ -1280,9 +1327,10 @@ export function TrackOrderView({
                     : "bg-amber-50 text-amber-800 border-amber-200"
                 }`}
               >
-                {orderResult.order_status === "approved"
-                  ? "مكتمل ومتاح للاستعراض"
-                  : "قيد المراجعة وتأكيد التحويل"}
+                {("progress_label" in orderResult && orderResult.progress_label) ||
+                  (orderResult.order_status === "approved"
+                    ? "مكتمل ومتاح للاستعراض"
+                    : "قيد المراجعة وتأكيد التحويل")}
               </span>
             </div>
 
@@ -1356,12 +1404,14 @@ export function TrackOrderView({
                   <div className="font-semibold">
                     طلبك قيد المراجعة وتأكيد التحويل من المستشار (يستغرق 15–60 دقيقة)
                   </div>
-                  <p className="text-amber-800 tabular-nums">
-                    مرجع تحويل InstaPay المسجل:{" "}
-                    <strong className="font-mono">
-                      {orderResult.instapay_ref}
-                    </strong>
-                  </p>
+                  {"instapay_ref" in orderResult && orderResult.instapay_ref ? (
+                    <p className="text-amber-800 tabular-nums">
+                      مرجع تحويل InstaPay المسجل:{" "}
+                      <strong className="font-mono">
+                        {orderResult.instapay_ref}
+                      </strong>
+                    </p>
+                  ) : null}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -1379,7 +1429,7 @@ export function TrackOrderView({
                   </button>
                   <a
                     href={`https://wa.me/201066594552?text=${encodeURIComponent(
-                      `مرحباً ChooseU، قمت بتحويل رسوم التقرير الاستشاري (150 ج.م). رقم الطلب: ${orderResult.order_code} - اسم الطالب: ${orderResult.student_name} - رقم العملية في إنستاباي: ${orderResult.instapay_ref}`
+                      `مرحباً ChooseU، قمت بتحويل رسوم التقرير الاستشاري (150 ج.م). رقم الطلب: ${orderResult.order_code}`
                     )}`}
                     target="_blank"
                     rel="noreferrer"
@@ -1419,13 +1469,13 @@ export function TrackOrderView({
                 <div>
                   <h3 className="text-[18px] font-bold text-slate-900">
                     التقرير الاستشاري المالي والأكاديمي الشامل
-                    {orderResult.student_name ? ` — ${orderResult.student_name}` : ""}
+                    {"student_name" in orderResult && orderResult.student_name ? ` — ${orderResult.student_name}` : ""}
                   </h3>
                   <p className="text-xs text-slate-600 font-medium mt-0.5 tabular-nums">
                     كود الطلب: {orderResult.order_code} • المجموع:{" "}
-                    {Number(orderResult.score_percentage).toFixed(1)}% •
-                    الميزانية: {Number(orderResult.max_budget).toLocaleString()}{" "}
-                    ج.م • المحافظة: {orderResult.governorate}
+                    {Number(("score_percentage" in orderResult && orderResult.score_percentage) || student?.scorePercentage || 80).toFixed(1)}% •
+                    الميزانية: {Number(("max_budget" in orderResult && orderResult.max_budget) || student?.annualBudgetEgp || 60000).toLocaleString()}{" "}
+                    ج.م • المحافظة: {("governorate" in orderResult && orderResult.governorate) || student?.governorate || "القاهرة"}
                   </p>
                 </div>
                 <span className="px-3 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
@@ -1439,7 +1489,7 @@ export function TrackOrderView({
                   توصيات وملاحظات المستشار الأكاديمي المختص:
                 </h4>
                 <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/50 text-[13px] text-slate-800 whitespace-pre-line leading-relaxed">
-                  {orderResult.advisor_notes ||
+                  {("advisor_notes" in orderResult && orderResult.advisor_notes) ||
                     "1. الأولوية الأولى للكليات الحكومية وبرامج الساعات المعتمدة داخل نطاق محافظتك لتقليل تكلفة الإقامة.\n2. الالتزام بتحقيق معدل تراكمي GPA >= 2.7 في السنة التأسيسية الأولى للتأهل للتخصص المطلوب."}
                 </div>
               </div>
@@ -1460,7 +1510,7 @@ export function TrackOrderView({
                         <th className="py-3 px-4">مصروفات سنة 1</th>
                         <th className="py-3 px-4">إجمالي تكلفة الدراسة بالكامل بالتضخم</th>
                         <th className="py-3 px-4">
-                          الانتقال / السكن ({orderResult.governorate})
+                          الانتقال / السكن ({("governorate" in orderResult && orderResult.governorate) || student?.governorate || "القاهرة"})
                         </th>
                         <th className="py-3 px-4">شروط الـ GPA والمنح</th>
                       </tr>
@@ -1469,7 +1519,7 @@ export function TrackOrderView({
                       {matchedOrderFaculties.map((f, i) => {
                         const m = computeFacultyTcoMetrics(
                           f,
-                          orderResult.governorate,
+                          ("governorate" in orderResult && orderResult.governorate) || student?.governorate || "القاهرة",
                           effectiveLivingMode,
                           effectiveInflation
                         );

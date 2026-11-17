@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { checkStrictLimit, checkGlobalLimit, rateLimitExceededResponse } from "@/lib/security/ratelimit";
 import { sanitizeInput } from "@/lib/security/sanitize";
-import { getSupabaseClient } from "@/lib/supabase";
+import { getSupabaseServerClient } from "@/lib/supabase";
 import { getClientIp } from "@/lib/server-auth";
 import { ConsultationOrderRow } from "@/types/chooseu";
 import { EGYPT_GOVERNORATES } from "@/data/faculties-db";
@@ -83,8 +83,8 @@ export async function POST(req: NextRequest) {
       created_at: new Date().toISOString(),
     };
 
-    // Forward to Supabase via parameterized SDK call
-    const supabase = getSupabaseClient();
+    // Forward to Supabase via server-only service-role client
+    const supabase = getSupabaseServerClient();
 
     if (supabase) {
       const { data: insertedRows, error: insertError } = await supabase
@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
         .select();
 
       if (insertError) {
-        console.error("Supabase parameterized insert error:", insertError.message);
+        console.error("Supabase service-role insert error:", insertError.message);
         return NextResponse.json(
           {
             success: false,
@@ -144,65 +144,56 @@ export async function GET(req: NextRequest) {
     }
 
     const { searchParams } = new URL(req.url);
-    const query = searchParams.get("q")?.trim() || "";
+    const rawParam = searchParams.get("code") || searchParams.get("q") || "";
+    const cleanCode = sanitizeInput(rawParam).trim().toUpperCase();
 
-    if (!query || query.length < 3) {
+    // Reject missing, non-code, or invalid format queries uniformly (no phone lookups allowed)
+    if (!cleanCode || !/^ORD-[0-9A-Z\-]+$/i.test(cleanCode)) {
       return NextResponse.json(
-        { success: false, error: "لم يتم العثور على الطلب." },
+        { error: "لم يتم العثور على الطلب." },
         { status: 404 }
       );
     }
 
-    const cleanQuery = sanitizeInput(query);
-    const upperCode = cleanQuery.toUpperCase();
-
-    const supabase = getSupabaseClient();
-    // Minimal fields only — never expose phone/name/internal notes to public lookup
-    const PUBLIC_FIELDS =
-      "order_code,order_status,academic_stream,score_percentage,max_budget,governorate,quiz_results,advisor_notes,voice_note_url,created_at";
-
-    if (supabase) {
-      try {
-        let row: ConsultationOrderRow | null = null;
-
-        if (/^ORD-2026-[0-9A-Z\-]+$/.test(upperCode)) {
-          // Order code lookup — exact match only (parameterized .eq)
-          const { data: rows, error } = await supabase
-            .from("consultation_orders")
-            .select(PUBLIC_FIELDS)
-            .eq("order_code", upperCode)
-            .limit(1);
-          if (!error && Array.isArray(rows) && rows.length > 0) {
-            row = rows[0] as ConsultationOrderRow;
-          }
-        } else if (/^01[0125][0-9]{8}$/.test(cleanQuery)) {
-          // Phone number lookup — exact match only
-          const { data: rows, error } = await supabase
-            .from("consultation_orders")
-            .select(PUBLIC_FIELDS)
-            .eq("whatsapp_phone", cleanQuery)
-            .order("created_at", { ascending: false })
-            .limit(1);
-          if (!error && Array.isArray(rows) && rows.length > 0) {
-            row = rows[0] as ConsultationOrderRow;
-          }
-        }
-
-        if (row) {
-          return NextResponse.json({ success: true, order: row });
-        }
-      } catch {
-        // Fall through to generic not-found
-      }
+    const supabase = getSupabaseServerClient();
+    if (!supabase) {
+      return NextResponse.json(
+        { error: "لم يتم العثور على الطلب." },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json(
-      { success: false, error: "لم يتم العثور على الطلب." },
-      { status: 404 }
-    );
+    // Query strictly order_code and order_status using parameterized SDK call
+    const { data, error } = await supabase
+      .from("consultation_orders")
+      .select("order_code, order_status")
+      .eq("order_code", cleanCode)
+      .maybeSingle();
+
+    if (error || !data) {
+      return NextResponse.json(
+        { error: "لم يتم العثور على الطلب." },
+        { status: 404 }
+      );
+    }
+
+    // Derive progress label
+    let progress_label = "قيد المراجعة وتأكيد التحويل";
+    if (data.order_status === "approved") {
+      progress_label = "مكتمل ومتاح للاستعراض";
+    } else if (data.order_status === "rejected") {
+      progress_label = "تم رفض الطلب";
+    }
+
+    // STRICT REQUIREMENT: Return ONLY { order_code, order_status, progress_label }. No other fields.
+    return NextResponse.json({
+      order_code: data.order_code,
+      order_status: data.order_status,
+      progress_label,
+    });
   } catch {
     return NextResponse.json(
-      { success: false, error: "لم يتم العثور على الطلب." },
+      { error: "لم يتم العثور على الطلب." },
       { status: 404 }
     );
   }

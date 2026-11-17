@@ -11,8 +11,8 @@ function TrackOrderContent() {
     ? searchParams.get("q") || searchParams.get("code") || ""
     : "";
 
-  const initialOrder: ConsultationOrderRow | null = queryParam
-    ? ({ order_code: queryParam } as ConsultationOrderRow)
+  const initialOrder = queryParam
+    ? { order_code: queryParam }
     : null;
 
   return (

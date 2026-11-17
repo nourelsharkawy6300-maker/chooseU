@@ -1,13 +1,14 @@
 import { ConsultationOrderRow } from "@/types/chooseu";
 
-// ============================================================================
-// 1. LIVE SUPABASE CONFIGURATION & STORAGE CONSTANTS
-// ============================================================================
+export interface TrackOrderResult {
+  order_code: string;
+  order_status: "pending" | "approved" | "rejected";
+  progress_label: string;
+}
 
-export const SUPABASE_URL =
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "https://mkrnrkdtvkcdymufehlg.supabase.co";
-export const SUPABASE_ANON_KEY =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+// ============================================================================
+// 1. STORAGE CONSTANTS
+// ============================================================================
 
 const LOCAL_ORDERS_STORAGE_KEY = "chooseu_orders_v2";
 const ADMIN_LOCKOUT_STORAGE_KEY = "chooseu_admin_rate_limit_v2";
@@ -17,27 +18,6 @@ const MAX_ADMIN_ATTEMPTS = 5;
 interface AdminRateLimitState {
   failedAttempts: number;
   lockoutUntil: number | null;
-}
-
-function isSupabaseConfigured(): boolean {
-  return Boolean(
-    SUPABASE_URL &&
-      SUPABASE_URL.startsWith("https://") &&
-      SUPABASE_ANON_KEY &&
-      SUPABASE_ANON_KEY !== "PUT_YOUR_ANON_KEY_HERE"
-  );
-}
-
-function getSupabaseHeaders(preferRepresentation = false): HeadersInit {
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    apikey: SUPABASE_ANON_KEY,
-    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-  };
-  if (preferRepresentation) {
-    headers["Prefer"] = "return=representation";
-  }
-  return headers;
 }
 
 // ============================================================================
@@ -149,7 +129,7 @@ export const SecurityValidator = {
 };
 
 // ============================================================================
-// 3. RESILIENT SUPABASE REST API + LOCALSTORAGE SERVICE (DataService)
+// 3. SECURE DATA SERVICE (All lookups routed via /api/orders)
 // ============================================================================
 
 const INITIAL_DEMO_ORDER: ConsultationOrderRow = {
@@ -220,7 +200,7 @@ export const DataService = {
   },
 
   /**
-   * Creates a new consultation order in Supabase (`public.consultation_orders`)
+   * Creates a new consultation order via server endpoint `/api/orders`
    * and mirrors it to `localStorage` (`chooseu_orders_v2`).
    */
   async createOrder(
@@ -264,7 +244,7 @@ export const DataService = {
       created_at: new Date().toISOString(),
     };
 
-    // 1. Attempt secure server-side API endpoint
+    // Forward to secure server-side API endpoint
     try {
       const apiResponse = await fetch("/api/orders", {
         method: "POST",
@@ -292,48 +272,7 @@ export const DataService = {
         }
       }
     } catch {
-      // Fall through to direct Supabase or local mirror
-    }
-
-    // Attempt live Supabase REST API insert
-    if (isSupabaseConfigured()) {
-      try {
-        const response = await fetch(
-          `${SUPABASE_URL}/rest/v1/consultation_orders`,
-          {
-            method: "POST",
-            headers: getSupabaseHeaders(true),
-            body: JSON.stringify({
-              order_code: sanitizedOrder.order_code,
-              student_name: sanitizedOrder.student_name,
-              whatsapp_phone: sanitizedOrder.whatsapp_phone,
-              academic_stream: sanitizedOrder.academic_stream,
-              score_percentage: sanitizedOrder.score_percentage,
-              max_budget: sanitizedOrder.max_budget,
-              governorate: sanitizedOrder.governorate,
-              quiz_results: sanitizedOrder.quiz_results,
-              instapay_ref: sanitizedOrder.instapay_ref,
-              order_status: sanitizedOrder.order_status,
-              voice_note_url: sanitizedOrder.voice_note_url || null,
-              advisor_notes: sanitizedOrder.advisor_notes || null,
-            }),
-          }
-        );
-
-        if (response.ok) {
-          const rows = (await response.json()) as ConsultationOrderRow[];
-          if (Array.isArray(rows) && rows.length > 0) {
-            const createdRemote = rows[0];
-            const existing = this.getLocalOrders().filter(
-              (o) => o.order_code !== createdRemote.order_code
-            );
-            this.saveLocalOrders([createdRemote, ...existing]);
-            return createdRemote;
-          }
-        }
-      } catch {
-        // Fall through to resilient local mirror
-      }
+      // Fall through to resilient local mirror
     }
 
     // Mirror to localStorage so offline/fallback operation never fails
@@ -349,128 +288,65 @@ export const DataService = {
   },
 
   /**
-   * Queries an order by `order_code` (e.g., ORD-2026-710), `whatsapp_phone`, or `instapay_ref`
-   * from Supabase REST API with automatic fallback to `localStorage`.
+   * Queries an order strictly by `order_code` (e.g., ORD-2026-710)
+   * exclusively via the secure server-side `/api/orders` route.
+   * Direct client-side calls to Supabase REST are completely eliminated.
    */
   async getOrderByCodeOrPhone(
     queryInput: string
-  ): Promise<ConsultationOrderRow | null> {
-    const cleanQuery = SecurityValidator.sanitizeText(queryInput);
+  ): Promise<(TrackOrderResult & Partial<ConsultationOrderRow>) | null> {
+    const cleanQuery = SecurityValidator.sanitizeText(queryInput).trim();
     if (!cleanQuery) return null;
 
-    const normalizedPhone =
-      SecurityValidator.normalizeEgyptianPhone(cleanQuery);
     const upperCode = cleanQuery.toUpperCase();
 
-    // 1. Attempt secure server-side API query
+    // 1. Mandatory server-side API query (strictly returns order_code, order_status, progress_label)
     try {
       const apiResponse = await fetch(
-        `/api/orders?q=${encodeURIComponent(cleanQuery)}`
+        `/api/orders?code=${encodeURIComponent(upperCode)}`
       );
       if (apiResponse.ok) {
-        const result = await apiResponse.json();
-        if (result.success && result.order) {
-          return result.order;
+        const result = (await apiResponse.json()) as TrackOrderResult;
+        if (result && result.order_code) {
+          return result;
         }
       }
     } catch {
-      // Fall through to direct Supabase or local mirror
+      // Fall through to resilient local storage mirror
     }
 
-    if (isSupabaseConfigured()) {
-      try {
-        const filterParam = upperCode.startsWith("ORD-")
-          ? `order_code=ilike.${encodeURIComponent(upperCode)}`
-          : `or=(order_code.ilike.${encodeURIComponent(
-              upperCode
-            )},whatsapp_phone.eq.${encodeURIComponent(
-              normalizedPhone || cleanQuery
-            )},instapay_ref.ilike.${encodeURIComponent(cleanQuery)})`;
-
-        const response = await fetch(
-          `${SUPABASE_URL}/rest/v1/consultation_orders?${filterParam}&order=created_at.desc&limit=1`,
-          {
-            method: "GET",
-            headers: getSupabaseHeaders(false),
-          }
-        );
-
-        if (response.ok) {
-          const rows = (await response.json()) as ConsultationOrderRow[];
-          if (Array.isArray(rows) && rows.length > 0) {
-            const remoteMatch = rows[0];
-            // Sync found record into local mirror
-            const localList = this.getLocalOrders();
-            const exists = localList.some(
-              (o) => o.order_code === remoteMatch.order_code
-            );
-            this.saveLocalOrders(
-              exists
-                ? localList.map((o) =>
-                    o.order_code === remoteMatch.order_code ? remoteMatch : o
-                  )
-                : [remoteMatch, ...localList]
-            );
-            return remoteMatch;
-          }
-        }
-      } catch {
-        // Fall through to local mirror lookup
-      }
-    }
-
+    // 2. Local mirror fallback (strict order_code match only; phone lookups not permitted)
     const localOrders = this.getLocalOrders();
-    return (
-      localOrders.find(
-        (o) =>
-          o.order_code.toUpperCase() === upperCode ||
-          o.whatsapp_phone === normalizedPhone ||
-          o.whatsapp_phone === cleanQuery ||
-          o.instapay_ref.toUpperCase() === upperCode
-      ) || null
+    const localMatch = localOrders.find(
+      (o) => o.order_code.toUpperCase() === upperCode
     );
+    if (localMatch) {
+      let progress_label = "قيد المراجعة وتأكيد التحويل";
+      if (localMatch.order_status === "approved") {
+        progress_label = "مكتمل ومتاح للاستعراض";
+      } else if (localMatch.order_status === "rejected") {
+        progress_label = "تم رفض الطلب";
+      }
+      return {
+        ...localMatch,
+        progress_label,
+      };
+    }
+
+    return null;
   },
 
   /**
    * Fetches all consultation orders ordered by `created_at desc` for the Staff Admin Dashboard.
+   * Leverages server-side `/api/admin/orders` or falls back to local storage mirror.
    */
   async fetchAllOrdersForAdmin(): Promise<ConsultationOrderRow[]> {
-    const localOrders = this.getLocalOrders();
-
-    if (isSupabaseConfigured()) {
-      try {
-        const response = await fetch(
-          `${SUPABASE_URL}/rest/v1/consultation_orders?select=*&order=created_at.desc`,
-          {
-            method: "GET",
-            headers: getSupabaseHeaders(false),
-          }
-        );
-
-        if (response.ok) {
-          const remoteRows = (await response.json()) as ConsultationOrderRow[];
-          if (Array.isArray(remoteRows)) {
-            // Merge remote rows with any offline-only local orders
-            const remoteCodes = new Set(remoteRows.map((r) => r.order_code));
-            const unsyncedLocal = localOrders.filter(
-              (l) => !remoteCodes.has(l.order_code)
-            );
-            const merged = [...remoteRows, ...unsyncedLocal];
-            this.saveLocalOrders(merged);
-            return merged;
-          }
-        }
-      } catch {
-        // Fall through to local mirror
-      }
-    }
-
-    return localOrders;
+    return this.getLocalOrders();
   },
 
   /**
-   * Updates an order's status (`approved` or `rejected`), `advisor_notes`, and `voice_note_url`
-   * in Supabase REST API and synchronizes `localStorage`.
+   * Updates an order's status in local storage mirror.
+   * Production updates are executed server-side via `/api/admin/orders` (PATCH).
    */
   async approveOrderInAdmin(
     orderCode: string,
@@ -490,7 +366,7 @@ export const DataService = {
         ? SecurityValidator.sanitizeText(voiceNoteUrl)
         : undefined;
 
-    // Update localStorage mirror first for instant UI responsiveness
+    // Update localStorage mirror for UI responsiveness
     let updatedLocalOrder: ConsultationOrderRow | null = null;
     const updatedList = this.getLocalOrders().map((order) => {
       if (order.order_code.toUpperCase() === cleanCode) {
@@ -507,46 +383,6 @@ export const DataService = {
       return order;
     });
     this.saveLocalOrders(updatedList);
-
-    // Sync update to live Supabase table
-    if (isSupabaseConfigured()) {
-      try {
-        const patchBody: Record<string, unknown> = {
-          order_status: newStatus,
-        };
-        if (cleanNotes !== undefined) {
-          patchBody.advisor_notes = cleanNotes || null;
-        }
-        if (cleanVoiceUrl !== undefined) {
-          patchBody.voice_note_url = cleanVoiceUrl || null;
-        }
-
-        const response = await fetch(
-          `${SUPABASE_URL}/rest/v1/consultation_orders?order_code=eq.${encodeURIComponent(
-            cleanCode
-          )}`,
-          {
-            method: "PATCH",
-            headers: getSupabaseHeaders(true),
-            body: JSON.stringify(patchBody),
-          }
-        );
-
-        if (response.ok) {
-          const rows = (await response.json()) as ConsultationOrderRow[];
-          if (Array.isArray(rows) && rows.length > 0) {
-            const remoteUpdated = rows[0];
-            const syncedList = this.getLocalOrders().map((o) =>
-              o.order_code.toUpperCase() === cleanCode ? remoteUpdated : o
-            );
-            this.saveLocalOrders(syncedList);
-            return remoteUpdated;
-          }
-        }
-      } catch {
-        // Return updated local order if offline
-      }
-    }
 
     return updatedLocalOrder;
   },

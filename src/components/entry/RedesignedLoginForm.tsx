@@ -86,11 +86,11 @@ export const RedesignedLoginForm = forwardRef<
       if (order) {
         // Restore student profile from retrieved consultation data
         updateStudent({
-          studentName: order.student_name,
-          stream: order.academic_stream as StreamType,
-          scorePercentage: Number(order.score_percentage),
-          annualBudgetEgp: Number(order.max_budget),
-          governorate: order.governorate,
+          studentName: ("student_name" in order && order.student_name) || "طالب ChooseU",
+          stream: ("academic_stream" in order && (order.academic_stream as StreamType)) || "Science",
+          scorePercentage: Number(("score_percentage" in order && order.score_percentage) || 80),
+          annualBudgetEgp: Number(("max_budget" in order && order.max_budget) || 60000),
+          governorate: ("governorate" in order && order.governorate) || "القاهرة",
           hasCompletedOnboarding: true,
           privacyConsent: true,
         });
