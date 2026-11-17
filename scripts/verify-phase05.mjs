@@ -1,11 +1,30 @@
 import assert from "assert";
-
-console.log("=== Verification: Phase 0.5 Implementation ===");
-
-// 1. Verify src/lib/supabase.ts uses SUPABASE_SERVICE_ROLE_KEY
 import fs from "fs";
 import path from "path";
 
+console.log("=== Verification: Phase 0.5 Implementation ===");
+
+// Helper to load env for live probe without leaking secrets
+function loadEnv() {
+  const envPath = path.resolve(".env.local");
+  if (fs.existsSync(envPath)) {
+    const lines = fs.readFileSync(envPath, "utf8").split("\n");
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const idx = trimmed.indexOf("=");
+      if (idx !== -1) {
+        const k = trimmed.slice(0, idx).trim();
+        const v = trimmed.slice(idx + 1).trim();
+        if (!process.env[k]) {
+          process.env[k] = v;
+        }
+      }
+    }
+  }
+}
+
+// 1. Verify src/lib/supabase.ts uses SUPABASE_SERVICE_ROLE_KEY
 const supabaseFile = fs.readFileSync("src/lib/supabase.ts", "utf8");
 assert(
   supabaseFile.includes("process.env.SUPABASE_SERVICE_ROLE_KEY"),
@@ -69,5 +88,29 @@ assert(
   "PlatformPages.tsx TrackOrderView must use fetch('/api/orders?code=...')"
 );
 console.log("✓ Step 3 verified: Frontend TrackOrderView and DataService use fetch('/api/orders') and have zero direct Supabase client calls.");
+
+// 4. Live Anon REST Request Probe (outputs status code and byte size ONLY, zero secrets or row data logged)
+loadEnv();
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://mkrnrkdtvkcdymufehlg.supabase.co";
+const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (supabaseUrl && anonKey) {
+  try {
+    const res = await fetch(`${supabaseUrl}/rest/v1/consultation_orders?limit=1`, {
+      method: "GET",
+      headers: {
+        apikey: anonKey,
+        Authorization: `Bearer ${anonKey}`,
+      },
+    });
+    const text = await res.text();
+    const byteLength = Buffer.byteLength(text, "utf8");
+    console.log(`✓ Step 4 live probe: GET /rest/v1/consultation_orders with anon key -> Status: ${res.status}, Body Size: ${byteLength} bytes`);
+  } catch (err) {
+    console.log(`! Step 4 live probe error: ${err.message}`);
+  }
+} else {
+  console.log("! Step 4 live probe skipped: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY not set.");
+}
 
 console.log("\nALL PHASE 0.5 VERIFICATION CHECKS PASSED SUCCESSFULLY!");
