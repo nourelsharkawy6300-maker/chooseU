@@ -242,7 +242,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div className="space-y-0.5">
-              <h4 className="text-xs font-bold text-white">حساب التكلفة الفعلية الشاملة (TCO)</h4>
+              <h4 className="text-xs font-bold text-white">حساب التكلفة التقديرية الشاملة (TCO)</h4>
               <p className="text-[11px] text-slate-400 leading-relaxed">
                 كشف الرسوم السنوية، نفقات السكن، النطاق الجغرافي (أ، ب، ج)، وتضخم السنوات بالكامل.
               </p>
@@ -356,7 +356,15 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-end pt-4">
+                  <div className="flex items-center justify-between pt-4">
+                    <Link
+                      href="/login"
+                      className="text-xs text-slate-500 hover:text-blue-600 transition-colors inline-flex items-center gap-1 font-medium"
+                    >
+                      <span>لديك طلب سابق أو حساب مسجل؟</span>
+                      <span className="font-bold underline underline-offset-2">تسجيل الدخول</span>
+                    </Link>
+
                     <button
                       type="submit"
                       disabled={name.trim().length < 2}

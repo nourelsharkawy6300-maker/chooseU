@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "رمز المرور غير صحيح. تأكد من إدخال الرمز المعتمد للمستشار.",
+          error: "رمز المرور غير صحيح. تأكد من إدخال رمز الدخول المصرح به للمستشار.",
           remainingAttempts: rateLimit.remaining,
         },
         { status: 401 }

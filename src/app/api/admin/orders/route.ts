@@ -53,7 +53,7 @@ export async function PATCH(req: NextRequest) {
 
   if (!session || session.role !== "admin") {
     return NextResponse.json(
-      { success: false, error: "غير مصرح: العملية مخصصة للمستشارين المعتمدين فقط." },
+      { success: false, error: "غير مصرح: العملية مخصصة للمستشارين المصرح لهم فقط." },
       { status: 403 }
     );
   }

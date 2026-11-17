@@ -11,7 +11,7 @@ import {
   Milestone,
   FileCheck2,
   Receipt,
-  ShieldCheck,
+  LogIn,
   SlidersHorizontal,
   GraduationCap,
   Wallet,
@@ -201,14 +201,14 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
             </span>
           </div>
           <Link
-            href="/admin"
+            href="/login"
             className="flex items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition-colors hover:border-slate-300 hover:text-slate-900"
           >
             <span className="flex items-center gap-2">
-              <ShieldCheck className="h-3.5 w-3.5 text-blue-600" />
-              دخول الإدارة
+              <LogIn className="h-3.5 w-3.5 text-blue-600" />
+              دخول الحساب
             </span>
-            <span dir="ltr" className="font-mono text-xs text-slate-600">/admin</span>
+            <span dir="ltr" className="font-mono text-xs text-slate-500">/login</span>
           </Link>
 
           <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500 pt-1">
@@ -394,12 +394,12 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                 </div>
                 <div className="border-t border-slate-200 pt-3 space-y-2">
                   <Link
-                    href="/admin"
+                    href="/login"
                     onClick={() => setIsMobileNavOpen(false)}
                     className="flex items-center gap-2 rounded-lg bg-slate-50 border border-slate-200 px-3 py-2 text-xs text-slate-700 hover:bg-slate-100"
                   >
-                    <ShieldCheck className="h-4 w-4 text-[#377ef0]" />
-                    <span>دخول الإدارة</span>
+                    <LogIn className="h-4 w-4 text-[#377ef0]" />
+                    <span>دخول الحساب</span>
                   </Link>
 
                   <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500 pt-1">

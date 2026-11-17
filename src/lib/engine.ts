@@ -396,7 +396,7 @@ export function evaluateAndRankFaculties(params: {
 
       const whyMatch = `توافق قوي مع ميولك في «${primaryTrackTitle}»، وحد القبول (${shiftedCutoff.toFixed(
         1
-      )}%) مناسب لمجموعك الفعلي (${score.toFixed(1)}%) ${geoNote}.`;
+      )}%) مناسب لمجموعك المدخل (${score.toFixed(1)}%) ${geoNote}.`;
 
       return {
         ...f,

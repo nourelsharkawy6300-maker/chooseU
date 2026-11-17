@@ -6,7 +6,8 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:terms": "node scripts/check-banned-terms.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",
