@@ -86,3 +86,25 @@ export const ENTRY_COPY = {
 
 export type EntryCopy = typeof ENTRY_COPY;
 export type ComplianceCopyKey = keyof typeof COMPLIANCE_COPY;
+
+/**
+ * Gateway screen copy — first card a new visitor sees after the logo intro.
+ * Legal: no banned terms. Uses استرشادي / آمن / تنبؤي only.
+ */
+export const GATEWAY_COPY = {
+  /** One value-proposition headline */
+  headline: "اكتشف جامعتك بدرجاتك — آمن، تنبؤي، استرشادي",
+  /** Small indicative disclaimer */
+  disclaimer:
+    "النتائج استرشادية تنبؤية بناءً على البيانات المتاحة. المنصة ليست جهة حكومية.",
+  /** Primary CTA */
+  primaryCta: "ابدأ بدرجاتك",
+  /** Secondary CTA */
+  secondaryCta: "عندي حساب أو كود طلب",
+  /** Back control inside login swap */
+  backLabel: "رجوع",
+  /** Info link */
+  discoverLink: "كيف يعمل؟",
+} as const;
+
+export type GatewayCopy = typeof GATEWAY_COPY;

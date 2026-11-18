@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect } from "react";
 import { m, MotionValue, useTransform } from "framer-motion";
-import { RedesignedLoginForm, RedesignedLoginFormHandle } from "./RedesignedLoginForm";
+import { EntryGateway, EntryGatewayHandle } from "./EntryGateway";
 import { INTRO_SCROLL_MILESTONES } from "@/lib/motion-tokens";
 
 interface AscendingLoginCardProps {
@@ -16,7 +16,7 @@ export function AscendingLoginCard({
   isReducedMotion,
   isReducedTransparency,
 }: AscendingLoginCardProps) {
-  const formRef = useRef<RedesignedLoginFormHandle>(null);
+  const gatewayRef = useRef<EntryGatewayHandle>(null);
   const hasFocusedRef = useRef(false);
 
   // Smooth GPU transforms: translateY, opacity, scale
@@ -43,11 +43,11 @@ export function AscendingLoginCard({
     (val) => (val >= INTRO_SCROLL_MILESTONES.loginCardStart + 0.15 ? "auto" : "none")
   );
 
-  // Auto-focus first input field when scroll handoff finishes
+  // Auto-focus primary CTA button when scroll handoff finishes
   useEffect(() => {
     if (isReducedMotion) {
       const timer = setTimeout(() => {
-        formRef.current?.focusFirstInput();
+        gatewayRef.current?.focusPrimary();
       }, 300);
       return () => clearTimeout(timer);
     }
@@ -55,9 +55,8 @@ export function AscendingLoginCard({
     const unsubscribe = scrollYProgress.on("change", (latest) => {
       if (latest >= INTRO_SCROLL_MILESTONES.loginCardFull - 0.05 && !hasFocusedRef.current) {
         hasFocusedRef.current = true;
-        // Small delay to ensure render layout is locked
         setTimeout(() => {
-          formRef.current?.focusFirstInput();
+          gatewayRef.current?.focusPrimary();
         }, 120);
       }
     });
@@ -68,8 +67,9 @@ export function AscendingLoginCard({
   if (isReducedMotion) {
     return (
       <div className="relative z-10 w-full max-w-md px-4 py-8">
-        <RedesignedLoginForm
-          ref={formRef}
+        <EntryGateway
+          ref={gatewayRef}
+          isReducedMotion={isReducedMotion}
           isReducedTransparency={isReducedTransparency}
         />
       </div>
@@ -86,8 +86,9 @@ export function AscendingLoginCard({
       }}
       className="absolute inset-0 z-10 flex items-center justify-center p-4 transform-gpu will-change-transform"
     >
-      <RedesignedLoginForm
-        ref={formRef}
+      <EntryGateway
+        ref={gatewayRef}
+        isReducedMotion={isReducedMotion}
         isReducedTransparency={isReducedTransparency}
       />
     </m.div>

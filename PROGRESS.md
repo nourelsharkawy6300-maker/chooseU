@@ -1,5 +1,24 @@
 # ChooseU Security Hardening - Order Lookup Flow (Branch: login-security)
 
+---
+
+## Gateway Screen (Branch: gateway-screen) — COMPLETE ✅
+
+**Branch**: `gateway-screen` (from `login-security`)
+**Completed**: 2026-11-18T08:19Z
+
+### Touched Files
+- `src/lib/copy-registry.ts` — Added `GATEWAY_COPY` and `GatewayCopy` type (legal-compliant Arabic copy)
+- `src/components/entry/EntryGateway.tsx` — NEW: Gateway card with swap-to-login animation, focus management, RTL, reduced-motion/transparency fallbacks
+- `src/components/entry/AscendingLoginCard.tsx` — Swapped `RedesignedLoginForm` → `EntryGateway`; focus now targets primary CTA button
+
+### Verification
+- ✅ `tsc --noEmit` — 0 errors
+- ✅ `npm run check:terms` — PASSED (zero banned terms)
+- ✅ `npm run build` — green (exit 0)
+
+---
+
 ## Session Metadata
 - **Current Phase**: Phase 1 (Backend API Hardening) — Complete; Ready for Phase 2
 - **Active Branch**: `login-security`
