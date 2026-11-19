@@ -67,6 +67,23 @@ export function StudentProvider({ children }: { children: React.ReactNode }) {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
+
+        // One-time cleanup: wipe legacy demo profile ONLY if exact values match
+        const isLegacyDemo =
+          parsed?.studentName === "عمر خالد محمود" &&
+          (parsed?.scorePercentage === 89.4 || parsed?.scorePercentage === 89) &&
+          parsed?.annualBudgetEgp === 95000 &&
+          parsed?.stream === "Math";
+
+        if (isLegacyDemo) {
+          localStorage.removeItem(STORAGE_KEY);
+          setTimeout(() => {
+            setProfile(DEFAULT_PROFILE);
+            setHydrated(true);
+          }, 0);
+          return;
+        }
+
         setTimeout(() => {
           setProfile((prev) => ({ ...prev, ...parsed }));
           setHydrated(true);

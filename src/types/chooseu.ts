@@ -14,6 +14,18 @@ export function formatStream(stream: StreamType | string): string {
   }
 }
 
+/**
+ * Formats a score percentage consistently across the entire application:
+ * - 1 decimal place if there is a fraction (e.g. 89.4 -> "89.4%")
+ * - 0 decimal places if it is an integer (e.g. 89.0 -> "89%")
+ * - Returns "0%" if zero or invalid
+ */
+export function formatScore(score: number): string {
+  if (isNaN(score) || score <= 0) return "0%";
+  const hasFraction = score % 1 !== 0;
+  return `${hasFraction ? score.toFixed(1) : Math.round(score)}%`;
+}
+
 export type InterestCluster =
   | "Medical_Bio"
   | "Eng_Tech"

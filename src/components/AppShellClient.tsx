@@ -269,7 +269,15 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                   <Percent className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
                   <span className="text-slate-500 hidden sm:inline">المجموع:</span>
                   <span className="font-bold text-slate-900 whitespace-nowrap">
-                    <AnimatedCounter value={scorePercentage} decimals={1} suffix="%" />
+                    {scorePercentage > 0 ? (
+                      <AnimatedCounter
+                        value={scorePercentage}
+                        decimals={scorePercentage % 1 !== 0 ? 1 : 0}
+                        suffix="%"
+                      />
+                    ) : (
+                      <span className="text-slate-400 font-medium">غير محدد</span>
+                    )}
                   </span>
                 </div>
                 <span className="text-[11px] font-semibold text-slate-500 group-hover:text-[#377ef0] px-1.5 hidden md:inline">

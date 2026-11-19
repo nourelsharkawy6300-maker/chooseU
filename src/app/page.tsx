@@ -68,8 +68,9 @@ const MODULES = [
 
 export default function HomePage() {
   const router = useRouter();
-  const { studentName, scorePercentage, annualBudgetEgp, stream } = useStudent();
+  const { studentName, scorePercentage, annualBudgetEgp, stream, hasCompletedOnboarding } = useStudent();
   const streamAr = formatStream(stream);
+  const hasUserData = Boolean(hasCompletedOnboarding || (studentName && scorePercentage > 0));
 
   return (
     <div className="space-y-12">
@@ -92,28 +93,55 @@ export default function HomePage() {
           </div>
 
           <p className="text-sm sm:text-base text-[#48425f] leading-relaxed max-w-2xl">
-            {studentName ? `مرحباً بك ${studentName}. ` : "مرحباً بك في ChooseU. "}منصة معمارية هندسية لطلاب الثانوية العامة وSTEM وأولياء الأمور؛ تفحص التوافق التخصصي الفعلي، تكشف مصاريف سنوات دراستك التراكمية بالكامل، وتبني بطاقة رغباتك الاستراتيجية.
+            {hasUserData && studentName ? `مرحباً بك ${studentName}. ` : "مرحباً بك في ChooseU. "}منصة معمارية هندسية لطلاب الثانوية العامة وSTEM وأولياء الأمور؛ تفحص التوافق التخصصي الفعلي، تكشف مصاريف سنوات دراستك التراكمية بالكامل، وتبني بطاقة رغباتك الاستراتيجية.
           </p>
 
-          {/* 3-Column Live Telemetry Console Bar */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-2xl bg-[#f2efe9] border border-[#dedad0]">
-            <div className="bg-white p-3.5 rounded-xl border border-[#e6e4dd] flex flex-col justify-between shadow-2xs">
-              <span className="text-[11px] font-semibold text-slate-500">الشعبة الدراسية</span>
-              <span className="text-sm font-bold text-slate-900 mt-1">{streamAr}</span>
+          {/* 3-Column Live Telemetry Console Bar / Neutral Empty State */}
+          {hasUserData ? (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-2xl bg-[#f2efe9] border border-[#dedad0]">
+              <div className="bg-white p-3.5 rounded-xl border border-[#e6e4dd] flex flex-col justify-between shadow-2xs">
+                <span className="text-[11px] font-semibold text-slate-500">الشعبة الدراسية</span>
+                <span className="text-sm font-bold text-slate-900 mt-1">{streamAr}</span>
+              </div>
+              <div className="bg-white p-3.5 rounded-xl border border-[#e6e4dd] flex flex-col justify-between shadow-2xs">
+                <span className="text-[11px] font-semibold text-slate-500">المجموع الفعلي</span>
+                <span className="text-sm font-bold text-[#377ef0] mt-1">
+                  <AnimatedCounter
+                    value={scorePercentage}
+                    decimals={scorePercentage % 1 !== 0 ? 1 : 0}
+                    suffix="%"
+                  />
+                </span>
+              </div>
+              <div className="bg-white p-3.5 rounded-xl border border-[#e6e4dd] flex flex-col justify-between shadow-2xs">
+                <span className="text-[11px] font-semibold text-slate-500">الميزانية السنوية</span>
+                <span className="text-sm font-bold text-emerald-700 mt-1">
+                  <AnimatedCounter value={annualBudgetEgp} suffix=" ج.م" />
+                </span>
+              </div>
             </div>
-            <div className="bg-white p-3.5 rounded-xl border border-[#e6e4dd] flex flex-col justify-between shadow-2xs">
-              <span className="text-[11px] font-semibold text-slate-500">المجموع الفعلي</span>
-              <span className="text-sm font-bold text-[#377ef0] mt-1">
-                <AnimatedCounter value={scorePercentage} suffix="%" />
-              </span>
+          ) : (
+            <div className="p-4 rounded-2xl bg-[#f2efe9] border border-[#dedad0] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="space-y-1 text-start">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-amber-500" />
+                  <span className="text-xs font-bold text-slate-800">
+                    لم تسجل درجاتك بعد
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  سجل شعبتك ومجموعك وميزانيتك لبدء مطابقة الكليات وحساب التكلفة التقديرية بدقة.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => router.push("/workspace")}
+                className="shrink-0 px-4 py-2 rounded-xl bg-white border border-[#dedad0] text-xs font-bold text-[#377ef0] hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+              >
+                إدخال بياناتي الآن
+              </button>
             </div>
-            <div className="bg-white p-3.5 rounded-xl border border-[#e6e4dd] flex flex-col justify-between shadow-2xs">
-              <span className="text-[11px] font-semibold text-slate-500">الميزانية السنوية</span>
-              <span className="text-sm font-bold text-emerald-700 mt-1">
-                <AnimatedCounter value={annualBudgetEgp} suffix=" ج.م" />
-              </span>
-            </div>
-          </div>
+          )}
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <KineticRollButton
