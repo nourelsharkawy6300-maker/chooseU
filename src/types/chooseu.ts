@@ -7,6 +7,7 @@ export interface UserProfileRow {
   track: StreamType | "Undecided" | null;
   score: number | null;
   annual_budget: number | null;
+  age_declared: boolean;
   is_minor: boolean;
   guardian_ack: boolean;
   guardian_ack_at: string | null;

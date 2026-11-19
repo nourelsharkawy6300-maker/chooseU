@@ -1,13 +1,14 @@
 -- ============================================================================
--- CHOOSEU STEP 1 AUTHENTICATION & PROFILES MIGRATION
+-- CHOOSEU STEP 1 AUTHENTICATION & PROFILES MIGRATION (Sub-task 1 & 1b)
 -- File: supabase/migrations/002_profiles_and_auth.sql
 -- Description:
---   1. Creates public.profiles with strict constraints and role lockdown.
+--   1. Creates public.profiles with age_declared, minor checks, and role lockdown.
 --   2. Adds minor registration protection (guardian acknowledgment constraint).
 --   3. Adds automatic user profile creation trigger on auth.users INSERT.
 --   4. Enforces strict RLS: authenticated users read/write their own profile only.
---   5. Strictly forbids role modification by regular authenticated users.
---   6. Absolutely zero anon permissions or policies.
+--   5. Strictly forbids role modification by regular authenticated users via trigger.
+--   6. Allows role modification only from SQL Editor (auth.uid() IS NULL) or service_role.
+--   7. Absolutely zero anon permissions or policies.
 -- ============================================================================
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -19,6 +20,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     track TEXT CHECK (track IN ('Science', 'Math', 'Arts', 'stem', 'Undecided')),
     score NUMERIC(5, 2) CHECK (score IS NULL OR (score >= 0 AND score <= 100.00)),
     annual_budget NUMERIC(12, 2) CHECK (annual_budget IS NULL OR annual_budget >= 0),
+    age_declared BOOLEAN NOT NULL DEFAULT false,
     is_minor BOOLEAN NOT NULL DEFAULT false,
     guardian_ack BOOLEAN NOT NULL DEFAULT false,
     guardian_ack_at TIMESTAMPTZ,
@@ -27,7 +29,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     -- Minor compliance constraint: minors MUST have guardian acknowledgment and timestamp
     CONSTRAINT check_minor_guardian_ack CHECK (
-        NOT is_minor OR (guardian_ack = true AND guardian_ack_at IS NOT NULL)
+        NOT (age_declared AND is_minor) OR (guardian_ack = true AND guardian_ack_at IS NOT NULL)
     )
 );
 
@@ -42,6 +44,7 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 DECLARE
+    _age_declared BOOLEAN := COALESCE((NEW.raw_user_meta_data->>'age_declared')::BOOLEAN, false);
     _is_minor BOOLEAN := COALESCE((NEW.raw_user_meta_data->>'is_minor')::BOOLEAN, false);
     _guardian_ack BOOLEAN := COALESCE((NEW.raw_user_meta_data->>'guardian_ack')::BOOLEAN, false);
     _guardian_ack_at TIMESTAMPTZ := NULL;
@@ -54,8 +57,8 @@ BEGIN
         _track := 'Undecided';
     END IF;
 
-    -- Validate minor policy at ingestion
-    IF _is_minor AND NOT _guardian_ack THEN
+    -- Validate minor policy at ingestion: if age is declared and user is minor, guardian acknowledgment is required
+    IF _age_declared AND _is_minor AND NOT _guardian_ack THEN
         RAISE EXCEPTION 'Minor registration requires explicit guardian acknowledgment and consent.';
     END IF;
 
@@ -89,6 +92,7 @@ BEGIN
         track,
         score,
         annual_budget,
+        age_declared,
         is_minor,
         guardian_ack,
         guardian_ack_at,
@@ -101,6 +105,7 @@ BEGIN
         _track,
         _score,
         _budget,
+        _age_declared,
         _is_minor,
         _guardian_ack,
         _guardian_ack_at,
@@ -120,17 +125,22 @@ CREATE TRIGGER on_auth_user_created
     FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- 3. STRICT ROLE IMMUTABILITY TRIGGER
--- Prevents regular authenticated users from elevating their role to admin/advisor
+-- Rejects role modification ONLY if caller is authenticated user (auth.uid() IS NOT NULL and not service_role).
+-- Explicitly permits role modifications from SQL Editor (auth.uid() IS NULL) and from service_role.
 CREATE OR REPLACE FUNCTION public.protect_profile_role()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public
 AS $$
 BEGIN
     IF NEW.role IS DISTINCT FROM OLD.role THEN
-        -- When called via PostgREST / client JWT (auth.role() = 'authenticated')
-        IF auth.role() = 'authenticated' THEN
-            RAISE EXCEPTION 'Security error: You do not have permission to modify account roles.';
+        -- Check if invoked in the context of an authenticated client session
+        IF auth.uid() IS NOT NULL THEN
+            -- Check if caller is NOT service_role
+            IF COALESCE(auth.jwt()->>'role', '') <> 'service_role' AND current_user <> 'service_role' THEN
+                RAISE EXCEPTION 'Security error: Users are not permitted to change their account role.';
+            END IF;
         END IF;
     END IF;
     NEW.updated_at = NOW();
@@ -163,24 +173,20 @@ CREATE POLICY "profiles_update_own"
     USING (auth.uid() = id)
     WITH CHECK (auth.uid() = id);
 
--- 4.3 Users can insert their own profile (for client-side upsert safety)
+-- 4.3 Users can insert their own profile (strictly as 'student' role only)
 DROP POLICY IF EXISTS "profiles_insert_own" ON public.profiles;
 CREATE POLICY "profiles_insert_own"
     ON public.profiles
     FOR INSERT
     TO authenticated
-    WITH CHECK (auth.uid() = id);
+    WITH CHECK (auth.uid() = id AND role = 'student');
 
 -- 5. PERMISSION GRANTS & ZERO-ANON ENFORCEMENT
 -- Strictly revoke any anonymous access
 REVOKE ALL ON public.profiles FROM anon;
 
 -- Grant authenticated operations
-GRANT SELECT, INSERT ON public.profiles TO authenticated;
-
--- Grant UPDATE only on user-editable columns (extra layer of defense for role immutability)
-GRANT UPDATE (full_name, track, score, annual_budget, is_minor, guardian_ack, guardian_ack_at, updated_at)
-    ON public.profiles TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.profiles TO authenticated;
 
 -- Service role retains full access for administrative tasks in Step 2
 GRANT ALL ON public.profiles TO service_role;
