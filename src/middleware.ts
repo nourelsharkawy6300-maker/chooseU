@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import {
   checkGlobalLimit,
   checkStrictLimit,
@@ -9,11 +10,13 @@ import {
 // ZERO-TRUST CORS CONFIGURATION
 // ============================================================================
 
-const ALLOWED_ORIGINS = new Set([
-  process.env.NEXT_PUBLIC_APP_URL,
-  "http://localhost:3000",
-  "http://127.0.0.1:3000",
-].filter(Boolean) as string[]);
+const ALLOWED_ORIGINS = new Set(
+  [
+    process.env.NEXT_PUBLIC_APP_URL,
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+  ].filter(Boolean) as string[]
+);
 
 function getClientIp(req: NextRequest): string {
   const forwarded = req.headers.get("x-forwarded-for");
@@ -21,6 +24,21 @@ function getClientIp(req: NextRequest): string {
     return forwarded.split(",")[0].trim();
   }
   return req.headers.get("x-real-ip") || "127.0.0.1";
+}
+
+// Protected routes requiring active authentication
+const PROTECTED_ROUTES = [
+  "/workspace",
+  "/tco-matrix",
+  "/universities",
+  "/future-me",
+  "/track-order",
+];
+
+function isProtectedPath(pathname: string): boolean {
+  return PROTECTED_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
 }
 
 export async function middleware(req: NextRequest) {
@@ -31,7 +49,6 @@ export async function middleware(req: NextRequest) {
   // 1. CORS LOCKDOWN FOR API ROUTES
   // ==========================================================================
   if (pathname.startsWith("/api/")) {
-    // If request carries an Origin header, ensure it is in the explicit whitelist
     if (origin && !ALLOWED_ORIGINS.has(origin)) {
       return new NextResponse(
         JSON.stringify({
@@ -45,7 +62,6 @@ export async function middleware(req: NextRequest) {
       );
     }
 
-    // Handle preflight OPTIONS requests
     if (req.method === "OPTIONS") {
       const preflightHeaders = new Headers();
       if (origin && ALLOWED_ORIGINS.has(origin)) {
@@ -64,9 +80,7 @@ export async function middleware(req: NextRequest) {
       return new NextResponse(null, { status: 204, headers: preflightHeaders });
     }
 
-    // ========================================================================
-    // 2. EDGE RATE LIMITING (ANTI-DDOS)
-    // ========================================================================
+    // Rate limiting for API endpoints
     const clientIp = getClientIp(req);
     const isSensitiveRoute =
       pathname.startsWith("/api/admin/") || pathname === "/api/orders";
@@ -85,12 +99,11 @@ export async function middleware(req: NextRequest) {
   }
 
   // ==========================================================================
-  // 3. CRYPTOGRAPHIC NONCE & CONTENT SECURITY POLICY (CSP)
+  // 2. CSP NONCE & SECURITY HEADERS SETUP
   // ==========================================================================
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-  const isDev = process.env.NODE_ENV === "development";
+  const isDev = process.env.NODE_ENV !== "production";
 
-  // Strict CSP: Deny all unsafe-inline and unsafe-eval in production
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ""};
@@ -107,20 +120,17 @@ export async function middleware(req: NextRequest) {
     .replace(/\s{2,}/g, " ")
     .trim();
 
-  // Forward nonce via request headers for App Router consumption
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-nonce", nonce);
   requestHeaders.set("Content-Security-Policy", cspHeader);
 
-  const response = NextResponse.next({
+  let response = NextResponse.next({
     request: {
       headers: requestHeaders,
     },
   });
 
-  // ==========================================================================
-  // 4. AGGRESSIVE SECURITY HEADERS
-  // ==========================================================================
+  // Apply base defensive headers to response
   response.headers.set("Content-Security-Policy", cspHeader);
   response.headers.set(
     "Strict-Transport-Security",
@@ -134,10 +144,97 @@ export async function middleware(req: NextRequest) {
     "camera=(), microphone=(), geolocation=(), browsing-topics=()"
   );
 
-  // Set CORS origin on successful API response if whitelisted
   if (pathname.startsWith("/api/") && origin && ALLOWED_ORIGINS.has(origin)) {
     response.headers.set("Access-Control-Allow-Origin", origin);
     response.headers.set("Access-Control-Allow-Credentials", "true");
+  }
+
+  // ==========================================================================
+  // 3. SUPABASE SESSION REFRESH & ROUTE GUARDING
+  // ==========================================================================
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const isSupabaseConfigured = Boolean(
+    supabaseUrl &&
+      supabaseUrl.startsWith("https://") &&
+      supabaseAnonKey &&
+      supabaseAnonKey.length > 20
+  );
+
+  const isProtected = isProtectedPath(pathname);
+
+  // Fallback behavior when Supabase credentials are missing:
+  if (!isSupabaseConfigured) {
+    if (process.env.NODE_ENV === "production") {
+      // In production: never fail open silently on protected routes
+      if (isProtected) {
+        console.error(
+          `[ChooseU Auth] Production error: Supabase environment variables missing. Protected route "${pathname}" is closed.`
+        );
+        const redirectUrl = req.nextUrl.clone();
+        redirectUrl.pathname = "/login";
+        redirectUrl.searchParams.set("error", "auth_unavailable");
+        return NextResponse.redirect(redirectUrl);
+      }
+    } else {
+      // In development: warn in console and allow passage
+      if (isProtected) {
+        console.warn(
+          `[ChooseU Auth] Development warning: Supabase credentials not set. Allowing access to "${pathname}".`
+        );
+      }
+    }
+    return response;
+  }
+
+  // Supabase is configured: Create cookie-aware client to refresh session
+  const supabase = createServerClient(
+    supabaseUrl as string,
+    supabaseAnonKey as string,
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll();
+        },
+        setAll(
+          cookiesToSet: Array<{
+            name: string;
+            value: string;
+            options?: CookieOptions;
+          }>
+        ) {
+          cookiesToSet.forEach(({ name, value }) => req.cookies.set(name, value));
+          response = NextResponse.next({
+            request: {
+              headers: requestHeaders,
+            },
+          });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          );
+        },
+      },
+    }
+  );
+
+  // Verify user strictly using getUser() (NEVER getSession() which trust unverified JWTs)
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Route protection for unauthenticated visitors
+  if (isProtected && !user) {
+    const redirectUrl = req.nextUrl.clone();
+    redirectUrl.pathname = "/login";
+
+    // Open redirect protection: strictly verify next begins with single '/' and not '//'
+    const safeNext =
+      pathname.startsWith("/") && !pathname.startsWith("//")
+        ? pathname
+        : "/workspace";
+
+    redirectUrl.searchParams.set("next", safeNext);
+    return NextResponse.redirect(redirectUrl);
   }
 
   return response;
@@ -147,10 +244,11 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except for:
-     * - _next/static (static files)
+     * - _next/static (static chunks and files)
      * - _next/image (image optimization files)
      * - favicon.ico, sitemap.xml, robots.txt
+     * - static images (.svg, .png, .jpg, .jpeg, .gif, .webp)
      */
-    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
