@@ -72,7 +72,11 @@ const NAVIGATION_ITEMS: NavItem[] = [
 
 export function AppShellClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admin");
+  const isStandalonePage =
+    pathname.startsWith("/admin") ||
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname.startsWith("/onboarding");
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const {
@@ -108,7 +112,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
       ? "مدارس STEM"
       : "أدبي";
 
-  if (isAdmin) {
+  if (isStandalonePage) {
     return (
       <div className="flex min-h-screen w-full bg-[var(--paper)] text-slate-900">
         <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth">
