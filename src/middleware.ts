@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { safeNext } from "@/lib/security/url";
 import {
   checkGlobalLimit,
   checkStrictLimit,
@@ -39,6 +40,31 @@ function isProtectedPath(pathname: string): boolean {
   return PROTECTED_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
+}
+
+// Authentication & Onboarding bypass routes that must never trigger auth redirect loops
+const AUTH_BYPASS_ROUTES = [
+  "/login",
+  "/signup",
+  "/auth/callback",
+  "/onboarding/age",
+];
+
+function isAuthBypassPath(pathname: string): boolean {
+  return AUTH_BYPASS_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
+}
+
+/**
+ * Ensures session cookies refreshed in the intermediate response are
+ * preserved and forwarded on redirect responses.
+ */
+function copyCookies(from: NextResponse, to: NextResponse): NextResponse {
+  from.cookies.getAll().forEach((cookie) => {
+    to.cookies.set(cookie.name, cookie.value, cookie);
+  });
+  return to;
 }
 
 export async function middleware(req: NextRequest) {
@@ -174,7 +200,7 @@ export async function middleware(req: NextRequest) {
         const redirectUrl = req.nextUrl.clone();
         redirectUrl.pathname = "/login";
         redirectUrl.searchParams.set("error", "auth_unavailable");
-        return NextResponse.redirect(redirectUrl);
+        return copyCookies(response, NextResponse.redirect(redirectUrl));
       }
     } else {
       // In development: warn in console and allow passage
@@ -222,19 +248,17 @@ export async function middleware(req: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Loop prevention: Never redirect auth entry points or onboarding
+  if (isAuthBypassPath(pathname)) {
+    return response;
+  }
+
   // Route protection for unauthenticated visitors
   if (isProtected && !user) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = "/login";
-
-    // Open redirect protection: strictly verify next begins with single '/' and not '//'
-    const safeNext =
-      pathname.startsWith("/") && !pathname.startsWith("//")
-        ? pathname
-        : "/workspace";
-
-    redirectUrl.searchParams.set("next", safeNext);
-    return NextResponse.redirect(redirectUrl);
+    redirectUrl.searchParams.set("next", safeNext(pathname));
+    return copyCookies(response, NextResponse.redirect(redirectUrl));
   }
 
   return response;
