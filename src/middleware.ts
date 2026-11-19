@@ -250,6 +250,18 @@ export async function middleware(req: NextRequest) {
 
   // Loop prevention: Never redirect auth entry points or onboarding
   if (isAuthBypassPath(pathname)) {
+    // If an authenticated user already declared their age visits /onboarding/age, send them to home
+    if (user && pathname === "/onboarding/age") {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("age_declared")
+        .eq("id", user.id)
+        .single();
+
+      if (profile?.age_declared) {
+        return copyCookies(response, NextResponse.redirect(new URL("/", req.url)));
+      }
+    }
     return response;
   }
 
@@ -259,6 +271,25 @@ export async function middleware(req: NextRequest) {
     redirectUrl.pathname = "/login";
     redirectUrl.searchParams.set("next", safeNext(pathname));
     return copyCookies(response, NextResponse.redirect(redirectUrl));
+  }
+
+  // Sub-task 3b: Age declaration enforcement for authenticated users
+  // Non-API routes redirect to /onboarding/age if age_declared is false
+  if (user && !pathname.startsWith("/api/")) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("age_declared")
+      .eq("id", user.id)
+      .single();
+
+    if (profile && !profile.age_declared) {
+      const redirectUrl = req.nextUrl.clone();
+      redirectUrl.pathname = "/onboarding/age";
+      if (pathname !== "/") {
+        redirectUrl.searchParams.set("next", safeNext(pathname));
+      }
+      return copyCookies(response, NextResponse.redirect(redirectUrl));
+    }
   }
 
   return response;

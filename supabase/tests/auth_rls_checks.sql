@@ -109,6 +109,61 @@ VALUES (
 ROLLBACK;
 
 
+-- ----------------------------------------------------------------------------
+-- اختبار (و.1): استدعاء declare_age لطالب راشد (18+)
+-- ----------------------------------------------------------------------------
+BEGIN;
+SET LOCAL ROLE authenticated;
+SET LOCAL request.jwt.claims = '{"sub":"<UUID_A>","role":"authenticated"}';
+
+-- الاستعلام: إعلان سن راشد
+SELECT public.declare_age(false, false);
+
+-- التحقق من تحديث البروفايل
+SELECT age_declared, is_minor, guardian_ack FROM public.profiles WHERE id = '<UUID_A>';
+
+-- النتيجة المتوقعة (EXPECTED RESULT):
+-- declare_age يرجع كائن JSON بنجاح
+-- الصف يظهر: age_declared = true, is_minor = false, guardian_ack = false
+ROLLBACK;
+
+
+-- ----------------------------------------------------------------------------
+-- اختبار (و.2): استدعاء declare_age لقاصر دون إقرار ولي الأمر (فحص رفض الدالة)
+-- ----------------------------------------------------------------------------
+BEGIN;
+SET LOCAL ROLE authenticated;
+SET LOCAL request.jwt.claims = '{"sub":"<UUID_A>","role":"authenticated"}';
+
+-- الاستعلام: محاولة تسجيل قاصر بدون موافقة
+SELECT public.declare_age(true, false);
+
+-- النتيجة المتوقعة (EXPECTED RESULT):
+-- ERROR: Minor registration requires explicit guardian acknowledgment and consent.
+-- الدالة ترفض الحفظ وترفع استثناء فوري.
+ROLLBACK;
+
+
+-- ----------------------------------------------------------------------------
+-- اختبار (و.3): استدعاء declare_age لقاصر مع إقرار ولي الأمر الصحيح
+-- ----------------------------------------------------------------------------
+BEGIN;
+SET LOCAL ROLE authenticated;
+SET LOCAL request.jwt.claims = '{"sub":"<UUID_A>","role":"authenticated"}';
+
+-- الاستعلام: تسجيل قاصر مع إقرار ولي الأمر
+SELECT public.declare_age(true, true);
+
+-- التحقق من تحديث البروفايل
+SELECT age_declared, is_minor, guardian_ack, guardian_ack_at IS NOT NULL AS has_timestamp
+FROM public.profiles WHERE id = '<UUID_A>';
+
+-- النتيجة المتوقعة (EXPECTED RESULT):
+-- declare_age يرجع كائن JSON بنجاح
+-- الصف يظهر: age_declared = true, is_minor = true, guardian_ack = true, has_timestamp = true
+ROLLBACK;
+
+
 
 -- ============================================================================
 -- القسم الثاني: اختبارات الإدارة والصلاحيات العليا (تشغيل كـ postgres / Superuser)
