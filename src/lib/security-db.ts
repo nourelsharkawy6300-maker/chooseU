@@ -155,8 +155,8 @@ export const SecurityValidator = {
 const INITIAL_DEMO_ORDER: ConsultationOrderRow = {
   id: "demo-ord-710",
   order_code: "ORD-2026-710",
-  student_name: "عمر خالد محمود",
-  whatsapp_phone: "01066594552",
+  student_name: "طالب تجريبي (نموذج افتراضي)",
+  whatsapp_phone: "01000000000",
   academic_stream: "Math",
   score_percentage: 83.0,
   max_budget: 65000,
@@ -174,36 +174,37 @@ const INITIAL_DEMO_ORDER: ConsultationOrderRow = {
   order_status: "approved",
   voice_note_url: "",
   advisor_notes:
-    "1. الأولوية الأولى: كلية الذكاء الاصطناعي وكلية الحاسبات والمعلومات بجامعة المنوفية (حكومي انتظام) لتقارب المجموع الفعلي (83.0%) مع الحد الأدنى وانخفاض التكلفة الدراسية.\n2. البديل الاستراتيجي المباشر: برنامج الأمن السيبراني وعلوم البيانات بالساعات المعتمدة بجامعة المنوفية، أو كلية الحاسبات والذكاء الاصطناعي بجامعة المنوفية الأهلية بطوخ طنبشا مع الالتزام بتحقيق GPA >= 2.7 في السنة التأسيسية الأولى.",
+    "1. الأولوية الأولى: كلية الذكاء الاصطناعي وكلية الحاسبات والمعلومات بجامعة المنوفية (حكومي انتظام) لتقارب المجموع الاسترشادي (83.0%) مع الحد الأدنى وانخفاض التكلفة الدراسية.\n2. البديل الاستراتيجي المباشر: برنامج الأمن السيبراني وعلوم البيانات بالساعات المعتمدة بجامعة المنوفية، أو كلية الحاسبات والذكاء الاصطناعي بجامعة المنوفية الأهلية بطوخ طنبشا مع الالتزام بتحقيق GPA >= 2.7 في السنة التأسيسية الأولى.",
   created_at: "2026-11-14T08:00:00.000Z",
 };
 
 export const DataService = {
   /**
-   * Reads mirrored orders from localStorage (`chooseu_orders_v2`), seeding a verified sample order if empty.
+   * Reads mirrored orders from localStorage (`chooseu_orders_v2`).
+   * No automatic demo seeding in production.
    */
   getLocalOrders(): ConsultationOrderRow[] {
-    if (typeof window === "undefined") return [INITIAL_DEMO_ORDER];
+    if (typeof window === "undefined") return [];
     try {
       const raw = localStorage.getItem(LOCAL_ORDERS_STORAGE_KEY);
-      if (!raw) {
-        localStorage.setItem(
-          LOCAL_ORDERS_STORAGE_KEY,
-          JSON.stringify([INITIAL_DEMO_ORDER])
-        );
-        return [INITIAL_DEMO_ORDER];
-      }
+      if (!raw) return [];
       const parsed = JSON.parse(raw) as ConsultationOrderRow[];
-      if (!Array.isArray(parsed) || parsed.length === 0) {
-        localStorage.setItem(
-          LOCAL_ORDERS_STORAGE_KEY,
-          JSON.stringify([INITIAL_DEMO_ORDER])
-        );
-        return [INITIAL_DEMO_ORDER];
+      if (!Array.isArray(parsed) || parsed.length === 0) return [];
+
+      // One-time cleanup: remove any legacy demo order ORD-2026-710 associated with demo name
+      const cleaned = parsed.filter(
+        (o) =>
+          !(
+            o.order_code === "ORD-2026-710" &&
+            (o.student_name === "عمر خالد محمود" || o.student_name.includes("عمر"))
+          )
+      );
+      if (cleaned.length !== parsed.length) {
+        localStorage.setItem(LOCAL_ORDERS_STORAGE_KEY, JSON.stringify(cleaned));
       }
-      return parsed;
+      return cleaned;
     } catch {
-      return [INITIAL_DEMO_ORDER];
+      return [];
     }
   },
 

@@ -317,14 +317,14 @@ export function LandingView({
             </span>
             <div className="flex items-baseline justify-between">
               <h3 className="text-[20px] font-bold text-slate-900">
-                التقرير الاستشاري المعتمد + المذكرة الصوتية
+                التقرير الاستشاري المخصص + المذكرة الصوتية
               </h3>
               <span className="text-[20px] font-bold text-blue-600 tabular-nums">
                 150 ج.م
               </span>
             </div>
             <p className="text-[13px] text-slate-600">
-              وثيقة تنفيذية معتمدة تفتح كافة البدائل وتوفر مراجعة بشرية ومذكرة صوتية تلخيصية لولي الأمر.
+              وثيقة استشارية استرشادية تفتح كافة البدائل وتوفر مراجعة بشرية ومذكرة صوتية تلخيصية لولي الأمر.
             </p>
             <ul className="space-y-2.5 pt-2 text-[13px] text-slate-700">
               {[
@@ -897,10 +897,10 @@ export function SampleReportView({
       <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4 shadow-2xs no-print">
         <div>
           <h1 className="text-[18px] font-bold text-slate-900 leading-[1.45]">
-            عينة التقرير الاستشاري المعتمد
+            نموذج تجريبي — تقرير استشاري (A4)
           </h1>
           <p className="text-[12px] text-slate-500 mt-0.5">
-            نموذج استرشادي يوضح هيكل الوثيقة التنفيذية وقائمة الرغبات التي تستلمها الأسرة بعد المراجعة الأكاديمية.
+            نموذج استرشادي تجريبي يوضح هيكل الوثيقة الاستشارية وقائمة الرغبات كعينة افتراضية.
           </p>
         </div>
 
@@ -940,10 +940,10 @@ export function SampleReportView({
                 وثيقة التقييم الأكاديمي والمالي الشامل — ChooseU Advisory
               </div>
               <h2 className="text-[20px] font-bold text-slate-900 mt-1 leading-[1.45]">
-                التقرير الاستشاري المعتمد لتنسيق الجامعات والتدفق المالي لسنوات الدراسة بالكامل
+                نموذج تجريبي استرشادي لتنسيق الجامعات والتدفق المالي لسنوات الدراسة
               </h2>
               <p className="text-xs text-slate-600 font-medium mt-1 tabular-nums">
-                وثيقة استشارية استرشادية وفق الحدود الدنيا ولوائح المصروفات الجامعية المعلنة
+                عينة استرشادية توضيحية وفق الحدود الدنيا ولوائح المصروفات المعلنة
               </p>
             </div>
 
@@ -951,8 +951,8 @@ export function SampleReportView({
               <div className="font-mono font-semibold text-slate-900">
                 REF: ORD-2026-SAMPLE
               </div>
-              <div className="text-emerald-700 font-medium">
-                مراجعة المستشار المختص: معتمدة
+              <div className="text-amber-700 font-medium">
+                مراجعة المستشار: نموذج تجريبي
               </div>
             </div>
           </div>
@@ -962,7 +962,7 @@ export function SampleReportView({
             <div>
               <span className="text-slate-500 block">اسم الطالب</span>
               <strong className="text-slate-900 font-semibold">
-                {studentName.trim() || "نموذج طالب ثانوية عامة"}
+                {studentName.trim() || "طالب تجريبي (عينة افتراضية)"}
               </strong>
             </div>
             <div>
@@ -1426,7 +1426,7 @@ export function TrackOrderView({
                   </p>
                 </div>
                 <span className="px-3 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
-                  نسخة أصلية معتمدة (Approved)
+                  طلب مراجع ومؤكد (Approved)
                 </span>
               </div>
 
