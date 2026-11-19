@@ -4,9 +4,10 @@ import {
   createAdminSessionToken,
   getClientIp,
   verifyPasscode,
+  checkAdminLoginRateLimit,
+  recordFailedAdminLogin,
+  resetAdminLoginRateLimit,
 } from "@/lib/server-auth";
-import { checkStrictLimit, rateLimitExceededResponse } from "@/lib/security/ratelimit";
-import { getHardenedCookieOptions } from "@/lib/security/cookies";
 
 const LoginSchema = z
   .object({
@@ -17,15 +18,34 @@ const LoginSchema = z
   })
   .strict();
 
+// Short-duration session lifetime: 1 hour (3600 seconds)
+const SESSION_DURATION_SECONDS = 3600;
+
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req.headers);
-    const rateLimit = await checkStrictLimit(`admin_auth_${ip}`);
 
-    if (!rateLimit.success) {
-      return rateLimitExceededResponse(rateLimit.reset);
+    // 1. Enforce Rate Limiting (5 failed attempts per 15 minutes per IP)
+    const rateLimit = checkAdminLoginRateLimit(ip);
+    if (!rateLimit.allowed) {
+      const minutesRemaining = Math.ceil(rateLimit.retryAfterSeconds / 60);
+      return NextResponse.json(
+        {
+          success: false,
+          error: `تم تجاوز الحد المسموح من محاولات الدخول (5 محاولات فاشلة). يرجى المحاولة بعد ${minutesRemaining} دقيقة.`,
+          remainingAttempts: 0,
+          retryAfter: rateLimit.retryAfterSeconds,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.retryAfterSeconds),
+          },
+        }
+      );
     }
 
+    // 2. Validate input schema
     const body: unknown = await req.json();
     const parsed = LoginSchema.safeParse(body);
 
@@ -39,40 +59,61 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const expectedHash = process.env.ADMIN_PASSCODE_HASH;
+    // 3. Read passcode STRICTLY from server-side environment variable ADMIN_PASSCODE
+    // Fail-Closed: If ADMIN_PASSCODE is not set or empty, reject immediately. No defaults, no bypass.
+    const expectedPasscode = process.env.ADMIN_PASSCODE;
 
-    if (!expectedHash) {
-      console.error("[admin/auth] ADMIN_PASSCODE_HASH is not set.");
+    if (!expectedPasscode || expectedPasscode.trim() === "") {
+      console.error("[admin/auth] ADMIN_PASSCODE environment variable is not configured on the server.");
       return NextResponse.json(
-        { success: false, error: "خطأ في إعداد الخادم. يرجى التواصل مع المسؤول." },
+        {
+          success: false,
+          error: "خدمة المصادقة غير مهيأة على الخادم. يرجى التواصل مع المسؤول.",
+        },
         { status: 500 }
       );
     }
 
-    const isValid = verifyPasscode(parsed.data.passcode, expectedHash);
+    // 4. Verify passcode using constant-time comparison (crypto.timingSafeEqual)
+    const isValid = verifyPasscode(parsed.data.passcode, expectedPasscode);
 
     if (!isValid) {
+      const failure = recordFailedAdminLogin(ip);
+      const remainingMsg = failure.isLockedOut
+        ? "تم استنفاد المحاولات وتجميد الدخول مؤقتاً لمدة 15 دقيقة."
+        : `المحاولات المتبقية: ${failure.remainingAttempts}`;
+
       return NextResponse.json(
         {
           success: false,
-          error: "رمز المرور غير صحيح. تأكد من إدخال الرمز المعتمد للمستشار.",
-          remainingAttempts: rateLimit.remaining,
+          error: `رمز المرور غير صحيح. ${remainingMsg}`,
+          remainingAttempts: failure.remainingAttempts,
         },
         { status: 401 }
       );
     }
 
-    const sessionToken = createAdminSessionToken(7200); // 2 hours
+    // 5. Successful login: Reset failed attempts for this IP
+    resetAdminLoginRateLimit(ip);
+
+    // 6. Generate signed HMAC-SHA256 session token (1 hour duration)
+    const sessionToken = createAdminSessionToken(SESSION_DURATION_SECONDS);
 
     const response = NextResponse.json({
       success: true,
       message: "تم التحقق من هوية المستشار بنجاح.",
     });
 
+    // 7. Issue hardened cookie: httpOnly, secure, sameSite=strict, short duration
+    const isProduction = process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL);
     response.cookies.set({
       name: "chooseu_admin_session",
       value: sessionToken,
-      ...getHardenedCookieOptions(7200),
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: "strict",
+      path: "/",
+      maxAge: SESSION_DURATION_SECONDS,
     });
 
     return response;

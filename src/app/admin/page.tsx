@@ -127,6 +127,9 @@ export default function AdvisorAdminPortalPage() {
 
       if (res.status === 429) {
         setAuthError(data.error || "تم تعليق المحاولات مؤقتاً لتكرار الفشل.");
+        if (data.retryAfter) {
+          setLockoutSeconds(Number(data.retryAfter));
+        }
         return;
       }
 
@@ -137,15 +140,7 @@ export default function AdvisorAdminPortalPage() {
             : "رمز المرور غير صحيح.")
       );
     } catch {
-      // Local fallback check if offline
-      const ok = SecurityValidator.verifyAdminPasscode(passcode);
-      if (ok) {
-        setIsAuthenticated(true);
-        setAuthError("");
-        setPasscode("");
-      } else {
-        setAuthError("فشل الاتصال بالخادم وتحقق رمز المرور.");
-      }
+      setAuthError("فشل الاتصال بالخادم وتحقق رمز المرور.");
     }
   };
 
@@ -321,9 +316,6 @@ export default function AdvisorAdminPortalPage() {
                 placeholder="أدخل رمز المرور..."
                 className="w-full border border-slate-300 focus:border-blue-600 rounded-xl px-3.5 py-2.5 text-[13px] dir-ltr text-left focus:outline-none disabled:bg-slate-100"
               />
-              <p className="text-[11px] text-slate-500 mt-1.5">
-                أدخل رمز المرور الخاص بالمستشار الأكاديمي.
-              </p>
             </div>
 
             <div className="pt-2 flex items-center justify-between gap-3">
