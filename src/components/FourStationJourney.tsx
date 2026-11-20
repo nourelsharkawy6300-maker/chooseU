@@ -268,6 +268,7 @@ export function FourStationJourney({
     },
   ]);
   const [inputQuestion, setInputQuestion] = useState("");
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
 
   // ============================================================================
@@ -391,46 +392,97 @@ export function FourStationJourney({
     setAssessmentAnswers((prev) => ({ ...prev, [qId]: track }));
   };
 
-  const handleSendMessage = () => {
-    if (!inputQuestion.trim()) return;
+  const handleSendMessage = async (overrideText?: string) => {
+    const q = (typeof overrideText === "string" ? overrideText : inputQuestion).trim();
+    if (!q || isAiLoading) return;
 
-    const userText = inputQuestion.trim();
-    const newMsg: ChatMessage = {
+    const nowTime = new Date().toLocaleTimeString("ar-EG", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const userMsg: ChatMessage = {
       id: `user-${Date.now()}`,
       sender: "user",
-      text: userText,
-      timestamp: "الآن",
+      text: q,
+      timestamp: nowTime,
     };
 
-    const streamTitle = formatStream(stream);
+    const historyPayload = chatMessages.slice(-10).map((m) => ({
+      role: m.sender === "user" ? ("user" as const) : ("assistant" as const),
+      text: m.text,
+    }));
 
-    const trackIntro =
-      dominantTrack && TRACK_DETAILS[dominantTrack]
-        ? ` وميولك في ${TRACK_DETAILS[dominantTrack].title}`
-        : "";
-    let reply = `بناءً على ملفك الأكاديمي (مجموع ${score}% بشعبة ${streamTitle})${trackIntro}: `;
-
-    if (userText.includes("ساعات معتمدة") || userText.includes("أهلي")) {
-      reply += `البرامج الأهلية والساعات المعتمدة توفر لك نفس الاعتماد الأكاديمي بحدود قبول أقل، مع ميزة الأعداد الأقل وتحديث اللوائح (مثل إمكانية التخرج في 4 سنوات لبعض كليات الهندسة)، وتكلفتها السنوية ضمن حدود ميزانيتك المقدرة بـ ${budget.toLocaleString()} ج.م.`;
-    } else if (userText.includes("ترتيب") || userText.includes("رغبات")) {
-      reply += `كدليل استرشادي لتنسيق الـ 75 رغبة، ننصحك بالبدء بـ 15 رغبة طموحة تليها 35 رغبة واقعية متوازنة تناسب مجموعك، ثم 25 رغبة كشبكة أمان في نطاقك الجغرافي (${governorate}).`;
-    } else if (userText.includes("سفر") || userText.includes("دول") || userText.includes("مرتب")) {
-      reply += `المسارات التقنية والهندسية توفر فرص عمل واعدة في السوق المحلي والإقليمي، بمتوسط رواتب أولية تتراوح بين 15,000 و 30,000 ج.م شهرياً مع إمكانية التدرج للعمل مع شركات إقليمية ودولية.`;
-    } else {
-      reply += `اختيارك لكلية تقع في نطاقك الجغرافي (نطاق أ) يوفر عليك ما يقارب 30,000 إلى 40,000 ج.م سنوياً من تكلفة السكن الجامعي والاغتراب، مما يتيح لك استثمار هذا الفائض في التدريب والشهادات المهنية المعتمدة.`;
-    }
-
-    setChatMessages((prev) => [
-      ...prev,
-      newMsg,
-      {
-        id: `ai-${Date.now()}`,
-        sender: "ai",
-        text: reply,
-        timestamp: "الآن",
-      },
-    ]);
+    setChatMessages((prev) => [...prev, userMsg]);
     setInputQuestion("");
+    setIsAiLoading(true);
+
+    try {
+      const res = await fetch("/api/ai/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: q,
+          history: historyPayload,
+          context: {
+            studentName,
+            stream: formatStream(stream),
+            score,
+            budget,
+            governorate,
+            dominantTrack:
+              dominantTrack && TRACK_DETAILS[dominantTrack]
+                ? TRACK_DETAILS[dominantTrack].title
+                : null,
+            topFaculties: rankedFaculties.slice(0, 6).map((f) => ({
+              name: f.name,
+              university: f.university,
+              cutoff: f.shiftedCutoff,
+              fee: f.y1_base_fee,
+            })),
+          },
+        }),
+      });
+
+      const data = (await res.json().catch(() => ({}))) as {
+        success?: boolean;
+        reply?: string;
+        error?: string;
+      };
+
+      const replyText =
+        res.ok && data.success && data.reply
+          ? data.reply
+          : data.error || "تعذّر الوصول للمساعد الذكي حالياً. حاول مرة أخرى.";
+
+      setChatMessages((prev) => [
+        ...prev,
+        {
+          id: `ai-${Date.now()}`,
+          sender: "ai",
+          text: replyText,
+          timestamp: new Date().toLocaleTimeString("ar-EG", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        },
+      ]);
+    } catch {
+      setChatMessages((prev) => [
+        ...prev,
+        {
+          id: `ai-err-${Date.now()}`,
+          sender: "ai",
+          text: "حصل خطأ في الاتصال بالإنترنت. جرّب تبعت سؤالك تاني.",
+          timestamp: new Date().toLocaleTimeString("ar-EG", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        },
+      ]);
+    } finally {
+      setIsAiLoading(false);
+    }
   };
 
   return (
@@ -1475,6 +1527,13 @@ export function FourStationJourney({
                     </div>
                   </div>
                 ))}
+                {isAiLoading && (
+                  <div className="flex justify-start">
+                    <div className="max-w-[70%] p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 font-medium animate-pulse">
+                      جاري التفكير وكتابة الرد...
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Quick Prompt Suggestions */}
@@ -1506,15 +1565,14 @@ export function FourStationJourney({
                   value={inputQuestion}
                   onChange={(e) => setInputQuestion(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") handleSendMessage();
+                    if (e.key === "Enter" && !isAiLoading) void handleSendMessage();
                   }}
-                  placeholder="اكتب سؤالك واستشارتك هنا (مثلاً: ما هي أفضل كلية لمجموعي لو حابب مجال السوفت وير؟)..."
+                  placeholder="اسألني أي سؤال (عام، دراسي، كليات، تنسيق، أو سوق العمل)..."
                   className="flex-1 bg-white border border-slate-300 rounded-lg px-3.5 py-2 text-slate-900 text-[12px] focus:border-blue-500 focus:outline-none"
                 />
                 <button
                   type="button"
-                  onClick={handleSendMessage}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[12px] font-bold transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer flex items-center gap-1.5 shrink-0"
+                  disabled={isAiLoading}
                 >
                   <span>إرسال</span>
                   <Send className="w-3.5 h-3.5 stroke-[2]" />

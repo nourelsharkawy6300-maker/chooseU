@@ -194,7 +194,8 @@ export async function proxy(req: NextRequest) {
     const clientIp = getClientIp(req);
     const isSensitiveRoute =
       (pathname.startsWith("/api/admin/") && pathname !== "/api/admin/session") ||
-      (pathname === "/api/orders" && req.method !== "GET");
+      (pathname === "/api/orders" && req.method !== "GET") ||
+      pathname === "/api/ai/chat";
 
     if (isSensitiveRoute) {
       const { success, reset } = await checkStrictLimit(`strict_${clientIp}`);
