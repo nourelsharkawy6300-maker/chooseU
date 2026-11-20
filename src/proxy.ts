@@ -53,6 +53,8 @@ const AUTH_BYPASS_ROUTES = [
   "/login",
   "/signup",
   "/auth/callback",
+  "/auth/forgot-password",
+  "/auth/reset-password",
   "/onboarding/age",
 ];
 

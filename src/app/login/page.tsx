@@ -3,7 +3,7 @@
 import React, { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { safeNext } from "@/lib/security/url";
 
@@ -13,6 +13,7 @@ function LoginForm() {
   const rawNext = searchParams.get("next");
   const nextPath = safeNext(rawNext);
   const urlError = searchParams.get("error");
+  const resetSuccess = searchParams.get("reset") === "success";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +24,7 @@ function LoginForm() {
     urlError === "auth_unavailable"
       ? "خدمة المصادقة غير متاحة حالياً، يرجى المحاولة لاحقاً."
       : urlError === "auth_callback_failed"
-      ? "فشل تسجيل الدخول عبر Google، يرجى المحاولة مرة أخرى."
+      ? "تعذر إتمام التحقق أو انتهت صلاحية الرابط، يرجى المحاولة مرة أخرى."
       : null
   );
 
@@ -128,6 +129,19 @@ function LoginForm() {
 
       {/* Card */}
       <div className="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-xs">
+        {/* Password Reset Success Alert */}
+        {resetSuccess && !errorMessage && (
+          <div
+            role="status"
+            className="mb-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50/80 p-3.5 text-sm text-emerald-800"
+          >
+            <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600 mt-0.5" />
+            <p className="leading-relaxed font-medium">
+              تم تحديث كلمة المرور بنجاح. يمكنك تسجيل الدخول الآن بكلمة المرور الجديدة.
+            </p>
+          </div>
+        )}
+
         {/* Error Alert */}
         {errorMessage && (
           <div
@@ -216,6 +230,12 @@ function LoginForm() {
               >
                 كلمة المرور
               </label>
+              <Link
+                href="/auth/forgot-password"
+                className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+              >
+                نسيت كلمة المرور؟
+              </Link>
             </div>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
