@@ -339,7 +339,8 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               </button>
 
               {/* Score Capsule */}
-              <button
+              {scorePercentage > 0 && (
+<button
                 type="button"
                 onClick={() => setIsEditingProfile(true)}
                 title="اضغط لتعديل المجموع"
@@ -364,9 +365,11 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                   تعديل
                 </span>
               </button>
+)}
 
               {/* Budget Capsule */}
-              <button
+              {annualBudgetEgp > 0 && (
+<button
                 type="button"
                 onClick={() => setIsEditingProfile(true)}
                 title="اضغط لتعديل الميزانية السنوية"
@@ -383,6 +386,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                   تعديل
                 </span>
               </button>
+)}
             </div>
           </div>
 

@@ -10,6 +10,7 @@ import {
   FileCheck2,
   Receipt,
   ArrowRight,
+  MessageCircle,
 } from "lucide-react";
 import { useStudent } from "@/context/StudentContext";
 import { formatStream } from "@/types/chooseu";
@@ -24,45 +25,45 @@ import {
 const MODULES = [
   {
     title: "لوحة التحكم وتنسيق الرغبات",
-    desc: "4 محطات متتابعة: اختبار الميول، ترشيح الكليات، محاكاة التنسيق، وتقرير القرار النهائي.",
+    desc: "4 خطوات متتابعة: اختبار الميول، ترشيح الكليات، محاكاة التنسيق، وملخص القرار النهائي.",
     href: "/workspace",
     icon: Compass,
     badge: "المسار الأكاديمي",
   },
   {
     title: "حاسبة التكلفة",
-    desc: "حساب تكلفة سنوات الدراسة بالكامل شاملة التضخم السنوي، نفقات السكن الجامعي، والانتقالات.",
+    desc: "حساب تقديري لتكلفة سنوات الدراسة شاملة الزيادة السنوية، السكن الجامعي، والانتقالات.",
     href: "/tco-matrix",
     icon: Calculator,
     badge: "التخطيط المالي",
   },
   {
     title: "دليل الجامعات والبرامج الأكاديمية",
-    desc: "دليل استرشادي شامل للكليات الحكومية والأهلية والخاصة مع مؤشرات القبول التاريخية.",
+    desc: "دليل استرشادي للكليات الحكومية والأهلية والخاصة مع مؤشرات القبول السابقة.",
     href: "/universities",
     icon: Building2,
     badge: "دليل الكليات",
   },
   {
     title: "دليل الوظائف وسوق العمل",
-    desc: "ربط التخصص الأكاديمي بالمهارات المطلوبة وسلاسل الرواتب المتوقعة في السوق المصري والإقليمي.",
+    desc: "ربط التخصص الأكاديمي بالمهارات المطلوبة ومتوسط الرواتب المتوقعة في السوق المصري والإقليمي.",
     href: "/future-me",
     icon: Milestone,
     badge: "سوق العمل",
   },
   {
     title: "عينة تقريري (A4)",
-    desc: "نموذج استرشادي يوضح هيكل تقرير ترتيب الرغبات الاستراتيجي وملاحظات اللائحة.",
+    desc: "نموذج استرشادي يوضح شكل تقرير ترتيب الرغبات وتقدير المصاريف السنوية.",
     href: "/sample-report",
     icon: FileCheck2,
-    badge: "تقرير استشاري",
+    badge: "نموذج التقرير",
   },
   {
     title: "متابعة حالة الطلب",
-    desc: "متابعة مراجعة طلبك، إدخال رقم عملية InstaPay، والتواصل المباشر مع فريق المراجعة.",
+    desc: "متابعة حالة طلبك، تأكيد رقم عملية InstaPay، والتواصل عبر واتساب (01066594552).",
     href: "/track-order",
     icon: Receipt,
-    badge: "خدمة المتابعة",
+    badge: "متابعة الطلب",
   },
 ];
 
@@ -74,13 +75,13 @@ export default function HomePage() {
 
   return (
     <div className="space-y-12">
-      {/* Editorial Hero Header with Primer Blueprint Frame */}
-      <BlueprintFrame label="CHOOSEU // ARCHIVAL ENGINE 2026" className="primer-grid-bg">
+      {/* Hero Header */}
+      <BlueprintFrame label="منصة ChooseU للتوجيه الجامعي" className="primer-grid-bg">
         <div className="max-w-4xl space-y-6 pt-2 text-start relative z-10">
-          {/* Top Status Ticker Pill */}
+          {/* Top Status Pill */}
           <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white border border-[#dedad0] text-xs font-semibold text-slate-700 shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-            <span>نظام التوجيه الأكاديمي والمالي الاسترشادي للجامعات المصرية</span>
+            <span>دليل استرشادي للتنسيق ومصاريف الجامعات المصرية</span>
           </div>
 
           <div className="space-y-2">
@@ -88,15 +89,25 @@ export default function HomePage() {
               قرارك الأكاديمي والمالي
             </h1>
             <h2 className="text-[clamp(2.1rem,4.4vw,3.5rem)] font-extrabold text-[#377ef0] leading-[1.2] tracking-tight">
-              مدقق بحسابات حقيقية لسنوات دراستك
+              بأرقام واضحة لمصاريف سنوات دراستك
             </h2>
           </div>
 
           <p className="text-sm sm:text-base text-[#48425f] leading-relaxed max-w-2xl">
-            {hasUserData && studentName ? `مرحباً بك ${studentName}. ` : "مرحباً بك في ChooseU. "}منصة معمارية هندسية لطلاب الثانوية العامة وSTEM وأولياء الأمور؛ تفحص التوافق التخصصي الفعلي، تكشف مصاريف سنوات دراستك التراكمية بالكامل، وتبني بطاقة رغباتك الاستراتيجية.
+            {hasUserData && studentName ? `مرحباً بك ${studentName}. ` : "مرحباً بك في ChooseU. "}
+            منصة توجيه جامعي ومالي لطلاب الثانوية العامة وSTEM وأولياء الأمور؛ تساعدك تقارن الكليات المناسبة لمجموعك، تحسب المصاريف التقديرية لسنوات الدراسة، وترتّب رغباتك بوضوح قبل التنسيق.
           </p>
 
-          {/* 3-Column Live Telemetry Console Bar / Neutral Empty State */}
+          {/* Transparent Pricing & Delivery Strip */}
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-semibold text-slate-700 bg-white/90 border border-[#dedad0] rounded-xl px-4 py-2.5 w-fit">
+            <span>الأدوات والمقارنات: <strong className="text-emerald-700">مجانية (0 ج.م)</strong></span>
+            <span className="text-slate-300 hidden sm:inline">|</span>
+            <span>التقرير المخصص والمراجعة: <strong className="text-[#1c1736]">150 ج.م</strong></span>
+            <span className="text-slate-300 hidden sm:inline">|</span>
+            <span>التسليم: <strong className="text-[#377ef0]">خلال 24 ساعة عبر واتساب</strong></span>
+          </div>
+
+          {/* 3-Column Live Summary / Empty State */}
           {hasUserData ? (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-2xl bg-[#f2efe9] border border-[#dedad0]">
               <div className="bg-white p-3.5 rounded-xl border border-[#e6e4dd] flex flex-col justify-between shadow-2xs">
@@ -104,7 +115,7 @@ export default function HomePage() {
                 <span className="text-sm font-bold text-slate-900 mt-1">{streamAr}</span>
               </div>
               <div className="bg-white p-3.5 rounded-xl border border-[#e6e4dd] flex flex-col justify-between shadow-2xs">
-                <span className="text-[11px] font-semibold text-slate-500">المجموع الفعلي</span>
+                <span className="text-[11px] font-semibold text-slate-500">المجموع</span>
                 <span className="text-sm font-bold text-[#377ef0] mt-1">
                   <AnimatedCounter
                     value={scorePercentage}
@@ -126,11 +137,11 @@ export default function HomePage() {
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-amber-500" />
                   <span className="text-xs font-bold text-slate-800">
-                    لم تسجل درجاتك بعد
+                    لم تسجل بياناتك بعد
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  سجل شعبتك ومجموعك وميزانيتك لبدء مطابقة الكليات وحساب التكلفة التقديرية بدقة.
+                  سجّل شعبتك ومجموعك وميزانيتك لبدء مطابقة الكليات وحساب التكلفة التقديرية مجاناً.
                 </p>
               </div>
               <button
@@ -149,7 +160,7 @@ export default function HomePage() {
               onClick={() => router.push("/workspace")}
               icon={<ArrowRight className="h-4 w-4" />}
             >
-              ابدأ التنسيق الهندسي
+              ابدأ الآن مجاناً
             </KineticRollButton>
 
             <KineticRollButton
@@ -158,22 +169,32 @@ export default function HomePage() {
             >
               معاينة نموذج التقرير A4
             </KineticRollButton>
+
+            <a
+              href="https://wa.me/201066594552"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-[#dedad0] text-xs font-bold text-emerald-700 hover:bg-emerald-50 transition-colors"
+            >
+              <MessageCircle className="h-4 w-4" />
+              <span dir="ltr">01066594552</span>
+            </a>
           </div>
         </div>
       </BlueprintFrame>
 
       <ArchitecturalDivider />
 
-      {/* Grid of Platform Modules Wrapped in UIMaven Double-Bezel Cards */}
+      {/* Grid of Platform Tools */}
       <div className="space-y-4">
         <div className="flex items-center justify-between border-b border-[#dedad0] pb-3">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#377ef0]" />
-            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono">
-              SYSTEM MODULES // معمارية الأدوات الست
+            <h2 className="text-sm font-bold text-slate-900">
+              أدوات المنصة
             </h2>
           </div>
-          <span className="text-xs font-mono text-slate-500">INDEX: 001 - 006</span>
+          <span className="text-xs font-medium text-slate-500">6 أدوات مجانية</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -182,7 +203,7 @@ export default function HomePage() {
             return (
               <UIMavenCard
                 key={m.href}
-                indexCode={`00${idx + 1} // SYS`}
+                indexCode={`0${idx + 1}`}
                 badgeText={m.badge}
                 onClick={() => router.push(m.href)}
                 className="h-full"
@@ -202,11 +223,10 @@ export default function HomePage() {
                     </p>
                   </div>
 
-                  {/* 1px Dashed Architectural Divider & Action Rail */}
                   <div className="space-y-3 pt-2">
                     <div className="border-t border-dashed border-[#dedad0]" />
                     <div className="flex items-center justify-between text-xs font-semibold text-slate-500 group-hover:text-[#377ef0] transition-colors">
-                      <span>فتح الأداة الهندسية</span>
+                      <span>افتح الأداة</span>
                       <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-[#377ef0] group-hover:-translate-x-1.5 transition-transform duration-200 shrink-0" />
                     </div>
                   </div>
