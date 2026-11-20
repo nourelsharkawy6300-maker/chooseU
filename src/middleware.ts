@@ -9,11 +9,19 @@ import {
 // ZERO-TRUST CORS CONFIGURATION
 // ============================================================================
 
-const ALLOWED_ORIGINS = new Set([
-  process.env.NEXT_PUBLIC_APP_URL,
-  "http://localhost:3000",
-  "http://127.0.0.1:3000",
-].filter(Boolean) as string[]);
+const isProd = process.env.NODE_ENV === "production";
+
+const ALLOWED_ORIGINS = new Set(
+  [
+    "https://choose-u.vercel.app",
+    process.env.NEXT_PUBLIC_APP_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : undefined,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+    ...(!isProd ? ["http://localhost:3000", "http://127.0.0.1:3000"] : []),
+  ].filter(Boolean) as string[]
+);
 
 function getClientIp(req: NextRequest): string {
   const forwarded = req.headers.get("x-forwarded-for");
@@ -31,7 +39,6 @@ export async function middleware(req: NextRequest) {
   // 1. CORS LOCKDOWN FOR API ROUTES
   // ==========================================================================
   if (pathname.startsWith("/api/")) {
-    // If request carries an Origin header, ensure it is in the explicit whitelist
     if (origin && !ALLOWED_ORIGINS.has(origin)) {
       return new NextResponse(
         JSON.stringify({
@@ -45,7 +52,6 @@ export async function middleware(req: NextRequest) {
       );
     }
 
-    // Handle preflight OPTIONS requests
     if (req.method === "OPTIONS") {
       const preflightHeaders = new Headers();
       if (origin && ALLOWED_ORIGINS.has(origin)) {
@@ -85,15 +91,13 @@ export async function middleware(req: NextRequest) {
   }
 
   // ==========================================================================
-  // 3. CRYPTOGRAPHIC NONCE & CONTENT SECURITY POLICY (CSP)
+  // 3. CONTENT SECURITY POLICY (ALIGNED WITH STATIC APP ROUTER BUILD)
   // ==========================================================================
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const isDev = process.env.NODE_ENV === "development";
 
-  // Strict CSP: Deny all unsafe-inline and unsafe-eval in production
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ""};
+    script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ""};
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     font-src 'self' https://fonts.gstatic.com data:;
     img-src 'self' blob: data: https:;
@@ -107,19 +111,10 @@ export async function middleware(req: NextRequest) {
     .replace(/\s{2,}/g, " ")
     .trim();
 
-  // Forward nonce via request headers for App Router consumption
-  const requestHeaders = new Headers(req.headers);
-  requestHeaders.set("x-nonce", nonce);
-  requestHeaders.set("Content-Security-Policy", cspHeader);
-
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  const response = NextResponse.next();
 
   // ==========================================================================
-  // 4. AGGRESSIVE SECURITY HEADERS
+  // 4. SECURITY HEADERS
   // ==========================================================================
   response.headers.set("Content-Security-Policy", cspHeader);
   response.headers.set(
@@ -134,7 +129,6 @@ export async function middleware(req: NextRequest) {
     "camera=(), microphone=(), geolocation=(), browsing-topics=()"
   );
 
-  // Set CORS origin on successful API response if whitelisted
   if (pathname.startsWith("/api/") && origin && ALLOWED_ORIGINS.has(origin)) {
     response.headers.set("Access-Control-Allow-Origin", origin);
     response.headers.set("Access-Control-Allow-Credentials", "true");
@@ -145,12 +139,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, sitemap.xml, robots.txt
-     */
     "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
   ],
 };
