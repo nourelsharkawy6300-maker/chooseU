@@ -64,19 +64,15 @@ npm run build
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `UPSTASH_REDIS_REST_URL`
 - `UPSTASH_REDIS_REST_TOKEN`
-- `ADMIN_PASSCODE_HASH`
+- `ADMIN_PASSCODE`
 - `ADMIN_SESSION_SECRET`
 
 ---
 
 ## تدوير الأسرار والمفاتيح (Secret Rotation Procedures)
 
-### 1. تدوير رمز مرور لوحة الإدارة (`ADMIN_PASSCODE_HASH`)
-لتغيير رمز مرور المستشار الأكاديمي، قم بتوليد تجزئة Scrypt جديدة باستخدام الأمر التالي في الطرفية:
-```bash
-node -e "console.log(require('crypto').scryptSync('NEW_PASSCODE', 'chooseu_enterprise_salt_2026', 64).toString('hex'))"
-```
-ثم قم بتحديث المتغير البيئي `ADMIN_PASSCODE_HASH` في خادم الإنتاج دون الحاجة لإعادة بناء الكود.
+### 1. تدوير رمز مرور لوحة الإدارة (`ADMIN_PASSCODE`)
+لتغيير رمز مرور المستشار الأكاديمي، قم بتحديث المتغير البيئي `ADMIN_PASSCODE` مباشرة في إعدادات البيئة (مثل لوحة تحكم Vercel) بكلمة مرور قوية وفريدة، دون الحاجة لإعادة بناء الكود (يتم التحقق منها على السيرفر في زمن ثابت عبر `crypto.timingSafeEqual`).
 
 ### 2. تدوير مفتاح الجلسة (`ADMIN_SESSION_SECRET`)
 لتوليد مفتاح HMAC جديد لجلسات الإدارة (سيبطل الجلسات النشطة فورياً):

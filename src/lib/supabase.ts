@@ -7,8 +7,8 @@ export { createClient as createServerClient } from "./supabase/server";
 let browserInstance: SupabaseClient | null = null;
 
 /**
- * Returns a client-safe Supabase instance using the public anon key.
- * Strictly zero service role keys.
+ * Returns a browser-safe Supabase client configured strictly with the public anon key.
+ * Never uses SUPABASE_SERVICE_ROLE_KEY.
  */
 export function getSupabaseClient(): SupabaseClient | null {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -19,7 +19,10 @@ export function getSupabaseClient(): SupabaseClient | null {
   }
 
   if (!browserInstance) {
-    browserInstance = createBrowserClient(supabaseUrl, supabaseAnonKey) as unknown as SupabaseClient;
+    browserInstance = createBrowserClient(
+      supabaseUrl,
+      supabaseAnonKey
+    ) as unknown as SupabaseClient;
   }
 
   return browserInstance;

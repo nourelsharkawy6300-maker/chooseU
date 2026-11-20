@@ -1,43 +1,41 @@
 import crypto from "crypto";
 
 // ============================================================================
-// 1. SECURE PASSWORD HASHING (SCRYPT + SALT)
+// 1. TIMING-SAFE PASSCODE VERIFICATION (CRYPTO.TIMINGSAFEQUAL)
 // ============================================================================
 
-const DEFAULT_SALT = "chooseu_enterprise_salt_2026";
-
 /**
- * Hashes a plaintext password or passcode using scrypt with a unique/fixed salt.
- * Produces a 64-byte hex string.
- */
-export function hashPasscode(passcode: string, salt: string = DEFAULT_SALT): string {
-  const derivedKey = crypto.scryptSync(passcode.trim(), salt, 64, {
-    N: 16384,
-    r: 8,
-    p: 1,
-  });
-  return derivedKey.toString("hex");
-}
-
-/**
- * Constant-time comparison between input passcode and expected hash.
- * Prevents timing attacks.
+ * Constant-time comparison between input passcode and expected passcode
+ * using SHA-256 digest normalization and crypto.timingSafeEqual.
+ * Prevents timing attacks and length leakage.
  */
 export function verifyPasscode(
   inputPasscode: string,
-  expectedHash: string,
-  salt: string = DEFAULT_SALT
+  expectedPasscode: string
 ): boolean {
+  if (
+    typeof inputPasscode !== "string" ||
+    typeof expectedPasscode !== "string" ||
+    inputPasscode.length === 0 ||
+    expectedPasscode.length === 0
+  ) {
+    return false;
+  }
   try {
-    const inputHash = hashPasscode(inputPasscode, salt);
-    const inputBuffer = Buffer.from(inputHash, "hex");
-    const expectedBuffer = Buffer.from(expectedHash, "hex");
+    // crypto.timingSafeEqual requires buffers of identical length. Direct comparison
+    // throws RangeError if lengths differ, and checking buffer length first leaks length timing.
+    // Pre-hashing with SHA-256 produces fixed 32-byte buffers, guaranteeing timing safety
+    // with zero length leakage and no RangeErrors.
+    const inputHash = crypto
+      .createHash("sha256")
+      .update(inputPasscode)
+      .digest();
+    const expectedHash = crypto
+      .createHash("sha256")
+      .update(expectedPasscode)
+      .digest();
 
-    if (inputBuffer.length !== expectedBuffer.length) {
-      return false;
-    }
-
-    return crypto.timingSafeEqual(inputBuffer, expectedBuffer);
+    return crypto.timingSafeEqual(inputHash, expectedHash);
   } catch {
     return false;
   }
@@ -73,7 +71,7 @@ export interface AdminSessionPayload {
 /**
  * Creates an HMAC-SHA256 signed session token for verified administrators.
  */
-export function createAdminSessionToken(durationSeconds = 7200): string {
+export function createAdminSessionToken(durationSeconds = 3600): string {
   const now = Date.now();
   const payload: AdminSessionPayload = {
     role: "admin",
@@ -195,4 +193,126 @@ export function getClientIp(headers: Headers): string {
     return realIp.trim();
   }
   return "127.0.0.1";
+}
+
+// ============================================================================
+// 4. IN-MEMORY FAILED LOGIN ATTEMPTS RATE LIMITER
+// Limits failed login attempts to 5 per 15 minutes per IP address.
+// ============================================================================
+
+interface LoginRateLimitEntry {
+  failedAttempts: number;
+  firstFailedAt: number;
+  lockedUntil: number | null;
+}
+
+const loginRateLimitMap = new Map<string, LoginRateLimitEntry>();
+
+const MAX_LOGIN_FAILURES = 5;
+const LOGIN_LOCKOUT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes in milliseconds
+
+/**
+ * Checks if the given IP address is currently locked out from admin login.
+ */
+export function checkAdminLoginRateLimit(ip: string): {
+  allowed: boolean;
+  remainingAttempts: number;
+  retryAfterSeconds: number;
+} {
+  const now = Date.now();
+  const entry = loginRateLimitMap.get(ip);
+
+  if (!entry) {
+    return {
+      allowed: true,
+      remainingAttempts: MAX_LOGIN_FAILURES,
+      retryAfterSeconds: 0,
+    };
+  }
+
+  // Check if active lockout exists
+  if (entry.lockedUntil) {
+    if (now >= entry.lockedUntil) {
+      loginRateLimitMap.delete(ip);
+      return {
+        allowed: true,
+        remainingAttempts: MAX_LOGIN_FAILURES,
+        retryAfterSeconds: 0,
+      };
+    }
+    const retryAfter = Math.max(1, Math.ceil((entry.lockedUntil - now) / 1000));
+    return {
+      allowed: false,
+      remainingAttempts: 0,
+      retryAfterSeconds: retryAfter,
+    };
+  }
+
+  // Check if the 15-minute sliding window has elapsed since first failure
+  if (now - entry.firstFailedAt > LOGIN_LOCKOUT_WINDOW_MS) {
+    loginRateLimitMap.delete(ip);
+    return {
+      allowed: true,
+      remainingAttempts: MAX_LOGIN_FAILURES,
+      retryAfterSeconds: 0,
+    };
+  }
+
+  return {
+    allowed: true,
+    remainingAttempts: Math.max(0, MAX_LOGIN_FAILURES - entry.failedAttempts),
+    retryAfterSeconds: 0,
+  };
+}
+
+/**
+ * Records a failed login attempt for the given IP address.
+ * If 5 failed attempts are reached within 15 minutes, locks out the IP for 15 minutes.
+ */
+export function recordFailedAdminLogin(ip: string): {
+  remainingAttempts: number;
+  isLockedOut: boolean;
+  retryAfterSeconds: number;
+} {
+  const now = Date.now();
+  let entry = loginRateLimitMap.get(ip);
+
+  if (!entry || now - entry.firstFailedAt > LOGIN_LOCKOUT_WINDOW_MS) {
+    entry = {
+      failedAttempts: 1,
+      firstFailedAt: now,
+      lockedUntil: null,
+    };
+    loginRateLimitMap.set(ip, entry);
+    return {
+      remainingAttempts: MAX_LOGIN_FAILURES - 1,
+      isLockedOut: false,
+      retryAfterSeconds: 0,
+    };
+  }
+
+  entry.failedAttempts += 1;
+
+  if (entry.failedAttempts >= MAX_LOGIN_FAILURES) {
+    entry.lockedUntil = now + LOGIN_LOCKOUT_WINDOW_MS;
+    const retryAfter = Math.ceil(LOGIN_LOCKOUT_WINDOW_MS / 1000);
+    return {
+      remainingAttempts: 0,
+      isLockedOut: true,
+      retryAfterSeconds: retryAfter,
+    };
+  }
+
+  return {
+    remainingAttempts: MAX_LOGIN_FAILURES - entry.failedAttempts,
+    isLockedOut: false,
+    retryAfterSeconds: 0,
+  };
+}
+
+/**
+ * Resets the failed login counter for an IP address upon successful login.
+ */
+export function resetAdminLoginRateLimit(ip: string): void {
+  loginRateLimitMap.delete(ip);
 }

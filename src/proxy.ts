@@ -11,11 +11,17 @@ import {
 // ZERO-TRUST CORS CONFIGURATION
 // ============================================================================
 
+const isProd = process.env.NODE_ENV === "production";
+
 const ALLOWED_ORIGINS = new Set(
   [
+    "https://choose-u.vercel.app",
     process.env.NEXT_PUBLIC_APP_URL,
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : undefined,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+    ...(!isProd ? ["http://localhost:3000", "http://127.0.0.1:3000"] : []),
   ].filter(Boolean) as string[]
 );
 
@@ -27,7 +33,7 @@ function getClientIp(req: NextRequest): string {
   return req.headers.get("x-real-ip") || "127.0.0.1";
 }
 
-// Protected routes requiring active authentication
+// Protected routes requiring active authentication AND declared age
 const PROTECTED_ROUTES = [
   "/workspace",
   "/tco-matrix",
@@ -56,10 +62,6 @@ function isAuthBypassPath(pathname: string): boolean {
   );
 }
 
-/**
- * Ensures session cookies refreshed in the intermediate response are
- * preserved and forwarded on redirect responses.
- */
 function copyCookies(from: NextResponse, to: NextResponse): NextResponse {
   from.cookies.getAll().forEach((cookie) => {
     to.cookies.set(cookie.name, cookie.value, cookie);
@@ -67,12 +69,56 @@ function copyCookies(from: NextResponse, to: NextResponse): NextResponse {
   return to;
 }
 
-export async function middleware(req: NextRequest) {
+function applySecurityHeaders(
+  response: NextResponse,
+  pathname: string,
+  origin: string | null
+): NextResponse {
+  const isDev = process.env.NODE_ENV === "development";
+
+  const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ""};
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com data:;
+    img-src 'self' blob: data: https:;
+    connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.upstash.io;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    upgrade-insecure-requests;
+  `
+    .replace(/\s{2,}/g, " ")
+    .trim();
+
+  response.headers.set("Content-Security-Policy", cspHeader);
+  response.headers.set(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains; preload"
+  );
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=(), browsing-topics=()"
+  );
+
+  if (pathname.startsWith("/api/") && origin && ALLOWED_ORIGINS.has(origin)) {
+    response.headers.set("Access-Control-Allow-Origin", origin);
+    response.headers.set("Access-Control-Allow-Credentials", "true");
+  }
+
+  return response;
+}
+
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const origin = req.headers.get("origin");
 
   // ==========================================================================
-  // 1. CORS LOCKDOWN FOR API ROUTES
+  // 1. CORS LOCKDOWN & RATE LIMITING FOR API ROUTES
   // ==========================================================================
   if (pathname.startsWith("/api/")) {
     if (origin && !ALLOWED_ORIGINS.has(origin)) {
@@ -106,10 +152,10 @@ export async function middleware(req: NextRequest) {
       return new NextResponse(null, { status: 204, headers: preflightHeaders });
     }
 
-    // Rate limiting for API endpoints
     const clientIp = getClientIp(req);
     const isSensitiveRoute =
-      pathname.startsWith("/api/admin/") || pathname === "/api/orders";
+      (pathname.startsWith("/api/admin/") && pathname !== "/api/admin/session") ||
+      pathname === "/api/orders";
 
     if (isSensitiveRoute) {
       const { success, reset } = await checkStrictLimit(`strict_${clientIp}`);
@@ -124,59 +170,10 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // ==========================================================================
-  // 2. CSP NONCE & SECURITY HEADERS SETUP
-  // ==========================================================================
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-  const isDev = process.env.NODE_ENV !== "production";
-
-  const cspHeader = `
-    default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ""};
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    font-src 'self' https://fonts.gstatic.com data:;
-    img-src 'self' blob: data: https:;
-    connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.upstash.io;
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-    upgrade-insecure-requests;
-  `
-    .replace(/\s{2,}/g, " ")
-    .trim();
-
-  const requestHeaders = new Headers(req.headers);
-  requestHeaders.set("x-nonce", nonce);
-  requestHeaders.set("Content-Security-Policy", cspHeader);
-
-  let response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
-
-  // Apply base defensive headers to response
-  response.headers.set("Content-Security-Policy", cspHeader);
-  response.headers.set(
-    "Strict-Transport-Security",
-    "max-age=31536000; includeSubDomains; preload"
-  );
-  response.headers.set("X-Frame-Options", "DENY");
-  response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  response.headers.set(
-    "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=(), browsing-topics=()"
-  );
-
-  if (pathname.startsWith("/api/") && origin && ALLOWED_ORIGINS.has(origin)) {
-    response.headers.set("Access-Control-Allow-Origin", origin);
-    response.headers.set("Access-Control-Allow-Credentials", "true");
-  }
+  let response = NextResponse.next();
 
   // ==========================================================================
-  // 3. SUPABASE SESSION REFRESH & ROUTE GUARDING
+  // 2. SUPABASE SESSION REFRESH & ROUTE GUARDING
   // ==========================================================================
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -189,31 +186,23 @@ export async function middleware(req: NextRequest) {
 
   const isProtected = isProtectedPath(pathname);
 
-  // Fallback behavior when Supabase credentials are missing:
   if (!isSupabaseConfigured) {
-    if (process.env.NODE_ENV === "production") {
-      // In production: never fail open silently on protected routes
-      if (isProtected) {
-        console.error(
-          `[ChooseU Auth] Production error: Supabase environment variables missing. Protected route "${pathname}" is closed.`
-        );
-        const redirectUrl = req.nextUrl.clone();
-        redirectUrl.pathname = "/login";
-        redirectUrl.searchParams.set("error", "auth_unavailable");
-        return copyCookies(response, NextResponse.redirect(redirectUrl));
-      }
-    } else {
-      // In development: warn in console and allow passage
-      if (isProtected) {
-        console.warn(
-          `[ChooseU Auth] Development warning: Supabase credentials not set. Allowing access to "${pathname}".`
-        );
-      }
+    if (process.env.NODE_ENV === "production" && isProtected) {
+      console.error(
+        `[ChooseU Auth] Production error: Supabase environment variables missing. Protected route "${pathname}" is closed.`
+      );
+      const redirectUrl = req.nextUrl.clone();
+      redirectUrl.pathname = "/login";
+      redirectUrl.searchParams.set("error", "auth_unavailable");
+      return applySecurityHeaders(
+        copyCookies(response, NextResponse.redirect(redirectUrl)),
+        pathname,
+        origin
+      );
     }
-    return response;
+    return applySecurityHeaders(response, pathname, origin);
   }
 
-  // Supabase is configured: Create cookie-aware client to refresh session
   const supabase = createServerClient(
     supabaseUrl as string,
     supabaseAnonKey as string,
@@ -232,7 +221,7 @@ export async function middleware(req: NextRequest) {
           cookiesToSet.forEach(({ name, value }) => req.cookies.set(name, value));
           response = NextResponse.next({
             request: {
-              headers: requestHeaders,
+              headers: req.headers,
             },
           });
           cookiesToSet.forEach(({ name, value, options }) =>
@@ -243,14 +232,13 @@ export async function middleware(req: NextRequest) {
     }
   );
 
-  // Verify user strictly using getUser() (NEVER getSession() which trust unverified JWTs)
+  // Verify user strictly using getUser() (NEVER getSession())
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   // Loop prevention: Never redirect auth entry points or onboarding
   if (isAuthBypassPath(pathname)) {
-    // If an authenticated user already declared their age visits /onboarding/age, send them to home
     if (user && pathname === "/onboarding/age") {
       const { data: profile } = await supabase
         .from("profiles")
@@ -259,51 +247,52 @@ export async function middleware(req: NextRequest) {
         .single();
 
       if (profile?.age_declared) {
-        return copyCookies(response, NextResponse.redirect(new URL("/", req.url)));
+        return applySecurityHeaders(
+          copyCookies(response, NextResponse.redirect(new URL("/", req.url))),
+          pathname,
+          origin
+        );
       }
     }
-    return response;
+    return applySecurityHeaders(response, pathname, origin);
   }
 
-  // Route protection for unauthenticated visitors
-  if (isProtected && !user) {
-    const redirectUrl = req.nextUrl.clone();
-    redirectUrl.pathname = "/login";
-    redirectUrl.searchParams.set("next", safeNext(pathname));
-    return copyCookies(response, NextResponse.redirect(redirectUrl));
-  }
+  // Protected routes: require authenticated user AND declared age
+  if (isProtected) {
+    if (!user) {
+      const redirectUrl = req.nextUrl.clone();
+      redirectUrl.pathname = "/login";
+      redirectUrl.searchParams.set("next", safeNext(pathname));
+      return applySecurityHeaders(
+        copyCookies(response, NextResponse.redirect(redirectUrl)),
+        pathname,
+        origin
+      );
+    }
 
-  // Sub-task 3b: Age declaration enforcement for authenticated users
-  // Non-API routes redirect to /onboarding/age if age_declared is false
-  if (user && !pathname.startsWith("/api/")) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("age_declared")
       .eq("id", user.id)
       .single();
 
-    if (profile && !profile.age_declared) {
+    if (!profile?.age_declared) {
       const redirectUrl = req.nextUrl.clone();
       redirectUrl.pathname = "/onboarding/age";
-      if (pathname !== "/") {
-        redirectUrl.searchParams.set("next", safeNext(pathname));
-      }
-      return copyCookies(response, NextResponse.redirect(redirectUrl));
+      redirectUrl.searchParams.set("next", safeNext(pathname));
+      return applySecurityHeaders(
+        copyCookies(response, NextResponse.redirect(redirectUrl)),
+        pathname,
+        origin
+      );
     }
   }
 
-  return response;
+  return applySecurityHeaders(response, pathname, origin);
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for:
-     * - _next/static (static chunks and files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, sitemap.xml, robots.txt
-     * - static images (.svg, .png, .jpg, .jpeg, .gif, .webp)
-     */
     "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

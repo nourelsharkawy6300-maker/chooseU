@@ -1222,7 +1222,7 @@ export function TrackOrderView({
             متابعة حالة الطلب واستلام التقرير المعتمد
           </h1>
           <p className="text-[13px] text-slate-500 mt-1">
-            أدخل رقم الطلب أو رقم الواتساب المسجل للاستعلام المباشر من قاعدة البيانات.
+            أدخل كود الطلب الكامل (ORD-2026-...) للاستعلام عن حالة المراجعة.
           </p>
         </div>
 
@@ -1231,7 +1231,7 @@ export function TrackOrderView({
             type="text"
             value={queryInput}
             onChange={(e) => setQueryInput(e.target.value)}
-            placeholder="أدخل رقم الطلب أو رقم الواتساب..."
+            placeholder="أدخل كود الطلب الكامل (ORD-2026-XXXX-XXXXXXXXXXXXXXXX)"
             className="flex-1 border border-slate-200 focus:border-slate-900 rounded-xl px-4 py-2.5 text-[13px] font-mono dir-ltr text-left tabular-nums focus:outline-none"
           />
           <button
@@ -1600,7 +1600,9 @@ export function CheckoutModal({
     }
 
     setIsSubmitting(true);
-    const order = await DataService.createOrder({
+    setValidationError("");
+    try {
+      const order = await DataService.createOrder({
       student_name: cleanName,
       whatsapp_phone: cleanPhone,
       academic_stream: stream,
@@ -1612,10 +1614,18 @@ export function CheckoutModal({
         eligibleIds: evaluation.allRanked.slice(0, 10).map((f) => f.id),
       },
       instapay_ref: cleanRef,
-    });
-    setIsSubmitting(false);
-    setCreatedOrder(order);
-    onOrderCreated(order);
+      });
+      setCreatedOrder(order);
+      onOrderCreated(order);
+    } catch (err) {
+      setValidationError(
+        err instanceof Error
+          ? err.message
+          : "تعذر حفظ الطلب حالياً. يرجى المحاولة مرة أخرى."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const streamLabel = formatStream(stream);
