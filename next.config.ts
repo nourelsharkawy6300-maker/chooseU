@@ -35,6 +35,7 @@ const securityHeaders = [
       style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
       font-src 'self' https://fonts.gstatic.com data:;
       img-src 'self' data: blob: https:;
+      media-src 'self' https: blob:;
       connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.upstash.io;
       object-src 'none';
       base-uri 'self';
@@ -47,6 +48,13 @@ const securityHeaders = [
   },
 ];
 
+const noIndexHeaders = [
+  {
+    key: "X-Robots-Tag",
+    value: "noindex, nofollow",
+  },
+];
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
@@ -54,13 +62,22 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   compiler: {
-    removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false,
+    removeConsole:
+      process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false,
   },
   async headers() {
     return [
       {
         source: "/:path*",
         headers: securityHeaders,
+      },
+      {
+        source: "/admin/:path*",
+        headers: noIndexHeaders,
+      },
+      {
+        source: "/api/:path*",
+        headers: noIndexHeaders,
       },
     ];
   },

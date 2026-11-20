@@ -11,19 +11,33 @@ import {
 // ZERO-TRUST CORS CONFIGURATION
 // ============================================================================
 
-const isProd = process.env.NODE_ENV === "production";
+const isProd =
+  process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL);
+
+function toOrigin(value?: string): string | null {
+  if (!value) return null;
+  try {
+    return new URL(value).origin;
+  } catch {
+    return null;
+  }
+}
 
 const ALLOWED_ORIGINS = new Set(
   [
     "https://choose-u.vercel.app",
-    process.env.NEXT_PUBLIC_APP_URL,
+    toOrigin(process.env.NEXT_PUBLIC_APP_URL),
     process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : undefined,
-    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+      ? toOrigin(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`)
+      : null,
+    process.env.VERCEL_URL
+      ? toOrigin(`https://${process.env.VERCEL_URL}`)
+      : null,
     ...(!isProd ? ["http://localhost:3000", "http://127.0.0.1:3000"] : []),
   ].filter(Boolean) as string[]
 );
+
+const MUTATING_METHODS = new Set(["POST", "PATCH", "PUT", "DELETE"]);
 
 function getClientIp(req: NextRequest): string {
   const forwarded = req.headers.get("x-forwarded-for");
@@ -84,6 +98,7 @@ function applySecurityHeaders(
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     font-src 'self' https://fonts.gstatic.com data:;
     img-src 'self' blob: data: https:;
+    media-src 'self' https: blob:;
     connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.upstash.io;
     object-src 'none';
     base-uri 'self';
@@ -107,9 +122,18 @@ function applySecurityHeaders(
     "camera=(), microphone=(), geolocation=(), browsing-topics=()"
   );
 
+  if (
+    pathname === "/admin" ||
+    pathname.startsWith("/admin/") ||
+    pathname.startsWith("/api/")
+  ) {
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  }
+
   if (pathname.startsWith("/api/") && origin && ALLOWED_ORIGINS.has(origin)) {
     response.headers.set("Access-Control-Allow-Origin", origin);
     response.headers.set("Access-Control-Allow-Credentials", "true");
+    response.headers.append("Vary", "Origin");
   }
 
   return response;
@@ -118,21 +142,33 @@ function applySecurityHeaders(
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const origin = req.headers.get("origin");
+  const secFetchSite = req.headers.get("sec-fetch-site");
 
   // ==========================================================================
-  // 1. CORS LOCKDOWN & RATE LIMITING FOR API ROUTES
+  // 1. CORS LOCKDOWN, CSRF DEFENSE & RATE LIMITING FOR API ROUTES
   // ==========================================================================
   if (pathname.startsWith("/api/")) {
-    if (origin && !ALLOWED_ORIGINS.has(origin)) {
-      return new NextResponse(
-        JSON.stringify({
-          error: "Forbidden",
-          message: "CORS origin rejected by Zero-Trust policy.",
-        }),
-        {
-          status: 403,
-          headers: { "Content-Type": "application/json" },
-        }
+    const isRejectedOrigin = Boolean(origin && !ALLOWED_ORIGINS.has(origin));
+    const isCrossSiteMutation =
+      MUTATING_METHODS.has(req.method) && secFetchSite === "cross-site";
+
+    if (isRejectedOrigin || isCrossSiteMutation) {
+      return applySecurityHeaders(
+        new NextResponse(
+          JSON.stringify({
+            error: "Forbidden",
+            message: "CORS origin rejected by Zero-Trust policy.",
+          }),
+          {
+            status: 403,
+            headers: {
+              "Content-Type": "application/json",
+              "Cache-Control": "no-store, max-age=0",
+            },
+          }
+        ),
+        pathname,
+        null
       );
     }
 
@@ -141,6 +177,7 @@ export async function proxy(req: NextRequest) {
       if (origin && ALLOWED_ORIGINS.has(origin)) {
         preflightHeaders.set("Access-Control-Allow-Origin", origin);
         preflightHeaders.set("Access-Control-Allow-Credentials", "true");
+        preflightHeaders.set("Vary", "Origin");
         preflightHeaders.set(
           "Access-Control-Allow-Methods",
           "GET, POST, PATCH, PUT, DELETE, OPTIONS"
@@ -162,13 +199,26 @@ export async function proxy(req: NextRequest) {
     if (isSensitiveRoute) {
       const { success, reset } = await checkStrictLimit(`strict_${clientIp}`);
       if (!success) {
-        return rateLimitExceededResponse(reset);
+        return applySecurityHeaders(
+          rateLimitExceededResponse(reset),
+          pathname,
+          origin
+        );
       }
     } else {
       const { success, reset } = await checkGlobalLimit(`global_${clientIp}`);
       if (!success) {
-        return rateLimitExceededResponse(reset);
+        return applySecurityHeaders(
+          rateLimitExceededResponse(reset),
+          pathname,
+          origin
+        );
       }
+    }
+
+    // Admin APIs authenticate via HMAC cookie; skip redundant Supabase Auth round-trip
+    if (pathname.startsWith("/api/admin/")) {
+      return applySecurityHeaders(NextResponse.next(), pathname, origin);
     }
   }
 
@@ -189,7 +239,7 @@ export async function proxy(req: NextRequest) {
   const isProtected = isProtectedPath(pathname);
 
   if (!isSupabaseConfigured) {
-    if (process.env.NODE_ENV === "production" && isProtected) {
+    if (isProd && isProtected) {
       console.error(
         `[ChooseU Auth] Production error: Supabase environment variables missing. Protected route "${pathname}" is closed.`
       );
