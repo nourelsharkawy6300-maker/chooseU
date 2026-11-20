@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Compass,
@@ -19,6 +19,11 @@ import {
   Menu,
   X,
   Check,
+  LogOut,
+  LogIn,
+  User,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
 import { useStudent } from "@/context/StudentContext";
 import { StreamType } from "@/types/chooseu";
@@ -72,16 +77,26 @@ const NAVIGATION_ITEMS: NavItem[] = [
 
 export function AppShellClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admin");
+  const router = useRouter();
+  const [signingOut, setSigningOut] = useState(false);
+  const isStandalonePage =
+    pathname.startsWith("/admin") ||
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname.startsWith("/onboarding") || pathname.startsWith("/auth");
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const {
+    studentName,
     stream,
     scorePercentage,
     annualBudgetEgp,
+    authUser,
+    syncStatus,
     setStream,
     setScorePercentage,
     setAnnualBudgetEgp,
+    signOut,
   } = useStudent();
 
   const [modalScoreStr, setModalScoreStr] = useState<string>(scorePercentage.toString());
@@ -108,7 +123,21 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
       ? "مدارس STEM"
       : "أدبي";
 
-  if (isAdmin) {
+  const handleSignOut = async () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    try {
+      await signOut();
+      setIsMobileNavOpen(false);
+      setIsEditingProfile(false);
+      router.replace("/login");
+      router.refresh();
+    } finally {
+      setSigningOut(false);
+    }
+  };
+
+  if (isStandalonePage) {
     return (
       <div className="flex min-h-screen w-full bg-[var(--paper)] text-slate-900">
         <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth">
@@ -191,6 +220,66 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
         </nav>
 
         <div className="border-t border-slate-200 p-4 space-y-3 bg-slate-50/70">
+          {authUser ? (
+            <div className="rounded-xl border border-slate-200 bg-white p-2.5 space-y-2 shadow-2xs">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                  <User className="h-3.5 w-3.5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-xs font-bold text-slate-800">
+                    {studentName.trim() || authUser.email || "حساب الطالب"}
+                  </p>
+                  <div className="flex items-center gap-1 text-[11px] text-slate-500">
+                    {syncStatus === "saving" && (
+                      <>
+                        <Loader2 className="h-3 w-3 animate-spin text-blue-600" />
+                        <span>جاري الحفظ بالحساب...</span>
+                      </>
+                    )}
+                    {syncStatus === "saved" && (
+                      <>
+                        <Check className="h-3 w-3 text-emerald-600" />
+                        <span className="text-emerald-700">محفوظ بالحساب</span>
+                      </>
+                    )}
+                    {syncStatus === "error" && (
+                      <>
+                        <AlertCircle className="h-3 w-3 text-rose-600" />
+                        <span className="text-rose-700">تعذر المزامنة</span>
+                      </>
+                    )}
+                    {syncStatus === "idle" && (
+                      <span className="truncate" dir="ltr">
+                        {authUser.email || "مسجّل الدخول"}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                disabled={signingOut}
+                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition-colors cursor-pointer disabled:opacity-50"
+              >
+                {signingOut ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <LogOut className="h-3.5 w-3.5" />
+                )}
+                <span>{signingOut ? "جاري تسجيل الخروج..." : "تسجيل الخروج"}</span>
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50/70 hover:bg-blue-100/70 px-3 py-2 text-xs font-bold text-blue-700 transition-colors"
+            >
+              <LogIn className="h-3.5 w-3.5" />
+              <span>تسجيل الدخول / إنشاء حساب</span>
+            </Link>
+          )}
           <div className="flex items-center justify-between text-xs text-slate-500">
             <span className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
@@ -392,6 +481,38 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                   </nav>
                 </div>
                 <div className="border-t border-slate-200 pt-3 space-y-2">
+                  {authUser ? (
+                    <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-2.5 space-y-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <User className="h-4 w-4 text-blue-600 shrink-0" />
+                        <p className="truncate text-xs font-bold text-slate-800">
+                          {studentName.trim() || authUser.email || "حساب الطالب"}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleSignOut}
+                        disabled={signingOut}
+                        className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition-colors cursor-pointer disabled:opacity-50"
+                      >
+                        {signingOut ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <LogOut className="h-3.5 w-3.5" />
+                        )}
+                        <span>{signingOut ? "جاري تسجيل الخروج..." : "تسجيل الخروج"}</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <Link
+                      href="/login"
+                      onClick={() => setIsMobileNavOpen(false)}
+                      className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700"
+                    >
+                      <LogIn className="h-3.5 w-3.5" />
+                      <span>تسجيل الدخول / إنشاء حساب</span>
+                    </Link>
+                  )}
 
 
                   <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500 pt-1">

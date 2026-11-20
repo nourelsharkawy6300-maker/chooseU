@@ -1,6 +1,10 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { createBrowserClient } from "@supabase/ssr";
+import { SupabaseClient } from "@supabase/supabase-js";
 
-let supabaseInstance: SupabaseClient | null = null;
+export { createClient as createBrowserClient } from "./supabase/client";
+export { createClient as createServerClient } from "./supabase/server";
+
+let browserInstance: SupabaseClient | null = null;
 
 /**
  * Returns a browser-safe Supabase client configured strictly with the public anon key.
@@ -14,19 +18,12 @@ export function getSupabaseClient(): SupabaseClient | null {
     return null;
   }
 
-  if (!supabaseInstance) {
-    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
-      global: {
-        headers: {
-          "X-Client-Info": "chooseu-public-client-v1",
-        },
-      },
-    });
+  if (!browserInstance) {
+    browserInstance = createBrowserClient(
+      supabaseUrl,
+      supabaseAnonKey
+    ) as unknown as SupabaseClient;
   }
 
-  return supabaseInstance;
+  return browserInstance;
 }

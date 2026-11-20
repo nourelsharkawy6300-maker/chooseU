@@ -1,4 +1,20 @@
 export type StreamType = "Science" | "Math" | "Arts" | "stem";
+export type UserRole = "student" | "advisor" | "admin";
+
+export interface UserProfileRow {
+  id: string;
+  full_name: string | null;
+  track: StreamType | "Undecided" | null;
+  score: number | null;
+  annual_budget: number | null;
+  age_declared: boolean;
+  is_minor: boolean;
+  guardian_ack: boolean;
+  guardian_ack_at: string | null;
+  role: UserRole;
+  created_at?: string;
+  updated_at?: string;
+}
 
 export function formatStream(stream: StreamType | string): string {
   switch (stream) {
