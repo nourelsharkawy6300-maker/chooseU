@@ -7,6 +7,8 @@ import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle, CheckCircle2 } from "luc
 import { createClient } from "@/lib/supabase/client";
 import { safeNext } from "@/lib/security/url";
 
+const ENABLE_GOOGLE_OAUTH = process.env.NEXT_PUBLIC_ENABLE_GOOGLE_OAUTH === "true";
+
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -153,7 +155,9 @@ function LoginForm() {
           </div>
         )}
 
-        {/* Google OAuth Button */}
+        {ENABLE_GOOGLE_OAUTH && (
+          <>
+            {/* Google OAuth Button */}
         <button
           type="button"
           onClick={handleGoogleSignIn}
@@ -194,6 +198,8 @@ function LoginForm() {
             أو عبر البريد الإلكتروني
           </span>
         </div>
+          </>
+        )}
 
         {/* Email & Password Form */}
         <form onSubmit={handleSubmit} className="space-y-4">

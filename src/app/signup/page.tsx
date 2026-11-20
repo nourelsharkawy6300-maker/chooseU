@@ -17,6 +17,8 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { safeNext } from "@/lib/security/url";
 
+const ENABLE_GOOGLE_OAUTH = process.env.NEXT_PUBLIC_ENABLE_GOOGLE_OAUTH === "true";
+
 function SignupForm() {
   const searchParams = useSearchParams();
   const rawNext = searchParams.get("next");
@@ -242,7 +244,9 @@ function SignupForm() {
           </div>
         )}
 
-        {/* Google OAuth Button */}
+        {ENABLE_GOOGLE_OAUTH && (
+          <>
+            {/* Google OAuth Button */}
         <button
           type="button"
           onClick={handleGoogleSignIn}
@@ -283,6 +287,8 @@ function SignupForm() {
             أو عبر البريد الإلكتروني
           </span>
         </div>
+          </>
+        )}
 
         {/* Signup Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
