@@ -32,8 +32,8 @@ const securityHeaders = [
     value: `
       default-src 'self';
       script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ""};
-      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-      font-src 'self' https://fonts.gstatic.com data:;
+      style-src 'self' 'unsafe-inline';
+      font-src 'self' data:;
       img-src 'self' data: blob: https:;
       media-src 'self' https: blob:;
       connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.upstash.io;

@@ -1,7 +1,29 @@
 import type { Metadata, Viewport } from "next";
+import { IBM_Plex_Sans_Arabic, Jost, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { StudentProvider } from "@/context/StudentContext";
 import { AppShellClient } from "@/components/AppShellClient";
+
+const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
+  subsets: ["arabic", "latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-ibm-plex-arabic",
+  display: "swap",
+});
+
+const jost = Jost({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-jost-next",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
 
 const SITE_URL = (
   process.env.NEXT_PUBLIC_APP_URL || "https://choose-u.vercel.app"
@@ -81,19 +103,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Jost:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-        />
-      </head>
+    <html
+      lang="ar"
+      dir="rtl"
+      className={`${ibmPlexSansArabic.variable} ${jost.variable} ${jetbrainsMono.variable}`}
+    >
       <body className="bg-[var(--paper)] text-slate-900 font-sans antialiased selection:bg-blue-600/20 selection:text-blue-900 min-h-screen">
         <script
           type="application/ld+json"
