@@ -2,7 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { safeNext } from "@/lib/security/url";
@@ -10,7 +10,6 @@ import { safeNext } from "@/lib/security/url";
 const ENABLE_GOOGLE_OAUTH = process.env.NEXT_PUBLIC_ENABLE_GOOGLE_OAUTH === "true";
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const rawNext = searchParams.get("next");
   const nextPath = safeNext(rawNext);
@@ -62,8 +61,8 @@ function LoginForm() {
       }
 
       // Successful sign-in: navigate to sanitized next path or home
-      router.push(nextPath);
-      router.refresh();
+      window.location.assign(nextPath);
+      return;
     } catch {
       setErrorMessage("الإيميل أو كلمة المرور غير صحيحة.");
       setLoading(false);
