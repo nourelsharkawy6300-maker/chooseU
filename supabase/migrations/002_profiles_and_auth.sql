@@ -182,11 +182,17 @@ CREATE POLICY "profiles_insert_own"
     WITH CHECK (auth.uid() = id AND role = 'student');
 
 -- 5. PERMISSION GRANTS & ZERO-ANON ENFORCEMENT
--- Strictly revoke any anonymous access
+-- Strictly revoke any public and anonymous access
+REVOKE ALL ON public.profiles FROM PUBLIC;
 REVOKE ALL ON public.profiles FROM anon;
 
--- Grant authenticated operations
-GRANT SELECT, INSERT, UPDATE ON public.profiles TO authenticated;
+-- Revoke table-level UPDATE so sensitive columns (age_declared, is_minor,
+-- guardian_ack, guardian_ack_at, role, id, created_at) cannot be modified directly
+REVOKE UPDATE ON public.profiles FROM authenticated;
+
+-- Grant authenticated SELECT/INSERT and column-scoped UPDATE for editable fields only
+GRANT SELECT, INSERT ON public.profiles TO authenticated;
+GRANT UPDATE (full_name, track, score, annual_budget, updated_at) ON public.profiles TO authenticated;
 
 -- Service role retains full access for administrative tasks in Step 2
 GRANT ALL ON public.profiles TO service_role;

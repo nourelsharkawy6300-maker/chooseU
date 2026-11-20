@@ -49,7 +49,7 @@ SET role = 'admin'
 WHERE id = '<UUID_A>';
 
 -- النتيجة المتوقعة (EXPECTED RESULT):
--- ERROR: Security error: Users are not permitted to change their account role.
+-- ERROR: permission denied for table profiles (من طبقة REVOKE UPDATE على الأعمدة؛ والتريجر trg_protect_profile_role خط دفاع ثانٍ).
 -- التريجر trg_protect_profile_role يكتشف وجود auth.uid() ويرفض العملية فوراً.
 ROLLBACK;
 
@@ -161,6 +161,66 @@ FROM public.profiles WHERE id = '<UUID_A>';
 -- النتيجة المتوقعة (EXPECTED RESULT):
 -- declare_age يرجع كائن JSON بنجاح
 -- الصف يظهر: age_declared = true, is_minor = true, guardian_ack = true, has_timestamp = true
+ROLLBACK;
+
+-- ----------------------------------------------------------------------------
+-- اختبار (و.4): منع الاستدعاء الثاني لـ declare_age بعد إقرار السن
+-- ----------------------------------------------------------------------------
+BEGIN;
+SET LOCAL ROLE authenticated;
+SET LOCAL request.jwt.claims = '{"sub":"<UUID_A>","role":"authenticated"}';
+
+-- الاستدعاء الأول (ينجح إذا لم يكن السن مُقرّاً بعد) ثم الثاني يجب أن يُرفض
+SELECT public.declare_age(false, false);
+SELECT public.declare_age(true, true);
+
+-- النتيجة المتوقعة (EXPECTED RESULT):
+-- ERROR: Age has already been declared and cannot be modified.
+ROLLBACK;
+
+
+-- ----------------------------------------------------------------------------
+-- اختبار (و.5): منع التعديل المباشر لأعمدة السن لـ authenticated
+-- ----------------------------------------------------------------------------
+BEGIN;
+SET LOCAL ROLE authenticated;
+SET LOCAL request.jwt.claims = '{"sub":"<UUID_A>","role":"authenticated"}';
+
+UPDATE public.profiles
+SET age_declared = true, is_minor = false
+WHERE id = '<UUID_A>';
+
+-- النتيجة المتوقعة (EXPECTED RESULT):
+-- ERROR: permission denied for table profiles
+ROLLBACK;
+
+
+-- ----------------------------------------------------------------------------
+-- اختبار (و.6): التأكد أن تعديل الأعمدة المسموحة فقط ما زال يعمل بنجاح
+-- ----------------------------------------------------------------------------
+BEGIN;
+SET LOCAL ROLE authenticated;
+SET LOCAL request.jwt.claims = '{"sub":"<UUID_A>","role":"authenticated"}';
+
+UPDATE public.profiles
+SET full_name = 'اختبار تعديل مسموح', score = 95.50
+WHERE id = '<UUID_A>';
+
+-- النتيجة المتوقعة (EXPECTED RESULT):
+-- UPDATE 1
+ROLLBACK;
+
+
+-- ----------------------------------------------------------------------------
+-- اختبار (ز): التأكد من حجب anon تماماً عن جدول profiles
+-- ----------------------------------------------------------------------------
+BEGIN;
+SET LOCAL ROLE anon;
+
+SELECT * FROM public.profiles LIMIT 1;
+
+-- النتيجة المتوقعة (EXPECTED RESULT):
+-- ERROR: permission denied for table profiles
 ROLLBACK;
 
 

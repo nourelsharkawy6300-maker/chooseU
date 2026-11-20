@@ -90,38 +90,34 @@ function DeclareAgeForm() {
     const supabase = createClient();
 
     try {
-      // 1. Attempt RPC call (atomic & constraint-enforced)
+      // Strict RPC-only age declaration (atomic, one-time, constraint-enforced)
       const { error: rpcError } = await supabase.rpc("declare_age", {
         p_is_minor: isMinor,
         p_guardian_ack: isMinor ? guardianAck : false,
       });
 
       if (rpcError) {
-        // 2. Fallback to direct profile update if RPC is not deployed yet
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+        const rawMsg = rpcError.message || "";
 
-        if (!user) {
+        if (rawMsg.includes("already been declared")) {
+          router.refresh();
+          router.replace(nextPath);
+          return;
+        }
+
+        if (rawMsg.includes("Unauthorized")) {
           throw new Error("انتهت جلستك. يرجى تسجيل الدخول مجدداً.");
         }
 
-        const updatePayload: Record<string, unknown> = {
-          age_declared: true,
-          is_minor: isMinor,
-          guardian_ack: isMinor ? guardianAck : false,
-          guardian_ack_at: isMinor && guardianAck ? new Date().toISOString() : null,
-          updated_at: new Date().toISOString(),
-        };
-
-        const { error: updateError } = await supabase
-          .from("profiles")
-          .update(updatePayload)
-          .eq("id", user.id);
-
-        if (updateError) {
-          throw new Error(updateError.message || "فشل تحديث البيانات في قاعدة البيانات.");
+        if (rawMsg.includes("guardian")) {
+          throw new Error(
+            "يجب الحصول على موافقة ولي الأمر وإقرار الموافقة لإتمام التسجيل للطلاب دون 18 عاماً."
+          );
         }
+
+        throw new Error(
+          "تعذر حفظ بيانات الفئة العمرية حالياً. يرجى المحاولة مرة أخرى."
+        );
       }
 
       // Success: Refresh and navigate to destination
