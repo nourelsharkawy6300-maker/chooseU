@@ -57,7 +57,7 @@ function FutureMeContent() {
       budget: annualBudgetEgp,
       gov: governorate,
       tansikShift: 0,
-      sectorFilter: "all",
+      sectorFilter: "الكل",
       trackCounts,
     });
   }, [stream, scorePercentage, annualBudgetEgp, governorate, trackCounts]);

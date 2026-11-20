@@ -38,7 +38,7 @@ export default function TcoMatrixPage() {
     stem: {},
   });
   const [tansikShift, setTansikShift] = useState<number>(0);
-  const [sectorFilter, setSectorFilter] = useState<string>("all");
+  const [sectorFilter, setSectorFilter] = useState<string>("الكل");
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [whatsappPhone, setWhatsappPhone] = useState("");
 
@@ -102,7 +102,7 @@ export default function TcoMatrixPage() {
         onSelectFutureCareer={() => router.push("/future-me")}
         onResetParameters={() => {
           setTansikShift(0);
-          setSectorFilter("all");
+          setSectorFilter("الكل");
         }}
       />
       <CheckoutModal

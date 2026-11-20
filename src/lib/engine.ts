@@ -262,6 +262,19 @@ function isFacultyEligibleForStream(f: Faculty, stream: StreamType): boolean {
   return false;
 }
 
+const SECTOR_ALL = "الكل";
+
+function isAllSectors(v: string | undefined | null): boolean {
+  return !v || v === SECTOR_ALL || v.toLowerCase() === "all";
+}
+
+function sectorMatches(facultyType: string, filter: string): boolean {
+  if (facultyType === filter) return true;
+  // زر "جامعات أهلية" يغطي كل أنواع الأهلية (منبثقة، دولية...)
+  if (filter === "جامعات أهلية") return facultyType.startsWith("جامعات أهلية");
+  return false;
+}
+
 export function evaluateAndRankFaculties(params: {
   stream: StreamType;
   score: number;
@@ -286,8 +299,8 @@ export function evaluateAndRankFaculties(params: {
   );
 
   const sectorFiltered = streamFaculties.filter((f) => {
-    if (!sectorFilter || sectorFilter === "الكل") return true;
-    return f.type === sectorFilter;
+    if (isAllSectors(sectorFilter)) return true;
+    return sectorMatches(f.type, sectorFilter);
   });
 
   // Compute minimum budget needed for score-eligible faculties (used for zero-match auto-recovery)
