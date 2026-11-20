@@ -1,11 +1,24 @@
+import { randomBytes } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { checkStrictLimit, checkGlobalLimit, rateLimitExceededResponse } from "@/lib/security/ratelimit";
+import {
+  checkStrictLimit,
+  checkGlobalLimit,
+  rateLimitExceededResponse,
+} from "@/lib/security/ratelimit";
 import { sanitizeInput } from "@/lib/security/sanitize";
-import { getSupabaseClient } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import { getClientIp } from "@/lib/server-auth";
-import { ConsultationOrderRow } from "@/types/chooseu";
 import { EGYPT_GOVERNORATES } from "@/data/faculties-db";
+
+// Minimal non-sensitive fields allowed on unauthenticated status lookup.
+// Full order details, grades, budget, and advisor notes require user_id auth (Step 2).
+const PUBLIC_STATUS_FIELDS = "order_code,order_status,created_at";
+const ORDER_CODE_REGEX = /^ORD-\d{4}-[0-9A-F]{4}-[0-9A-F]{16}$/;
+
+const NO_STORE_HEADERS = {
+  "Cache-Control": "no-store, max-age=0",
+};
 
 // Server-side strict validation schema (Hard-fail on unknown fields)
 const CreateOrderSchema = z
@@ -36,6 +49,12 @@ const CreateOrderSchema = z
   })
   .strict();
 
+function generateSecureOrderCode(): string {
+  const segment = randomBytes(2).toString("hex").toUpperCase();
+  const suffix = randomBytes(8).toString("hex").toUpperCase();
+  return `ORD-2026-${segment}-${suffix}`;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req.headers);
@@ -54,82 +73,56 @@ export async function POST(req: NextRequest) {
           success: false,
           error: parsed.error.issues[0]?.message || "بيانات الإدخال غير صالحة",
         },
-        { status: 400 }
+        { status: 400, headers: NO_STORE_HEADERS }
       );
     }
 
     const data = parsed.data;
+    const orderCode = generateSecureOrderCode();
 
-    // Server-enforced Order Code & Official Pricing
-    // Format: ORD-2026-NNNN-XXXXXXXXXXXXXXXX (sequential prefix + 16-char random hex suffix)
-    const randomSuffix = crypto.randomUUID().replace(/-/g, "").slice(0, 16).toUpperCase();
-    const orderCode = `ORD-2026-${Math.floor(1000 + Math.random() * 9000)}-${randomSuffix}`;
-    const OFFICIAL_REPORT_PRICE_EGP = 150; // Strictly enforced server-side
+    const supabase = getSupabaseAdmin();
 
-    const sanitizedOrder: ConsultationOrderRow & { amount_egp: number } = {
-      order_code: orderCode,
-      student_name: sanitizeInput(data.student_name),
-      whatsapp_phone: sanitizeInput(data.whatsapp_phone),
-      academic_stream: data.academic_stream,
-      score_percentage: Number(data.score_percentage),
-      max_budget: Number(data.max_budget),
-      governorate: sanitizeInput(data.governorate),
-      quiz_results: data.quiz_results || {},
-      instapay_ref: sanitizeInput(data.instapay_ref),
-      order_status: "pending",
-      amount_egp: OFFICIAL_REPORT_PRICE_EGP,
-      voice_note_url: "",
-      advisor_notes: "",
-      created_at: new Date().toISOString(),
-    };
+    const { data: insertedRow, error: insertError } = await supabase
+      .from("consultation_orders")
+      .insert({
+        order_code: orderCode,
+        student_name: sanitizeInput(data.student_name),
+        whatsapp_phone: sanitizeInput(data.whatsapp_phone),
+        academic_stream: data.academic_stream,
+        score_percentage: Number(data.score_percentage),
+        max_budget: Number(data.max_budget),
+        governorate: sanitizeInput(data.governorate),
+        quiz_results: data.quiz_results || {},
+        instapay_ref: sanitizeInput(data.instapay_ref),
+        order_status: "pending",
+      })
+      .select(PUBLIC_STATUS_FIELDS)
+      .single();
 
-    // Forward to Supabase via parameterized SDK call
-    const supabase = getSupabaseClient();
-
-    if (supabase) {
-      const { data: insertedRows, error: insertError } = await supabase
-        .from("consultation_orders")
-        .insert({
-          order_code: sanitizedOrder.order_code,
-          student_name: sanitizedOrder.student_name,
-          whatsapp_phone: sanitizedOrder.whatsapp_phone,
-          academic_stream: sanitizedOrder.academic_stream,
-          score_percentage: sanitizedOrder.score_percentage,
-          max_budget: sanitizedOrder.max_budget,
-          governorate: sanitizedOrder.governorate,
-          quiz_results: sanitizedOrder.quiz_results,
-          instapay_ref: sanitizedOrder.instapay_ref,
-          order_status: sanitizedOrder.order_status,
-        })
-        .select();
-
-      if (insertError) {
-        console.error("Supabase parameterized insert error:", insertError.message);
-        return NextResponse.json(
-          {
-            success: false,
-            error: "فشل حفظ الطلب في قاعدة البيانات. يرجى التحقق من صحة البيانات والمحاولة مجدداً.",
-          },
-          { status: 500 }
-        );
-      }
-
-      if (Array.isArray(insertedRows) && insertedRows.length > 0) {
-        return NextResponse.json({
-          success: true,
-          order: insertedRows[0],
-        });
-      }
+    if (insertError || !insertedRow) {
+      console.error("Supabase order insert error:", insertError?.message);
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "فشل حفظ الطلب في قاعدة البيانات. يرجى التحقق من صحة البيانات والمحاولة مجدداً.",
+        },
+        { status: 500, headers: NO_STORE_HEADERS }
+      );
     }
 
-    return NextResponse.json({
-      success: true,
-      order: sanitizedOrder,
-    });
-  } catch {
+    return NextResponse.json(
+      {
+        success: true,
+        order: insertedRow,
+      },
+      { status: 201, headers: NO_STORE_HEADERS }
+    );
+  } catch (err) {
+    console.error("Order POST handler error:", err);
     return NextResponse.json(
       { success: false, error: "حدث خطأ في الخادم أثناء إنشاء الطلب." },
-      { status: 500 }
+      { status: 500, headers: NO_STORE_HEADERS }
     );
   }
 }
@@ -146,64 +139,38 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("q")?.trim() || "";
 
-    if (!query || query.length < 3) {
+    const upperCode = sanitizeInput(query).toUpperCase();
+
+    // Strictly require full high-entropy order code; phone lookup is disabled.
+    if (!ORDER_CODE_REGEX.test(upperCode)) {
       return NextResponse.json(
         { success: false, error: "لم يتم العثور على الطلب." },
-        { status: 404 }
+        { status: 404, headers: NO_STORE_HEADERS }
       );
     }
 
-    const cleanQuery = sanitizeInput(query);
-    const upperCode = cleanQuery.toUpperCase();
+    const supabase = getSupabaseAdmin();
+    const { data: row, error } = await supabase
+      .from("consultation_orders")
+      .select(PUBLIC_STATUS_FIELDS)
+      .eq("order_code", upperCode)
+      .maybeSingle();
 
-    const supabase = getSupabaseClient();
-    // Minimal fields only — never expose phone/name/internal notes to public lookup
-    const PUBLIC_FIELDS =
-      "order_code,order_status,academic_stream,score_percentage,max_budget,governorate,quiz_results,advisor_notes,voice_note_url,created_at";
-
-    if (supabase) {
-      try {
-        let row: ConsultationOrderRow | null = null;
-
-        if (/^ORD-2026-[0-9A-Z\-]+$/.test(upperCode)) {
-          // Order code lookup — exact match only (parameterized .eq)
-          const { data: rows, error } = await supabase
-            .from("consultation_orders")
-            .select(PUBLIC_FIELDS)
-            .eq("order_code", upperCode)
-            .limit(1);
-          if (!error && Array.isArray(rows) && rows.length > 0) {
-            row = rows[0] as ConsultationOrderRow;
-          }
-        } else if (/^01[0125][0-9]{8}$/.test(cleanQuery)) {
-          // Phone number lookup — exact match only
-          const { data: rows, error } = await supabase
-            .from("consultation_orders")
-            .select(PUBLIC_FIELDS)
-            .eq("whatsapp_phone", cleanQuery)
-            .order("created_at", { ascending: false })
-            .limit(1);
-          if (!error && Array.isArray(rows) && rows.length > 0) {
-            row = rows[0] as ConsultationOrderRow;
-          }
-        }
-
-        if (row) {
-          return NextResponse.json({ success: true, order: row });
-        }
-      } catch {
-        // Fall through to generic not-found
-      }
+    if (!error && row) {
+      return NextResponse.json(
+        { success: true, order: row },
+        { status: 200, headers: NO_STORE_HEADERS }
+      );
     }
 
     return NextResponse.json(
       { success: false, error: "لم يتم العثور على الطلب." },
-      { status: 404 }
+      { status: 404, headers: NO_STORE_HEADERS }
     );
   } catch {
     return NextResponse.json(
       { success: false, error: "لم يتم العثور على الطلب." },
-      { status: 404 }
+      { status: 404, headers: NO_STORE_HEADERS }
     );
   }
 }
