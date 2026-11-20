@@ -57,6 +57,10 @@ const noIndexHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  compress: true,
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion"],
+  },
   reactStrictMode: true,
   images: {
     unoptimized: true,

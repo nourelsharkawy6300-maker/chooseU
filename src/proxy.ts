@@ -255,6 +255,25 @@ export async function proxy(req: NextRequest) {
     return applySecurityHeaders(response, pathname, origin);
   }
 
+  const hasSupabaseAuthCookie = req.cookies
+    .getAll()
+    .some((cookie) => cookie.name.startsWith("sb-"));
+
+  // Fast-path: avoid Supabase client & auth round-trip when no session cookie exists
+  if (!hasSupabaseAuthCookie) {
+    if (isProtected) {
+      const redirectUrl = req.nextUrl.clone();
+      redirectUrl.pathname = "/login";
+      redirectUrl.searchParams.set("next", safeNext(pathname));
+      return applySecurityHeaders(
+        NextResponse.redirect(redirectUrl),
+        pathname,
+        origin
+      );
+    }
+    return applySecurityHeaders(response, pathname, origin);
+  }
+
   const supabase = createServerClient(
     supabaseUrl as string,
     supabaseAnonKey as string,
@@ -345,6 +364,6 @@ export async function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|manifest.webmanifest|opengraph-image|twitter-image|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2)$).*)",
   ],
 };
