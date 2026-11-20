@@ -9,6 +9,10 @@ import {
   resetAdminLoginRateLimit,
 } from "@/lib/server-auth";
 
+const NO_STORE_HEADERS = {
+  "Cache-Control": "no-store, max-age=0",
+};
+
 const LoginSchema = z
   .object({
     passcode: z
@@ -39,6 +43,7 @@ export async function POST(req: NextRequest) {
         {
           status: 429,
           headers: {
+            ...NO_STORE_HEADERS,
             "Retry-After": String(rateLimit.retryAfterSeconds),
           },
         }
@@ -55,12 +60,11 @@ export async function POST(req: NextRequest) {
           success: false,
           error: parsed.error.issues[0]?.message || "مدخلات غير صالحة",
         },
-        { status: 400 }
+        { status: 400, headers: NO_STORE_HEADERS }
       );
     }
 
     // 3. Read passcode STRICTLY from server-side environment variable ADMIN_PASSCODE
-    // Fail-Closed: If ADMIN_PASSCODE is not set or empty, reject immediately. No defaults, no bypass.
     const expectedPasscode = process.env.ADMIN_PASSCODE;
 
     if (!expectedPasscode || expectedPasscode.trim() === "") {
@@ -70,7 +74,7 @@ export async function POST(req: NextRequest) {
           success: false,
           error: "خدمة المصادقة غير مهيأة على الخادم. يرجى التواصل مع المسؤول.",
         },
-        { status: 500 }
+        { status: 500, headers: NO_STORE_HEADERS }
       );
     }
 
@@ -89,7 +93,7 @@ export async function POST(req: NextRequest) {
           error: `رمز المرور غير صحيح. ${remainingMsg}`,
           remainingAttempts: failure.remainingAttempts,
         },
-        { status: 401 }
+        { status: 401, headers: NO_STORE_HEADERS }
       );
     }
 
@@ -99,10 +103,13 @@ export async function POST(req: NextRequest) {
     // 6. Generate signed HMAC-SHA256 session token (1 hour duration)
     const sessionToken = createAdminSessionToken(SESSION_DURATION_SECONDS);
 
-    const response = NextResponse.json({
-      success: true,
-      message: "تم التحقق من هوية المستشار بنجاح.",
-    });
+    const response = NextResponse.json(
+      {
+        success: true,
+        message: "تم التحقق من هوية المستشار بنجاح.",
+      },
+      { headers: NO_STORE_HEADERS }
+    );
 
     // 7. Issue hardened cookie: httpOnly, secure, sameSite=strict, short duration
     const isProduction = process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL);
@@ -120,7 +127,7 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json(
       { success: false, error: "حدث خطأ غير متوقع في معالجة الطلب." },
-      { status: 500 }
+      { status: 500, headers: NO_STORE_HEADERS }
     );
   }
 }

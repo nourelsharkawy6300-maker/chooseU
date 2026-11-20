@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { ConsultationOrderRow } from "@/types/chooseu";
-import { DataService, SecurityValidator } from "@/lib/security-db";
+import { SecurityValidator } from "@/lib/security-db";
 import {
   ArrowRight,
   CheckCircle2,
@@ -50,6 +50,7 @@ export default function AdvisorAdminPortalPage() {
   const [isLoadingOrders, setIsLoadingOrders] = useState<boolean>(false);
   const [isApproving, setIsApproving] = useState<boolean>(false);
   const [statusBanner, setStatusBanner] = useState<string>("");
+  const [errorBanner, setErrorBanner] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "approved">("all");
   const [copiedOrderCode, setCopiedOrderCode] = useState<string>("");
 
@@ -71,29 +72,48 @@ export default function AdvisorAdminPortalPage() {
     };
   }, []);
 
+  const handleExpiredSession = useCallback(() => {
+    setIsAuthenticated(false);
+    setOrders([]);
+    setSelectedOrderCode("");
+    setStatusBanner("");
+    setErrorBanner("");
+    setAuthError("انتهت صلاحية جلسة المستشار. يرجى تسجيل الدخول مرة أخرى.");
+  }, []);
+
   const refreshOrdersFromServer = useCallback(async () => {
     setIsLoadingOrders(true);
+    setErrorBanner("");
     try {
-      const res = await fetch("/api/admin/orders");
-      if (res.ok) {
-        const data = await res.json();
-        if (data.orders && Array.isArray(data.orders) && data.orders.length > 0) {
-          setOrders(data.orders);
-          setSelectedOrderCode((curr) => curr || data.orders[0].order_code);
-          setIsLoadingOrders(false);
-          return;
-        }
+      const res = await fetch("/api/admin/orders", { cache: "no-store" });
+      if (res.status === 401 || res.status === 403) {
+        handleExpiredSession();
+        return;
       }
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setErrorBanner(
+          data.error || "تعذر تحميل الطلبات من الخادم. يرجى المحاولة مرة أخرى."
+        );
+        return;
+      }
+
+      const list: ConsultationOrderRow[] = Array.isArray(data.orders)
+        ? data.orders
+        : [];
+      setOrders(list);
+      setSelectedOrderCode((curr) =>
+        list.some((o) => o.order_code === curr)
+          ? curr
+          : list[0]?.order_code || ""
+      );
     } catch {
-      // Fallback to local DataService
+      setErrorBanner("تعذر الاتصال بالخادم لتحميل الطلبات.");
+    } finally {
+      setIsLoadingOrders(false);
     }
-    const list = await DataService.fetchAllOrdersForAdmin();
-    setOrders(list);
-    if (list.length > 0) {
-      setSelectedOrderCode((curr) => curr || list[0].order_code);
-    }
-    setIsLoadingOrders(false);
-  }, []);
+  }, [handleExpiredSession]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -166,6 +186,9 @@ export default function AdvisorAdminPortalPage() {
   const handleApproveSelectedOrder = async () => {
     if (!selectedOrder) return;
     setIsApproving(true);
+    setErrorBanner("");
+    setStatusBanner("");
+
     const notesToSave =
       selectedOrder.advisor_notes?.trim() || DEFAULT_ADVISOR_NOTES;
     const voiceToSave = selectedOrder.voice_note_url?.trim() || "";
@@ -182,47 +205,35 @@ export default function AdvisorAdminPortalPage() {
         }),
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        if (data.success && data.order) {
-          setOrders((prev) =>
-            prev.map((o) =>
-              o.order_code === data.order.order_code
-                ? { ...o, ...data.order }
-                : o
-            )
-          );
-          setStatusBanner(
-            `تم اعتماد الطلب (${data.order.order_code}) للطالب «${selectedOrder.student_name}» وفتح التقرير الكامل في قاعدة البيانات فوراً.`
-          );
-          setIsApproving(false);
-          return;
-        }
+      if (res.status === 401 || res.status === 403) {
+        handleExpiredSession();
+        return;
       }
+
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success && data.order) {
+        setOrders((prev) =>
+          prev.map((o) =>
+            o.order_code === data.order.order_code
+              ? { ...o, ...data.order }
+              : o
+          )
+        );
+        setStatusBanner(
+          `تم اعتماد الطلب (${data.order.order_code}) للطالب «${selectedOrder.student_name}» وفتح التقرير الكامل في قاعدة البيانات فوراً.`
+        );
+        return;
+      }
+
+      setErrorBanner(
+        data.error || "تعذر اعتماد الطلب على الخادم. لم يتم حفظ أي تغييرات."
+      );
     } catch {
-      // Fallback to local DataService
-    }
-
-    const updated = await DataService.approveOrderInAdmin(
-      selectedOrder.order_code,
-      notesToSave,
-      voiceToSave,
-      "approved"
-    );
-    setIsApproving(false);
-
-    if (updated) {
-      setOrders((prev) =>
-        prev.map((o) =>
-          o.order_code === updated.order_code ? updated : o
-        )
-      );
-      setStatusBanner(
-        `تم اعتماد الطلب (${updated.order_code}) للطالب «${updated.student_name}» وفتح التقرير الكامل في قاعدة البيانات فوراً.`
-      );
+      setErrorBanner("فشل الاتصال بالخادم أثناء اعتماد الطلب.");
+    } finally {
+      setIsApproving(false);
     }
   };
-
   const totalOrdersCount = orders.length;
   const pendingOrdersCount = orders.filter(
     (o) => o.order_status === "pending"
@@ -479,6 +490,22 @@ export default function AdvisorAdminPortalPage() {
           </div>
         </div>
 
+        {errorBanner && (
+          <div
+            role="alert"
+            className="bg-rose-50 border border-rose-200 text-rose-900 px-4 py-3 rounded-xl text-[12px] flex items-center justify-between shadow-2xs"
+          >
+            <span>{errorBanner}</span>
+            <button
+              type="button"
+              onClick={() => setErrorBanner("")}
+              className="text-rose-700 hover:text-rose-950 font-semibold cursor-pointer"
+            >
+              إغلاق
+            </button>
+          </div>
+        )}
+
         {statusBanner && (
           <div className="bg-emerald-50 border border-emerald-200 text-emerald-900 px-4 py-3 rounded-xl text-[12px] flex items-center justify-between shadow-2xs">
             <div className="flex items-center gap-2">
@@ -538,6 +565,18 @@ export default function AdvisorAdminPortalPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
+                  {filteredOrders.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan={6}
+                        className="py-10 px-4 text-center text-[12px] text-slate-500"
+                      >
+                        {isLoadingOrders
+                          ? "جاري تحميل الطلبات من قاعدة البيانات..."
+                          : "لا توجد طلبات مطابقة حالياً."}
+                      </td>
+                    </tr>
+                  )}
                   {filteredOrders.map((ord) => {
                     const isSelected =
                       selectedOrder?.order_code === ord.order_code;

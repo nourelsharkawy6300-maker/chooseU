@@ -9,8 +9,19 @@ const NO_STORE_HEADERS = {
   "Cache-Control": "no-store, max-age=0",
 };
 
+function normalizeSafeHttpsUrl(raw: string): string | null {
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  const parsed = new URL(trimmed);
+  if (parsed.protocol !== "https:") {
+    throw new Error("Invalid protocol");
+  }
+  return parsed.toString();
+}
+
 const HttpsUrlOrEmptySchema = z
   .string()
+  .trim()
   .max(1024)
   .refine((val) => {
     if (val === "") return true;
@@ -24,7 +35,7 @@ const HttpsUrlOrEmptySchema = z
 
 const PatchOrderSchema = z
   .object({
-    order_code: z.string().min(4).max(64),
+    order_code: z.string().trim().min(4).max(64),
     order_status: z.enum(["pending", "approved", "rejected"]),
     advisor_notes: z.string().max(4000).optional(),
     voice_note_url: HttpsUrlOrEmptySchema.optional(),
@@ -32,13 +43,19 @@ const PatchOrderSchema = z
   .strict();
 
 export async function GET(req: NextRequest) {
-  // 1. RBAC Check: Must have a valid admin session cookie
   const cookieToken = req.cookies.get("chooseu_admin_session")?.value;
   const session = verifyAdminSessionToken(cookieToken);
 
-  if (!session || session.role !== "admin") {
+  if (!session) {
     return NextResponse.json(
       { success: false, error: "غير مصرح: يجب تسجيل الدخول كمستشار أولاً." },
+      { status: 401, headers: NO_STORE_HEADERS }
+    );
+  }
+
+  if (session.role !== "admin") {
+    return NextResponse.json(
+      { success: false, error: "مرفوض: لا تملك صلاحية الوصول لهذه البيانات." },
       { status: 403, headers: NO_STORE_HEADERS }
     );
   }
@@ -72,11 +89,20 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  // 1. RBAC Check: Must have a valid admin session cookie
   const cookieToken = req.cookies.get("chooseu_admin_session")?.value;
   const session = verifyAdminSessionToken(cookieToken);
 
-  if (!session || session.role !== "admin") {
+  if (!session) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "انتهت صلاحية الجلسة: يجب تسجيل الدخول كمستشار أولاً.",
+      },
+      { status: 401, headers: NO_STORE_HEADERS }
+    );
+  }
+
+  if (session.role !== "admin") {
     return NextResponse.json(
       {
         success: false,
@@ -114,9 +140,7 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (voice_note_url !== undefined) {
-      patchBody.voice_note_url = voice_note_url
-        ? sanitizeInput(voice_note_url)
-        : null;
+      patchBody.voice_note_url = normalizeSafeHttpsUrl(voice_note_url);
     }
 
     const supabase = getSupabaseAdmin();

@@ -1,3 +1,4 @@
+import "server-only";
 import crypto from "crypto";
 
 // ============================================================================
@@ -50,7 +51,7 @@ export function verifyPasscode(
 // only so the dev server can start — never deploy without setting this variable.
 const _rawSecret = process.env.ADMIN_SESSION_SECRET;
 if (!_rawSecret) {
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL)) {
     throw new Error(
       "[server-auth] ADMIN_SESSION_SECRET is not set. The application cannot start in production without it."
     );
@@ -116,7 +117,13 @@ export function verifyAdminSessionToken(token: string | undefined): AdminSession
       Buffer.from(payloadB64, "base64url").toString("utf-8")
     ) as AdminSessionPayload;
 
-    if (payload.role !== "admin" || Date.now() > payload.expiresAt) {
+    if (
+      !payload ||
+      payload.role !== "admin" ||
+      typeof payload.expiresAt !== "number" ||
+      !Number.isFinite(payload.expiresAt) ||
+      Date.now() > payload.expiresAt
+    ) {
       return null;
     }
 
