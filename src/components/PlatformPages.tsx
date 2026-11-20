@@ -1143,8 +1143,10 @@ export function TrackOrderView({
     initialOrder?.order_code || ""
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [myOrders, setMyOrders] = useState<ConsultationOrderRow[]>([]);
+  const [isLoadingMyOrders, setIsLoadingMyOrders] = useState<boolean>(true);
   const [orderResult, setOrderResult] = useState<ConsultationOrderRow | null>(
-    initialOrder || null
+    initialOrder?.order_status ? initialOrder : null
   );
   const [prevOrderCode, setPrevOrderCode] = useState<string | undefined>(
     initialOrder?.order_code
@@ -1154,9 +1156,59 @@ export function TrackOrderView({
   // Sync state during render when initialOrder prop changes
   if (initialOrder && initialOrder.order_code !== prevOrderCode) {
     setPrevOrderCode(initialOrder.order_code);
-    setOrderResult(initialOrder);
+    if (initialOrder.order_status) {
+      setOrderResult(initialOrder);
+    }
     setQueryInput(initialOrder.order_code);
   }
+
+  // Load authenticated student's orders automatically on mount
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadOwnedOrders() {
+      setIsLoadingMyOrders(true);
+      const list = await DataService.getMyOrders();
+      if (cancelled) return;
+      setMyOrders(list);
+
+      const targetCode = initialOrder?.order_code?.trim();
+      if (targetCode) {
+        const matched = list.find(
+          (o) => o.order_code.toUpperCase() === targetCode.toUpperCase()
+        );
+        if (matched) {
+          setOrderResult(matched);
+          setQueryInput(matched.order_code);
+          setNotFound(false);
+          onOrderLoaded?.(matched);
+        } else {
+          const fetched = await DataService.getOrderByCodeOrPhone(targetCode);
+          if (cancelled) return;
+          if (fetched) {
+            setOrderResult(fetched);
+            setQueryInput(fetched.order_code);
+            setNotFound(false);
+            onOrderLoaded?.(fetched);
+          } else if (!initialOrder?.order_status) {
+            setOrderResult(null);
+            setNotFound(true);
+          }
+        }
+      } else if (list.length > 0) {
+        setOrderResult((prev) => prev ?? list[0]);
+        setQueryInput((prev) => prev || list[0].order_code);
+        onOrderLoaded?.(list[0]);
+      }
+
+      setIsLoadingMyOrders(false);
+    }
+
+    void loadOwnedOrders();
+    return () => {
+      cancelled = true;
+    };
+  }, [initialOrder?.order_code, initialOrder?.order_status, onOrderLoaded]);
 
   const orderStatus = orderResult?.order_status;
   const orderCode = orderResult?.order_code;
@@ -1168,6 +1220,9 @@ export function TrackOrderView({
       const refreshed = await DataService.getOrderByCodeOrPhone(orderCode);
       if (refreshed) {
         setOrderResult(refreshed);
+        setMyOrders((prev) =>
+          prev.map((o) => (o.order_code === refreshed.order_code ? refreshed : o))
+        );
         onOrderLoaded?.(refreshed);
         if (refreshed.order_status !== "pending") clearInterval(interval);
       }
@@ -1251,9 +1306,94 @@ export function TrackOrderView({
 
         {notFound && (
           <div className="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-[12px]">
-            مفيش طلب بالكود ده. اتأكد من الكود وجرّب تاني.
+            مفيش طلب بالكود ده ضمن طلبات حسابك. اتأكد من الكود وجرّب تاني.
           </div>
         )}
+
+        {/* Authenticated student's saved orders list */}
+        <div className="border-t border-slate-100 pt-4 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[12px] font-semibold text-slate-700">
+              طلباتك المسجّلة بحسابك
+            </span>
+            {myOrders.length > 0 && (
+              <span className="text-[11px] text-slate-500 tabular-nums">
+                {myOrders.length} {myOrders.length === 1 ? "طلب" : "طلبات"}
+              </span>
+            )}
+          </div>
+
+          {isLoadingMyOrders ? (
+            <div className="flex items-center gap-2 text-[12px] text-slate-500 py-2">
+              <Loader2 className="w-3.5 h-3.5 animate-spin" strokeWidth={1.5} />
+              <span>جاري تحميل طلبات حسابك...</span>
+            </div>
+          ) : myOrders.length === 0 ? (
+            <div className="bg-slate-50 border border-slate-200/80 rounded-xl px-4 py-3 text-[12px] text-slate-600">
+              لا توجد طلبات مسجّلة على حسابك حتى الآن. يمكنك طلب التقرير المعتمد من مصفوفة التكلفة أو التقرير النموذجي.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+              {myOrders.map((ord) => {
+                const isSelected = orderResult?.order_code === ord.order_code;
+                const statusBadge =
+                  ord.order_status === "approved"
+                    ? {
+                        label: "تم الاعتماد",
+                        cls: "bg-emerald-50 text-emerald-700 border-emerald-200",
+                      }
+                    : ord.order_status === "rejected"
+                    ? {
+                        label: "مرفوض",
+                        cls: "bg-rose-50 text-rose-700 border-rose-200",
+                      }
+                    : {
+                        label: "قيد المراجعة",
+                        cls: "bg-amber-50 text-amber-800 border-amber-200",
+                      };
+
+                return (
+                  <button
+                    key={ord.order_code}
+                    type="button"
+                    onClick={() => {
+                      setOrderResult(ord);
+                      setQueryInput(ord.order_code);
+                      setNotFound(false);
+                      onOrderLoaded?.(ord);
+                    }}
+                    className={`text-right rounded-xl border p-3 transition cursor-pointer space-y-1.5 ${
+                      isSelected
+                        ? "border-[#377ef0] bg-blue-50/50 ring-1 ring-[#377ef0]/30"
+                        : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] font-mono font-bold text-slate-800 truncate dir-ltr">
+                        {ord.order_code}
+                      </span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border shrink-0 ${statusBadge.cls}`}
+                      >
+                        {statusBadge.label}
+                      </span>
+                    </div>
+                    {ord.student_name && (
+                      <div className="text-[12px] font-medium text-slate-700 truncate">
+                        {ord.student_name}
+                      </div>
+                    )}
+                    {ord.created_at && (
+                      <div className="text-[11px] text-slate-400 tabular-nums">
+                        {new Date(ord.created_at).toLocaleDateString("ar-EG")}
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
       {orderResult && (
@@ -1563,6 +1703,7 @@ export function CheckoutModal({
   onOrderCreated,
   onNavigateToTrackOrder,
 }: CheckoutModalProps) {
+  const { authUser } = useStudent();
   const [instapayRef, setInstapayRef] = useState<string>("");
   const [validationError, setValidationError] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -1573,6 +1714,11 @@ export function CheckoutModal({
   const [copiedPhone, setCopiedPhone] = useState<boolean>(false);
 
   if (!isOpen) return null;
+
+  const loginNextParam =
+    typeof window !== "undefined"
+      ? encodeURIComponent(window.location.pathname + window.location.search)
+      : "%2Ftco-matrix";
 
   const handleConfirmOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1665,7 +1811,32 @@ export function CheckoutModal({
           </button>
         </div>
 
-        {!createdOrder ? (
+        {!authUser && !createdOrder ? (
+          <div className="space-y-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-2">
+              <div className="text-[14px] font-bold text-slate-900">
+                سجّل دخولك أولاً لربط التقرير بحسابك
+              </div>
+              <p className="text-[12px] text-slate-700 leading-relaxed">
+                لضمان خصوصية درجاتك وملاحظات المستشار والمذكرة الصوتية، يتم ربط كل طلب استشارة بحسابك الشخصي مباشرة حتى تتمكن من متابعته في أي وقت.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2.5">
+              <a
+                href={`/login?next=${loginNextParam}`}
+                className="flex-1 bg-[#377ef0] hover:bg-[#2962be] text-white py-2.5 px-4 rounded-xl text-[13px] font-semibold text-center transition shadow-sm"
+              >
+                تسجيل الدخول بحسابك
+              </a>
+              <a
+                href={`/signup?next=${loginNextParam}`}
+                className="flex-1 border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 py-2.5 px-4 rounded-xl text-[13px] font-semibold text-center transition"
+              >
+                إنشاء حساب جديد
+              </a>
+            </div>
+          </div>
+        ) : !createdOrder ? (
           <form onSubmit={handleConfirmOrder} className="space-y-4">
             {validationError && (
               <div className="bg-rose-50 border border-rose-200 text-rose-800 px-3.5 py-2.5 rounded-xl text-[12px]">

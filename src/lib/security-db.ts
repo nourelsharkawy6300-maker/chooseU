@@ -151,6 +151,7 @@ export const DataService = {
 
     const apiResponse = await fetch("/api/orders", {
       method: "POST",
+      credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         student_name: payload.student_name,
@@ -199,7 +200,36 @@ export const DataService = {
   },
 
   /**
-   * Queries minimal public status by full order_code strictly through GET /api/orders.
+   * Fetches all consultation orders owned by the currently authenticated student.
+   */
+  async getMyOrders(): Promise<ConsultationOrderRow[]> {
+    purgeLegacyLocalOrders();
+
+    try {
+      const apiResponse = await fetch("/api/orders", {
+        method: "GET",
+        credentials: "same-origin",
+        cache: "no-store",
+      });
+      if (!apiResponse.ok) return [];
+
+      const result = (await apiResponse.json().catch(() => null)) as {
+        success?: boolean;
+        orders?: ConsultationOrderRow[];
+      } | null;
+
+      if (!result?.success || !Array.isArray(result.orders)) {
+        return [];
+      }
+
+      return result.orders;
+    } catch {
+      return [];
+    }
+  },
+
+  /**
+   * Queries an order owned by the authenticated student by full order_code through GET /api/orders.
    */
   async getOrderByCodeOrPhone(
     queryInput: string
@@ -212,7 +242,7 @@ export const DataService = {
     try {
       const apiResponse = await fetch(
         `/api/orders?q=${encodeURIComponent(cleanQuery)}`,
-        { cache: "no-store" }
+        { credentials: "same-origin", cache: "no-store" }
       );
       if (!apiResponse.ok) return null;
 
@@ -226,19 +256,21 @@ export const DataService = {
       }
 
       return {
+        id: result.order.id,
+        user_id: result.order.user_id ?? null,
         order_code: result.order.order_code,
         order_status: result.order.order_status || "pending",
         created_at: result.order.created_at || "",
-        student_name: "",
-        whatsapp_phone: "",
-        academic_stream: "",
-        score_percentage: 0,
-        max_budget: 0,
-        governorate: "",
-        quiz_results: {},
-        instapay_ref: "",
-        voice_note_url: "",
-        advisor_notes: "",
+        student_name: result.order.student_name || "",
+        whatsapp_phone: result.order.whatsapp_phone || "",
+        academic_stream: result.order.academic_stream || "",
+        score_percentage: Number(result.order.score_percentage) || 0,
+        max_budget: Number(result.order.max_budget) || 0,
+        governorate: result.order.governorate || "",
+        quiz_results: result.order.quiz_results ?? {},
+        instapay_ref: result.order.instapay_ref || "",
+        voice_note_url: result.order.voice_note_url || "",
+        advisor_notes: result.order.advisor_notes || "",
       };
     } catch {
       return null;

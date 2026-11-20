@@ -180,6 +180,7 @@ export interface EvaluationResult {
 
 export interface ConsultationOrderRow {
   id?: string;
+  user_id?: string | null;
   order_code: string;
   student_name: string;
   whatsapp_phone: string;

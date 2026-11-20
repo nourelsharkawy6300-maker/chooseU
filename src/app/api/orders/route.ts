@@ -8,12 +8,13 @@ import {
 } from "@/lib/security/ratelimit";
 import { sanitizeInput } from "@/lib/security/sanitize";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { createClient } from "@/lib/supabase/server";
 import { getClientIp } from "@/lib/server-auth";
 import { EGYPT_GOVERNORATES } from "@/data/faculties-db";
 
-// Minimal non-sensitive fields allowed on unauthenticated status lookup.
-// Full order details, grades, budget, and advisor notes require user_id auth (Step 2).
-const PUBLIC_STATUS_FIELDS = "order_code,order_status,created_at";
+// Full fields returned strictly to the authenticated order owner (enforced by auth + RLS).
+const OWNER_ORDER_FIELDS =
+  "id,order_code,user_id,student_name,whatsapp_phone,academic_stream,score_percentage,max_budget,governorate,quiz_results,instapay_ref,order_status,voice_note_url,advisor_notes,created_at";
 const ORDER_CODE_REGEX = /^ORD-\d{4}-[0-9A-F]{4}-[0-9A-F]{16}$/;
 
 const NO_STORE_HEADERS = {
@@ -58,12 +59,42 @@ function generateSecureOrderCode(): string {
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req.headers);
-    // Strict rate limit check: 5 requests per minute
     const rateLimit = await checkStrictLimit(`order_create_${ip}`);
     if (!rateLimit.success) {
       return rateLimitExceededResponse(rateLimit.reset);
     }
 
+    // 1. Authenticate student via server-side Supabase session
+    const authClient = await createClient();
+    if (!authClient) {
+      return NextResponse.json(
+        { success: false, error: "تعذر الاتصال بخدمة المصادقة حالياً." },
+        { status: 500, headers: NO_STORE_HEADERS }
+      );
+    }
+
+    const {
+      data: { user },
+      error: authError,
+    } = await authClient.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "يجب تسجيل الدخول بحسابك أولاً لإرسال طلب الاستشارة.",
+        },
+        { status: 401, headers: NO_STORE_HEADERS }
+      );
+    }
+
+    // Per-user strict rate limit (defense-in-depth alongside IP limit)
+    const userLimit = await checkStrictLimit(`order_create_u_${user.id}`);
+    if (!userLimit.success) {
+      return rateLimitExceededResponse(userLimit.reset);
+    }
+
+    // 2. Validate payload strictly
     const body: unknown = await req.json();
     const parsed = CreateOrderSchema.safeParse(body);
 
@@ -80,12 +111,13 @@ export async function POST(req: NextRequest) {
     const data = parsed.data;
     const orderCode = generateSecureOrderCode();
 
+    // 3. Server-only insert binding order strictly to verified user.id
     const supabase = getSupabaseAdmin();
-
     const { data: insertedRow, error: insertError } = await supabase
       .from("consultation_orders")
       .insert({
         order_code: orderCode,
+        user_id: user.id,
         student_name: sanitizeInput(data.student_name),
         whatsapp_phone: sanitizeInput(data.whatsapp_phone),
         academic_stream: data.academic_stream,
@@ -96,7 +128,7 @@ export async function POST(req: NextRequest) {
         instapay_ref: sanitizeInput(data.instapay_ref),
         order_status: "pending",
       })
-      .select(PUBLIC_STATUS_FIELDS)
+      .select(OWNER_ORDER_FIELDS)
       .single();
 
     if (insertError || !insertedRow) {
@@ -130,18 +162,63 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const ip = getClientIp(req.headers);
-    // Global rate limit: 50 requests per 10 seconds
     const rateLimit = await checkGlobalLimit(`order_query_${ip}`);
     if (!rateLimit.success) {
       return rateLimitExceededResponse(rateLimit.reset);
     }
 
+    // 1. Authenticate student via server-side Supabase session
+    const authClient = await createClient();
+    if (!authClient) {
+      return NextResponse.json(
+        { success: false, error: "تعذر الاتصال بخدمة المصادقة حالياً." },
+        { status: 500, headers: NO_STORE_HEADERS }
+      );
+    }
+
+    const {
+      data: { user },
+      error: authError,
+    } = await authClient.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "يجب تسجيل الدخول أولاً لمتابعة طلباتك.",
+        },
+        { status: 401, headers: NO_STORE_HEADERS }
+      );
+    }
+
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("q")?.trim() || "";
 
-    const upperCode = sanitizeInput(query).toUpperCase();
+    // 2A. No query param -> return all orders owned by this authenticated user (Zero-Trust RLS via authClient)
+    if (!query) {
+      const { data: rows, error } = await authClient
+        .from("consultation_orders")
+        .select(OWNER_ORDER_FIELDS)
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(20);
 
-    // Strictly require full high-entropy order code; phone lookup is disabled.
+      if (error) {
+        console.error("User orders list error:", error.message);
+        return NextResponse.json(
+          { success: false, error: "تعذر تحميل طلباتك حالياً." },
+          { status: 500, headers: NO_STORE_HEADERS }
+        );
+      }
+
+      return NextResponse.json(
+        { success: true, orders: rows ?? [] },
+        { status: 200, headers: NO_STORE_HEADERS }
+      );
+    }
+
+    // 2B. Specific order_code lookup strictly scoped to this authenticated user
+    const upperCode = sanitizeInput(query).toUpperCase();
     if (!ORDER_CODE_REGEX.test(upperCode)) {
       return NextResponse.json(
         { success: false, error: "لم يتم العثور على الطلب." },
@@ -149,11 +226,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const supabase = getSupabaseAdmin();
-    const { data: row, error } = await supabase
+    const { data: row, error } = await authClient
       .from("consultation_orders")
-      .select(PUBLIC_STATUS_FIELDS)
+      .select(OWNER_ORDER_FIELDS)
       .eq("order_code", upperCode)
+      .eq("user_id", user.id)
       .maybeSingle();
 
     if (!error && row) {
