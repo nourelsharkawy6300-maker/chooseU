@@ -31,7 +31,7 @@ function getClientIp(req: NextRequest): string {
   return req.headers.get("x-real-ip") || "127.0.0.1";
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const origin = req.headers.get("origin");
 
@@ -75,7 +75,7 @@ export async function middleware(req: NextRequest) {
     // ========================================================================
     const clientIp = getClientIp(req);
     const isSensitiveRoute =
-      pathname.startsWith("/api/admin/") || pathname === "/api/orders";
+      (pathname.startsWith("/api/admin/") && pathname !== "/api/admin/session") || pathname === "/api/orders";
 
     if (isSensitiveRoute) {
       const { success, reset } = await checkStrictLimit(`strict_${clientIp}`);
