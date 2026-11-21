@@ -1558,11 +1558,13 @@ export function FourStationJourney({
                     if (e.key === "Enter" && !isAiLoading) void handleSendMessage();
                   }}
                   placeholder="اسألني أي سؤال (عام، دراسي، كليات، تنسيق، أو سوق العمل)..."
-                  className="flex-1 bg-white border border-slate-300 rounded-lg px-3.5 py-2 text-slate-900 text-[12px] focus:border-blue-500 focus:outline-none"
+                  className="flex-1 min-w-0 bg-white border border-slate-300 rounded-lg px-3.5 py-2 text-slate-900 text-[12px] focus:border-[#377ef0] focus:outline-none"
                 />
                 <button
                   type="button"
-                  disabled={isAiLoading}
+                  onClick={() => void handleSendMessage()}
+                  disabled={isAiLoading || !inputQuestion.trim()}
+                  className="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#377ef0] hover:bg-[#2a6ad6] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-white text-[12px] font-semibold px-3.5 py-2 transition-all cursor-pointer"
                 >
                   <span>إرسال</span>
                   <Send className="w-3.5 h-3.5 stroke-[2]" />
