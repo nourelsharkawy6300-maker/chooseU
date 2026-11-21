@@ -49,7 +49,7 @@ const STATUS_META: Record<ApplicationStatus, { label: string; cls: string }> = {
   },
   applied: {
     label: "تم التقديم",
-    cls: "bg-blue-50 text-blue-700 border-blue-200",
+    cls: "bg-amber-50 text-amber-800 border-amber-200",
   },
   accepted: {
     label: "تم القبول / الترشيح",
@@ -183,7 +183,7 @@ export default function ActionPlanPage() {
       <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-2xs space-y-3">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#377ef0] bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full">
+            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full">
               <ClipboardCheck className="w-3.5 h-3.5" />
               <span>Take Action & Track Your Journey</span>
             </div>
@@ -215,7 +215,7 @@ export default function ActionPlanPage() {
       <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-[16px] font-bold text-slate-900 flex items-center gap-2">
-            <CalendarClock className="w-4 h-4 text-[#377ef0]" />
+            <CalendarClock className="w-4 h-4 text-amber-600" />
             <span>1. قائمتك المختصرة ومتابعة مواعيد وحالة التقديم ({mvpState.shortlist.length})</span>
           </h2>
         </div>
@@ -226,7 +226,7 @@ export default function ActionPlanPage() {
             <select
               value={selectedFacultyId}
               onChange={(e) => setSelectedFacultyId(e.target.value)}
-              className="flex-1 border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:border-[#377ef0]"
+              className="flex-1 border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:border-amber-500"
             >
               {streamFaculties.map((f) => (
                 <option key={f.id} value={f.id}>
@@ -237,7 +237,7 @@ export default function ActionPlanPage() {
             <button
               type="button"
               onClick={addFacultyToShortlist}
-              className="bg-[#377ef0] hover:bg-[#2962be] text-white px-3.5 py-2 rounded-xl font-bold inline-flex items-center gap-1 shrink-0 cursor-pointer"
+              className="bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 px-3.5 py-2 rounded-xl font-bold inline-flex items-center gap-1 shrink-0 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>إضافة كلية</span>
@@ -248,7 +248,7 @@ export default function ActionPlanPage() {
             <select
               value={selectedScholarshipId}
               onChange={(e) => setSelectedScholarshipId(e.target.value)}
-              className="flex-1 border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:border-[#377ef0]"
+              className="flex-1 border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:border-amber-500"
             >
               {SCHOLARSHIPS_DATABASE.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -281,7 +281,7 @@ export default function ActionPlanPage() {
                 <div className="space-y-0.5 min-w-[220px] flex-1">
                   <div className="flex items-center gap-1.5">
                     {item.kind === "faculty" ? (
-                      <Building2 className="w-3.5 h-3.5 text-[#377ef0]" />
+                      <Building2 className="w-3.5 h-3.5 text-amber-600" />
                     ) : (
                       <Award className="w-3.5 h-3.5 text-emerald-600" />
                     )}
@@ -374,7 +374,7 @@ export default function ActionPlanPage() {
         {/* Extended Student Profile (Stage 1 & 2 completeness) */}
         <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs space-y-4">
           <h2 className="text-[15px] font-bold text-slate-900 flex items-center gap-2">
-            <UserCog className="w-4 h-4 text-[#377ef0]" />
+            <UserCog className="w-4 h-4 text-amber-600" />
             <span>3. استكمال ملف الطالب (النظام التعليمي، المدرسة، أسلوب التعلم والأهداف)</span>
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[12px]">
@@ -512,7 +512,7 @@ export default function ActionPlanPage() {
                 "تم حفظ بيانات الملف الموسّع وربطها بتقرير القرار الجامعي."
               )
             }
-            className="w-full bg-[#377ef0] hover:bg-[#2962be] text-white py-2.5 rounded-xl text-[13px] font-bold inline-flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 py-2.5 rounded-xl text-[13px] font-bold inline-flex items-center justify-center gap-2 cursor-pointer"
           >
             <Save className="w-4 h-4" />
             <span>{saving ? "جاري الحفظ..." : "حفظ بيانات الملف الموسّع"}</span>

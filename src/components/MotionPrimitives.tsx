@@ -103,7 +103,7 @@ interface SpotlightCardProps extends HTMLMotionProps<"div"> {
 
 export function SpotlightCard({
   children,
-  spotlightColor = "rgba(55, 126, 240, 0.08)",
+  spotlightColor = "rgba(234, 179, 8, 0.08)",
   className = "",
   ...props
 }: SpotlightCardProps) {
@@ -191,7 +191,7 @@ export function MagneticButton({
 
   const baseStyle =
     variant === "primary"
-      ? "bg-[#377ef0] hover:bg-[#2962be] text-white shadow-sm"
+      ? "bg-[#FACC15] hover:bg-[#EAB308] text-white shadow-sm"
       : variant === "accent"
       ? "bg-[#fe6d2e] hover:bg-[#e0591f] text-white shadow-sm"
       : "bg-white hover:bg-[#f3f3f3] text-[#1c1736] border border-[#e2e2e2]";
@@ -204,7 +204,7 @@ export function MagneticButton({
       style={{ x: springX, y: springY }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-[13px] transition-colors cursor-pointer select-none overflow-hidden group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#377ef0] focus-visible:ring-offset-2 ${baseStyle} ${className}`}
+      className={`relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-[13px] transition-colors cursor-pointer select-none overflow-hidden group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 ${baseStyle} ${className}`}
       {...props}
     >
       <span className="relative z-10 flex items-center gap-2">
@@ -302,7 +302,7 @@ export interface UIMavenCardProps {
 export function UIMavenCard({
   indexCode,
   badgeText,
-  statusDotColor = "bg-[#377ef0]",
+  statusDotColor = "bg-[#FACC15]",
   children,
   className = "",
   onClick,
@@ -329,7 +329,7 @@ export function UIMavenCard({
       <div className="px-3 py-1.5 flex items-center justify-between text-xs select-none">
         <span
           dir="ltr"
-          className="font-mono tabular-nums font-bold text-slate-600 group-hover:text-[#377ef0] transition-colors"
+          className="font-mono tabular-nums font-bold text-slate-600 group-hover:text-amber-600 transition-colors"
         >
           {indexCode}
         </span>
@@ -353,7 +353,7 @@ export function UIMavenCard({
           className="pointer-events-none absolute inset-0 transition-opacity duration-300 rounded-[inherit]"
           style={{
             opacity: isHovered ? 1 : 0,
-            background: `radial-gradient(360px circle at ${mousePos.x}px ${mousePos.y}px, rgba(55, 126, 240, 0.08), transparent 45%)`,
+            background: `radial-gradient(360px circle at ${mousePos.x}px ${mousePos.y}px, rgba(234, 179, 8, 0.08), transparent 45%)`,
           }}
         />
         <div className="relative z-10">{children}</div>
@@ -443,7 +443,7 @@ export function ArchivalIndexBadge({ index, className = "" }: ArchivalIndexBadge
   return (
     <span
       dir="ltr"
-      className={`font-mono tabular-nums text-xs font-bold tracking-wider px-2.5 py-1 rounded-md bg-[#fbfaf6] border border-[#e2e2e2] text-slate-700 group-hover:bg-[#377ef0] group-hover:text-white group-hover:border-[#377ef0] transition-colors duration-300 inline-block shrink-0 ${className}`}
+      className={`font-mono tabular-nums text-xs font-bold tracking-wider px-2.5 py-1 rounded-md bg-[#fbfaf6] border border-[#e2e2e2] text-slate-700 group-hover:bg-[#FACC15] group-hover:text-white group-hover:border-amber-500 transition-colors duration-300 inline-block shrink-0 ${className}`}
     >
       {formatted}
     </span>
@@ -471,14 +471,14 @@ export function KineticRollButton({
 }: KineticRollButtonProps) {
   const baseColor =
     variant === "primary"
-      ? "bg-[#377ef0] text-white border-[#377ef0]"
+      ? "bg-[#FACC15] text-white border-amber-500"
       : variant === "accent"
       ? "bg-[#fe6d2e] text-white border-[#fe6d2e]"
       : "bg-white text-slate-900 border-[#dedad0]";
 
   const fillColor =
     variant === "primary"
-      ? "bg-[#2962be]"
+      ? "bg-[#CA8A04]"
       : variant === "accent"
       ? "bg-[#e0591f]"
       : "bg-[#eaeff8]";

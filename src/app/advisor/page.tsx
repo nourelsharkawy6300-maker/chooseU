@@ -155,7 +155,7 @@ export default function AdvisorPage() {
       {/* Header */}
       <div className="rounded-xl border border-[#dedad0] bg-white p-4 mb-4 flex items-center justify-between gap-3 shadow-2xs">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-[#377ef0]/10 text-[#377ef0] flex items-center justify-center shrink-0">
+          <div className="h-10 w-10 rounded-xl bg-[#FACC15]/10 text-amber-600 flex items-center justify-center shrink-0">
             <Bot className="h-5 w-5" />
           </div>
           <div>
@@ -185,7 +185,7 @@ export default function AdvisorPage() {
             <div
               className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
                 m.role === "user"
-                  ? "bg-[#377ef0] text-white"
+                  ? "bg-[#FACC15] text-slate-950"
                   : "bg-white border border-[#dedad0] text-[#1c1736]"
               }`}
             >
@@ -204,7 +204,7 @@ export default function AdvisorPage() {
         {loading && (
           <div className="flex justify-end">
             <div className="rounded-2xl bg-white border border-[#dedad0] px-4 py-3 text-xs text-[#64748b] inline-flex items-center gap-2">
-              <Loader2 className="h-3.5 w-3.5 animate-spin text-[#377ef0]" />
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-amber-600" />
               <span>جاري التفكير...</span>
             </div>
           </div>
@@ -220,7 +220,7 @@ export default function AdvisorPage() {
             type="button"
             disabled={loading}
             onClick={() => void sendMessage(s)}
-            className="shrink-0 rounded-lg border border-[#dedad0] bg-white hover:border-[#377ef0] hover:text-[#377ef0] px-3 py-1.5 text-xs font-medium text-[#48425f] transition-colors cursor-pointer"
+            className="shrink-0 rounded-lg border border-[#dedad0] bg-white hover:border-amber-500 hover:text-amber-600 px-3 py-1.5 text-xs font-medium text-[#48425f] transition-colors cursor-pointer"
           >
             {s}
           </button>
@@ -237,13 +237,13 @@ export default function AdvisorPage() {
             if (e.key === "Enter" && !loading) void sendMessage();
           }}
           placeholder="اكتب سؤالك هنا (كليات، تنسيق، مصروفات، سوق العمل)..."
-          className="flex-1 min-w-0 bg-white border border-slate-300 rounded-lg px-3.5 py-2 text-slate-900 text-sm focus:border-[#377ef0] focus:outline-none"
+          className="flex-1 min-w-0 bg-white border border-slate-300 rounded-lg px-3.5 py-2 text-slate-900 text-sm focus:border-amber-500 focus:outline-none"
         />
         <button
           type="button"
           onClick={() => void sendMessage()}
           disabled={loading || !input.trim()}
-          className="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#377ef0] hover:bg-[#2a6ad6] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-semibold px-4 py-2.5 transition-all cursor-pointer"
+          className="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#FACC15] hover:bg-[#2a6ad6] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 text-xs font-semibold px-4 py-2.5 transition-all cursor-pointer"
         >
           <span>إرسال</span>
           <Send className="w-3.5 h-3.5 stroke-[2]" />

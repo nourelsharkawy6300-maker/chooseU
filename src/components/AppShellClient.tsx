@@ -196,7 +196,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
       <aside className="hidden lg:flex lg:w-72 lg:flex-col lg:shrink-0 border-l border-slate-200 bg-white">
         <div className="flex h-16 items-center justify-between px-6 border-b border-slate-200">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-lg tracking-tight">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FACC15] text-slate-950 font-bold text-lg tracking-tight">
               U
             </div>
             <div>
@@ -231,7 +231,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                 {isActive && (
                   <motion.div
                     layoutId="active-nav-pill"
-                    className="absolute inset-0 rounded-xl bg-blue-50/90 border border-blue-200/90 shadow-2xs"
+                    className="absolute inset-0 rounded-xl bg-amber-50/90 border border-amber-200/90 shadow-2xs"
                     transition={{
                       type: "spring",
                       stiffness: 380,
@@ -241,7 +241,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                 )}
                 <IconComponent
                   className={`relative z-10 mt-0.5 h-4 w-4 shrink-0 transition-colors duration-200 ${
-                    isActive ? "text-[#377ef0]" : "text-slate-400 group-hover:text-[#377ef0]"
+                    isActive ? "text-amber-600" : "text-slate-400 group-hover:text-amber-600"
                   }`}
                 />
                 <div className="relative z-10 min-w-0 flex-1">
@@ -253,7 +253,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                       {indexStr}
                     </span>
                   </div>
-                  <p className={`truncate text-xs transition-colors duration-200 ${isActive ? "text-[#377ef0]" : "text-slate-500"}`}>
+                  <p className={`truncate text-xs transition-colors duration-200 ${isActive ? "text-amber-600" : "text-slate-500"}`}>
                     {item.sublabel}
                   </p>
                 </div>
@@ -266,7 +266,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
           {authUser ? (
             <div className="rounded-xl border border-slate-200 bg-white p-2.5 space-y-2 shadow-2xs">
               <div className="flex items-center gap-2 min-w-0">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-700">
                   <User className="h-3.5 w-3.5" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -276,7 +276,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                   <div className="flex items-center gap-1 text-[11px] text-slate-500">
                     {syncStatus === "saving" && (
                       <>
-                        <Loader2 className="h-3 w-3 animate-spin text-blue-600" />
+                        <Loader2 className="h-3 w-3 animate-spin text-amber-700" />
                         <span>جاري الحفظ بالحساب...</span>
                       </>
                     )}
@@ -302,7 +302,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               </div>
               <Link
                 href="/profile"
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition-colors"
+                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white hover:bg-amber-50 hover:border-amber-200 hover:text-amber-800 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition-colors"
               >
                 <User className="h-3.5 w-3.5" />
                 <span>الملف الشخصي</span>
@@ -324,7 +324,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
           ) : (
             <Link
               href="/login"
-              className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50/70 hover:bg-blue-100/70 px-3 py-2 text-xs font-bold text-blue-700 transition-colors"
+              className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50/70 hover:bg-amber-100/70 px-3 py-2 text-xs font-bold text-amber-800 transition-colors"
             >
               <LogIn className="h-3.5 w-3.5" />
               <span>تسجيل الدخول / إنشاء حساب</span>
@@ -374,16 +374,16 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                 type="button"
                 onClick={() => setIsEditingProfile(true)}
                 title="اضغط لتعديل الشعبة الدراسية"
-                className="bg-[#f2efe9] p-1 rounded-xl border border-[#dedad0] hover:border-[#377ef0]/50 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs group"
+                className="bg-[#f2efe9] p-1 rounded-xl border border-[#dedad0] hover:border-amber-500/50 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs group"
               >
                 <div className="bg-white px-2.5 py-1 rounded-lg border border-[#e6e4dd] flex items-center gap-1.5 text-xs">
-                  <GraduationCap className="h-3.5 w-3.5 text-[#377ef0] shrink-0" />
+                  <GraduationCap className="h-3.5 w-3.5 text-amber-600 shrink-0" />
                   <span className="text-slate-500 hidden sm:inline">الشعبة:</span>
                   <span className="font-bold text-slate-900 whitespace-nowrap">
                     {streamDisplay}
                   </span>
                 </div>
-                <span className="text-[11px] font-semibold text-slate-500 group-hover:text-[#377ef0] px-1.5 hidden md:inline">
+                <span className="text-[11px] font-semibold text-slate-500 group-hover:text-amber-600 px-1.5 hidden md:inline">
                   تعديل
                 </span>
               </button>
@@ -394,7 +394,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                 type="button"
                 onClick={() => setIsEditingProfile(true)}
                 title="اضغط لتعديل المجموع"
-                className="bg-[#f2efe9] p-1 rounded-xl border border-[#dedad0] hover:border-[#377ef0]/50 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs group"
+                className="bg-[#f2efe9] p-1 rounded-xl border border-[#dedad0] hover:border-amber-500/50 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs group"
               >
                 <div className="bg-white px-2.5 py-1 rounded-lg border border-[#e6e4dd] flex items-center gap-1.5 text-xs">
                   <Percent className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
@@ -411,7 +411,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                     )}
                   </span>
                 </div>
-                <span className="text-[11px] font-semibold text-slate-500 group-hover:text-[#377ef0] px-1.5 hidden md:inline">
+                <span className="text-[11px] font-semibold text-slate-500 group-hover:text-amber-600 px-1.5 hidden md:inline">
                   تعديل
                 </span>
               </button>
@@ -423,7 +423,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                 type="button"
                 onClick={() => setIsEditingProfile(true)}
                 title="اضغط لتعديل الميزانية السنوية"
-                className="bg-[#f2efe9] p-1 rounded-xl border border-[#dedad0] hover:border-[#377ef0]/50 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs group"
+                className="bg-[#f2efe9] p-1 rounded-xl border border-[#dedad0] hover:border-amber-500/50 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs group"
               >
                 <div className="bg-white px-2.5 py-1 rounded-lg border border-[#e6e4dd] flex items-center gap-1.5 text-xs">
                   <Wallet className="h-3.5 w-3.5 text-amber-600 shrink-0" />
@@ -432,7 +432,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                     <AnimatedCounter value={annualBudgetEgp} suffix=" ج.م" />
                   </span>
                 </div>
-                <span className="text-[11px] font-semibold text-slate-500 group-hover:text-[#377ef0] px-1.5 hidden md:inline">
+                <span className="text-[11px] font-semibold text-slate-500 group-hover:text-amber-600 px-1.5 hidden md:inline">
                   تعديل
                 </span>
               </button>
@@ -444,14 +444,14 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
             <button
               type="button"
               onClick={() => setIsEditingProfile(true)}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#dedad0] bg-[#f2efe9] hover:bg-[#eaeff8] hover:border-[#377ef0]/50 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors cursor-pointer shadow-2xs"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#dedad0] bg-[#f2efe9] hover:bg-[#eaeff8] hover:border-amber-500/50 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors cursor-pointer shadow-2xs"
             >
-              <SlidersHorizontal className="h-3.5 w-3.5 text-[#377ef0]" />
+              <SlidersHorizontal className="h-3.5 w-3.5 text-amber-600" />
               <span>تعديل معاييري</span>
             </button>
             <Link
               href="/sample-report"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-blue-500"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-md bg-[#FACC15] px-3.5 py-1.5 text-xs font-semibold text-slate-950 transition-colors hover:bg-amber-400"
             >
               <FileCheck2 className="h-3.5 w-3.5" />
               <span>تقريري</span>
@@ -481,7 +481,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                 <div>
                   <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
                     <div className="flex items-center gap-2">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#377ef0] text-white font-bold">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FACC15] text-slate-950 font-bold">
                         U
                       </div>
                       <span className="font-bold text-slate-900">ChooseU</span>
@@ -512,7 +512,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                           {isActive && (
                             <motion.div
                               layoutId="mobile-nav-pill"
-                              className="absolute inset-0 rounded-lg bg-blue-50 border border-blue-200"
+                              className="absolute inset-0 rounded-lg bg-amber-50 border border-amber-200"
                               transition={{
                                 type: "spring",
                                 stiffness: 400,
@@ -522,12 +522,12 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                           )}
                           <IconComponent
                             className={`relative z-10 mt-0.5 h-4 w-4 shrink-0 transition-colors duration-200 ${
-                              isActive ? "text-[#377ef0]" : "text-slate-400"
+                              isActive ? "text-amber-600" : "text-slate-400"
                             }`}
                           />
                           <div className="relative z-10 min-w-0 flex-1">
                             <p className="truncate font-medium">{item.label}</p>
-                            <p className={`truncate text-xs ${isActive ? "text-[#377ef0]" : "text-slate-500"}`}>{item.sublabel}</p>
+                            <p className={`truncate text-xs ${isActive ? "text-amber-600" : "text-slate-500"}`}>{item.sublabel}</p>
                           </div>
                         </Link>
                       );
@@ -538,7 +538,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                   {authUser ? (
                     <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-2.5 space-y-2">
                       <div className="flex items-center gap-2 min-w-0">
-                        <User className="h-4 w-4 text-blue-600 shrink-0" />
+                        <User className="h-4 w-4 text-amber-700 shrink-0" />
                         <p className="truncate text-xs font-bold text-slate-800">
                           {studentName.trim() || authUser.email || "حساب الطالب"}
                         </p>
@@ -546,7 +546,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                       <Link
                         href="/profile"
                         onClick={() => setIsMobileNavOpen(false)}
-                        className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition-colors"
+                        className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white hover:bg-amber-50 hover:border-amber-200 hover:text-amber-800 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition-colors"
                       >
                         <User className="h-3.5 w-3.5" />
                         <span>الملف الشخصي</span>
@@ -569,7 +569,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                     <Link
                       href="/login"
                       onClick={() => setIsMobileNavOpen(false)}
-                      className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700"
+                      className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-bold text-amber-800"
                     >
                       <LogIn className="h-3.5 w-3.5" />
                       <span>تسجيل الدخول / إنشاء حساب</span>
@@ -632,7 +632,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               >
                 <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                   <div className="flex items-center gap-2">
-                    <SlidersHorizontal className="h-5 w-5 text-[#377ef0]" />
+                    <SlidersHorizontal className="h-5 w-5 text-amber-600" />
                     <h3 className="text-base font-bold text-slate-900">
                       تعديل الملف الأكاديمي ومعايير التنسيق
                     </h3>
@@ -666,12 +666,12 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                       onClick={() => setStream(s.id as StreamType)}
                       className={`flex items-center justify-between px-3 py-2.5 rounded-lg border text-xs font-semibold transition-colors cursor-pointer ${
                         stream === s.id
-                          ? "bg-blue-50 text-blue-700 border-blue-300"
+                          ? "bg-amber-50 text-amber-800 border-amber-300"
                           : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50 hover:border-slate-300"
                       }`}
                     >
                       <span>{s.label}</span>
-                      {stream === s.id && <Check className="h-3.5 w-3.5 text-blue-600" />}
+                      {stream === s.id && <Check className="h-3.5 w-3.5 text-amber-700" />}
                     </button>
                   ))}
                 </div>
@@ -703,7 +703,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                       onKeyDown={(e) => {
                         if (e.key === "Enter") (e.target as HTMLInputElement).blur();
                       }}
-                      className="w-20 rounded-lg border border-slate-300 bg-white px-2 py-1 text-right font-mono text-xs font-bold text-emerald-700 focus:border-blue-500 focus:outline-none"
+                      className="w-20 rounded-lg border border-slate-300 bg-white px-2 py-1 text-right font-mono text-xs font-bold text-emerald-700 focus:border-amber-500 focus:outline-none"
                     />
                     <span className="font-mono text-slate-600 text-xs font-semibold">%</span>
                   </div>
@@ -745,7 +745,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                       onKeyDown={(e) => {
                         if (e.key === "Enter") (e.target as HTMLInputElement).blur();
                       }}
-                      className="w-28 rounded-lg border border-slate-300 bg-white px-2 py-1 text-right font-mono text-xs font-bold text-amber-700 focus:border-blue-500 focus:outline-none"
+                      className="w-28 rounded-lg border border-slate-300 bg-white px-2 py-1 text-right font-mono text-xs font-bold text-amber-700 focus:border-amber-500 focus:outline-none"
                     />
                     <span className="text-slate-600 text-xs font-semibold">ج.م</span>
                   </div>
@@ -784,7 +784,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
               <button
                 type="button"
                 onClick={() => setIsEditingProfile(false)}
-                className="w-full py-2.5 rounded-lg bg-[#377ef0] hover:bg-[#2962be] text-white text-xs font-bold transition-colors cursor-pointer shadow-md"
+                className="w-full py-2.5 rounded-lg bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 text-xs font-bold transition-colors cursor-pointer shadow-md"
               >
                 تطبيق وتحديث نتائج التنسيق والمصفوفة
               </button>
@@ -814,11 +814,11 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 className={`flex flex-col items-center justify-center gap-1 py-1 px-2.5 rounded-lg text-xs font-medium transition-colors ${
                   isActive
-                    ? "text-blue-600 font-bold"
+                    ? "text-amber-700 font-bold"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
-                <Icon className={`h-4 w-4 ${isActive ? "text-blue-600" : "text-slate-400"}`} />
+                <Icon className={`h-4 w-4 ${isActive ? "text-amber-700" : "text-slate-400"}`} />
                 <span>{item.label}</span>
               </Link>
             );

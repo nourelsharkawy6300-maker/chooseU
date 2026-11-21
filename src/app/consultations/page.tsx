@@ -142,7 +142,7 @@ export default function ConsultationsPage() {
               onClick={() => setCategory(cat)}
               className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition cursor-pointer ${
                 category === cat
-                  ? "bg-[#377ef0] text-white shadow-xs"
+                  ? "bg-[#FACC15] text-slate-950 shadow-xs"
                   : "bg-slate-100 text-slate-700 hover:bg-slate-200"
               }`}
             >
@@ -154,7 +154,7 @@ export default function ConsultationsPage() {
 
       {/* My Booked Sessions */}
       {mvpState.consultationBookings.length > 0 && (
-        <div className="bg-blue-50/70 border border-blue-200 rounded-2xl p-5 space-y-3">
+        <div className="bg-amber-50/70 border border-amber-200 rounded-2xl p-5 space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-[14px] font-bold text-slate-900">
               جلساتك المحجوزة ({mvpState.consultationBookings.length})
@@ -169,7 +169,7 @@ export default function ConsultationsPage() {
               return (
                 <div
                   key={bk.id}
-                  className="bg-white border border-blue-200 rounded-xl p-3.5 text-[12px] space-y-2"
+                  className="bg-white border border-amber-200 rounded-xl p-3.5 text-[12px] space-y-2"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <strong className="text-slate-900">{bk.consultantName}</strong>
@@ -204,12 +204,12 @@ export default function ConsultationsPage() {
         {filtered.map((c) => (
           <div
             key={c.id}
-            className="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs flex flex-col justify-between gap-4 hover:border-blue-300 transition"
+            className="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs flex flex-col justify-between gap-4 hover:border-amber-300 transition"
           >
             <div className="space-y-3">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-1">
+                  <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 mb-1">
                     {CONSULTANT_CATEGORY_LABELS[c.category]}
                   </span>
                   <h2 className="text-[16px] font-bold text-slate-900">{c.name}</h2>
@@ -239,7 +239,7 @@ export default function ConsultationsPage() {
             <div className="pt-3 border-t border-slate-100 space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-600">
                 <span className="inline-flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5 text-blue-600" />
+                  <Clock className="w-3.5 h-3.5 text-amber-700" />
                   أقرب موعد: <strong>{c.nextAvailable}</strong>
                 </span>
                 <span className="inline-flex items-center gap-1">
@@ -253,7 +253,7 @@ export default function ConsultationsPage() {
                 <button
                   type="button"
                   onClick={() => openBooking(c)}
-                  className="bg-[#377ef0] hover:bg-[#2962be] text-white px-4 py-2 rounded-xl text-[12px] font-bold inline-flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+                  className="bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 px-4 py-2 rounded-xl text-[12px] font-bold inline-flex items-center gap-1.5 transition cursor-pointer shadow-xs"
                 >
                   <Calendar className="w-3.5 h-3.5" />
                   <span>احجز جلسة الآن</span>
@@ -298,7 +298,7 @@ export default function ConsultationsPage() {
                       e.target.value as ConsultationBooking["meetingFormat"]
                     )
                   }
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:border-[#377ef0]"
+                  className="w-full border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:border-amber-500"
                 >
                   {selectedConsultant.meetingFormats.map((fmt) => (
                     <option key={fmt} value={fmt}>
@@ -317,7 +317,7 @@ export default function ConsultationsPage() {
                   value={preferredSlot}
                   onChange={(e) => setPreferredSlot(e.target.value)}
                   placeholder="مثال: غداً الساعة 8 مساءً"
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-[#377ef0]"
+                  className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-amber-500"
                   required
                 />
               </div>
@@ -331,7 +331,7 @@ export default function ConsultationsPage() {
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                   placeholder="مثال: محتار بين حاسبات حكومي وهندسة خاصة، وعايز أعرف الأفضل لسوق العمل وميزانيتي..."
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-[#377ef0]"
+                  className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-amber-500"
                   required
                 />
               </div>
@@ -339,7 +339,7 @@ export default function ConsultationsPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full bg-[#377ef0] hover:bg-[#2962be] text-white py-2.5 rounded-xl text-[13px] font-bold inline-flex items-center justify-center gap-2 transition cursor-pointer"
+                className="w-full bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 py-2.5 rounded-xl text-[13px] font-bold inline-flex items-center justify-center gap-2 transition cursor-pointer"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>{saving ? "جاري الحجز..." : "تأكيد طلب الجلسة وحفظه بحسابي"}</span>

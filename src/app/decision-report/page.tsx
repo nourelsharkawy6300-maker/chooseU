@@ -140,7 +140,7 @@ export default function DecisionReportPage() {
       {/* Top Action Bar */}
       <div className="bg-slate-900 text-white rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4 no-print">
         <div>
-          <div className="text-[11px] font-bold text-blue-300">
+          <div className="text-[11px] font-bold text-amber-300">
             Personalized Decision Report — ChooseU
           </div>
           <h1 className="text-[20px] font-extrabold mt-0.5">
@@ -153,7 +153,7 @@ export default function DecisionReportPage() {
         <button
           type="button"
           onClick={() => window.print()}
-          className="bg-[#377ef0] hover:bg-[#2962be] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold inline-flex items-center gap-2 transition cursor-pointer shadow-sm"
+          className="bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 px-5 py-2.5 rounded-xl text-[13px] font-bold inline-flex items-center gap-2 transition cursor-pointer shadow-sm"
         >
           <Printer className="w-4 h-4" />
           <span>طباعة / حفظ كـ PDF</span>
@@ -165,7 +165,7 @@ export default function DecisionReportPage() {
         {/* Report Title & Meta */}
         <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 pb-5">
           <div>
-            <div className="text-[12px] font-bold text-[#377ef0]">CHOOSEU DECISION REPORT</div>
+            <div className="text-[12px] font-bold text-amber-600">CHOOSEU DECISION REPORT</div>
             <h2 className="text-[22px] font-extrabold text-slate-900 mt-1">
               ملف القرار الجامعي — {studentName || "طالب ChooseU"}
             </h2>
@@ -189,7 +189,7 @@ export default function DecisionReportPage() {
         {/* 1. Student Profile & Assessment */}
         <section className="space-y-3">
           <h3 className="text-[15px] font-extrabold text-slate-900 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#377ef0]" />
+            <Sparkles className="w-4 h-4 text-amber-600" />
             <span>1. ملف الطالب ونتائج التقييم الذكي</span>
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[12px]">
@@ -207,7 +207,7 @@ export default function DecisionReportPage() {
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
               <div className="text-slate-500 text-[11px]">المسار الأقرب من التقييم</div>
-              <div className="font-bold text-[#377ef0] mt-0.5">
+              <div className="font-bold text-amber-600 mt-0.5">
                 {TRACK_DETAILS[psych.topTrack]?.title}
               </div>
             </div>
@@ -217,7 +217,7 @@ export default function DecisionReportPage() {
         {/* 2. Recommended Majors */}
         <section className="space-y-3">
           <h3 className="text-[15px] font-extrabold text-slate-900 flex items-center gap-2">
-            <FileText className="w-4 h-4 text-[#377ef0]" />
+            <FileText className="w-4 h-4 text-amber-600" />
             <span>2. التخصصات الجامعية المقترحة والمهارات المطلوبة</span>
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -234,7 +234,7 @@ export default function DecisionReportPage() {
                   {tr.coreSkills.slice(0, 4).map((sk, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-[10px] font-semibold"
+                      className="px-2 py-0.5 rounded bg-amber-50 text-amber-800 text-[10px] font-semibold"
                     >
                       {sk}
                     </span>
@@ -248,7 +248,7 @@ export default function DecisionReportPage() {
         {/* 3. Matching Universities & Financial Comparison */}
         <section className="space-y-3">
           <h3 className="text-[15px] font-extrabold text-slate-900 flex items-center gap-2">
-            <Building2 className="w-4 h-4 text-[#377ef0]" />
+            <Building2 className="w-4 h-4 text-amber-600" />
             <span>3. الجامعات المطابقة والمقارنة المالية (4 سنوات بعد المنح)</span>
           </h3>
           <div className="overflow-x-auto">
@@ -279,7 +279,7 @@ export default function DecisionReportPage() {
                         <div className="text-slate-500">{fac.university}</div>
                       </td>
                       <td className="py-2.5 px-2.5 tabular-nums">
-                        <div className="font-bold text-[#377ef0]">توافق {fac.matchScore}%</div>
+                        <div className="font-bold text-amber-600">توافق {fac.matchScore}%</div>
                         <div className="text-slate-600">{fac.safetyBadge.label}</div>
                       </td>
                       <td className="py-2.5 px-2.5 text-slate-600 max-w-[180px]">
@@ -318,7 +318,7 @@ export default function DecisionReportPage() {
               >
                 <div className="flex items-center justify-between gap-2">
                   <strong className="text-slate-900">{s.name}</strong>
-                  <span className="text-[11px] font-bold text-[#377ef0] tabular-nums">
+                  <span className="text-[11px] font-bold text-amber-600 tabular-nums">
                     {s.matchScore}%
                   </span>
                 </div>
@@ -361,7 +361,7 @@ export default function DecisionReportPage() {
             ) : (
               <p className="text-[11px] text-slate-500">
                 لم تُسجّل ملاحظات أسريّة بعد.{" "}
-                <Link href="/parent-mode" className="text-[#377ef0] font-semibold no-print">
+                <Link href="/parent-mode" className="text-amber-600 font-semibold no-print">
                   فتح وضع ولي الأمر
                 </Link>
               </p>
@@ -371,14 +371,14 @@ export default function DecisionReportPage() {
           {/* AI Advisor Insights */}
           <div className="border border-slate-200 rounded-xl p-4 space-y-2">
             <div className="font-bold text-slate-900 flex items-center gap-1.5">
-              <Bot className="w-4 h-4 text-[#377ef0]" />
+              <Bot className="w-4 h-4 text-amber-600" />
               <span>6. أبرز توصيات المستشار الذكي</span>
             </div>
             {mvpState.savedAiInsights.length > 0 ? (
               <ul className="space-y-1 text-[11px] text-slate-700">
                 {mvpState.savedAiInsights.slice(0, 4).map((note, idx) => (
                   <li key={idx} className="flex items-start gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 mt-0.5 shrink-0" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-700 mt-0.5 shrink-0" />
                     <span>{note}</span>
                   </li>
                 ))}
@@ -386,7 +386,7 @@ export default function DecisionReportPage() {
             ) : (
               <p className="text-[11px] text-slate-500">
                 أضف أهم الخلاصات من محادثتك مع{" "}
-                <Link href="/advisor" className="text-[#377ef0] font-semibold no-print">
+                <Link href="/advisor" className="text-amber-600 font-semibold no-print">
                   المستشار الذكي
                 </Link>
                 .
@@ -403,7 +403,7 @@ export default function DecisionReportPage() {
               <button
                 type="button"
                 onClick={handleAddAiInsight}
-                className="bg-[#377ef0] text-white px-2 py-1 rounded-lg cursor-pointer"
+                className="bg-[#FACC15] text-slate-950 px-2 py-1 rounded-lg cursor-pointer"
                 title="حفظ"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -445,7 +445,7 @@ export default function DecisionReportPage() {
             ) : (
               <p className="text-[11px] text-slate-500">
                 لم تُحجز جلسة بشرية بعد.{" "}
-                <Link href="/consultations" className="text-[#377ef0] font-semibold no-print">
+                <Link href="/consultations" className="text-amber-600 font-semibold no-print">
                   تصفح الخبراء
                 </Link>
               </p>
@@ -470,7 +470,7 @@ export default function DecisionReportPage() {
                     <div className="font-bold text-slate-900">{it.title}</div>
                     <div className="text-[11px] text-slate-500">الموعد: {it.deadline}</div>
                   </div>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 shrink-0">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 shrink-0">
                     {it.status === "accepted"
                       ? "مقبول"
                       : it.status === "applied"
@@ -485,7 +485,7 @@ export default function DecisionReportPage() {
           ) : (
             <p className="text-[12px] text-slate-600">
               ابدأ بإضافة أفضل 3 جامعات ومنحتين في{" "}
-              <Link href="/action-plan" className="text-[#377ef0] font-bold no-print">
+              <Link href="/action-plan" className="text-amber-600 font-bold no-print">
                 صفحة خطة التنفيذ
               </Link>{" "}
               لتظهر هنا تلقائياً مع حالة تجهيز مستنداتك ({mvpState.completedDocIds.length}/8 مستندات جاهزة).

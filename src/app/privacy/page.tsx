@@ -12,7 +12,7 @@ export default function PrivacyPage() {
     <div className="max-w-4xl mx-auto space-y-8 py-4">
       <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-10 shadow-xs space-y-8">
         <div className="border-b border-slate-200 pb-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold mb-3">
             <Shield className="w-3.5 h-3.5" />
             <span>وثيقة الخصوصية وحماية البيانات الشخصية</span>
           </div>
@@ -27,7 +27,7 @@ export default function PrivacyPage() {
         {/* Section 1: Collected Data */}
         <section className="space-y-3">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <Lock className="w-4 h-4 text-blue-600" />
+            <Lock className="w-4 h-4 text-amber-700" />
             <span>1. ما هي البيانات التي نجمعها؟</span>
           </h2>
           <p className="text-sm text-slate-700 leading-relaxed">
@@ -47,7 +47,7 @@ export default function PrivacyPage() {
         {/* Section 2: Why We Collect Data */}
         <section className="space-y-3">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <Shield className="w-4 h-4 text-blue-600" />
+            <Shield className="w-4 h-4 text-amber-700" />
             <span>2. لماذا نجمع هذه البيانات؟</span>
           </h2>
           <p className="text-sm text-slate-700 leading-relaxed">
@@ -64,7 +64,7 @@ export default function PrivacyPage() {
         {/* Section 3: Where Data is Stored */}
         <section className="space-y-3">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <Database className="w-4 h-4 text-blue-600" />
+            <Database className="w-4 h-4 text-amber-700" />
             <span>3. أين تُخزن البيانات؟</span>
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -86,36 +86,36 @@ export default function PrivacyPage() {
         {/* Section 4: Retention */}
         <section className="space-y-3">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-blue-600" />
+            <Clock className="w-4 h-4 text-amber-700" />
             <span>4. مدة الاحتفاظ بالبيانات</span>
           </h2>
           <p className="text-sm text-slate-700 leading-relaxed">
-            المدة المحددة لحفظ سجلات الطلبات واسترجاعها: <span className="font-mono font-bold text-blue-700">[تُحدَّد]</span>.
+            المدة المحددة لحفظ سجلات الطلبات واسترجاعها: <span className="font-mono font-bold text-amber-800">[تُحدَّد]</span>.
           </p>
         </section>
 
         {/* Section 5: Contact */}
         <section className="space-y-3">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <Mail className="w-4 h-4 text-blue-600" />
+            <Mail className="w-4 h-4 text-amber-700" />
             <span>5. طلب حذف البيانات والتواصل</span>
           </h2>
           <p className="text-sm text-slate-700 leading-relaxed">
-            يحق لك في أي وقت طلب مسح بياناتك أو الاستفسار عن تفاصيل الحفظ عبر التواصل معنا على: <span className="font-mono font-bold text-blue-700">[تُحدَّد]</span>.
+            يحق لك في أي وقت طلب مسح بياناتك أو الاستفسار عن تفاصيل الحفظ عبر التواصل معنا على: <span className="font-mono font-bold text-amber-800">[تُحدَّد]</span>.
           </p>
         </section>
 
         <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 hover:text-blue-600 transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 hover:text-amber-700 transition-colors"
           >
             <ArrowRight className="w-4 h-4" />
             <span>العودة للرئيسية</span>
           </Link>
           <Link
             href="/terms"
-            className="text-xs font-bold text-blue-600 hover:underline"
+            className="text-xs font-bold text-amber-700 hover:underline"
           >
             عرض الشروط والأحكام ←
           </Link>

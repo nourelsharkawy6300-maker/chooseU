@@ -169,8 +169,8 @@ function SignupForm() {
     return (
       <div className="w-full max-w-md mx-auto text-center">
         <div className="bg-white rounded-2xl border border-slate-200/80 p-8 shadow-xs">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 border border-blue-100">
-            <CheckCircle2 className="h-8 w-8 text-blue-600" />
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 text-amber-700 border border-amber-100">
+            <CheckCircle2 className="h-8 w-8 text-amber-700" />
           </div>
 
           <h2 className="text-xl font-bold text-slate-900 tracking-tight mb-2">
@@ -194,7 +194,7 @@ function SignupForm() {
 
           <Link
             href="/login"
-            className="block w-full rounded-xl bg-blue-600 py-3 px-4 text-sm font-semibold text-white hover:bg-blue-700 transition-colors shadow-xs"
+            className="block w-full rounded-xl bg-[#FACC15] py-3 px-4 text-sm font-semibold text-slate-950 hover:bg-[#EAB308] transition-colors shadow-xs"
           >
             الانتقال إلى صفحة تسجيل الدخول
           </Link>
@@ -211,7 +211,7 @@ function SignupForm() {
           href="/"
           className="inline-flex items-center gap-3 group focus:outline-hidden"
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white font-bold text-xl tracking-tight shadow-xs">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FACC15] text-slate-950 font-bold text-xl tracking-tight shadow-xs">
             U
           </div>
           <div className="text-right">
@@ -251,7 +251,7 @@ function SignupForm() {
           type="button"
           onClick={handleGoogleSignIn}
           disabled={oauthLoading || loading}
-          className="w-full flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white py-3 px-4 text-sm font-semibold text-slate-800 hover:bg-slate-50 hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-blue-600/20 active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          className="w-full flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white py-3 px-4 text-sm font-semibold text-slate-800 hover:bg-slate-50 hover:border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-amber-600/20 active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {oauthLoading ? (
             <Loader2 className="h-5 w-5 animate-spin text-slate-600" />
@@ -311,7 +311,7 @@ function SignupForm() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="مثال: أحمد محمود"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pr-10 pl-3 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-600/20 transition-all text-right"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pr-10 pl-3 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-600 focus:outline-hidden focus:ring-2 focus:ring-amber-600/20 transition-all text-right"
               />
             </div>
           </div>
@@ -336,7 +336,7 @@ function SignupForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pr-10 pl-3 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-600/20 transition-all text-left"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pr-10 pl-3 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-600 focus:outline-hidden focus:ring-2 focus:ring-amber-600/20 transition-all text-left"
               />
             </div>
           </div>
@@ -362,7 +362,7 @@ function SignupForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pr-10 pl-10 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-600/20 transition-all text-left"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pr-10 pl-10 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-600 focus:outline-hidden focus:ring-2 focus:ring-amber-600/20 transition-all text-left"
               />
               <button
                 type="button"
@@ -393,7 +393,7 @@ function SignupForm() {
                 }}
                 className={`py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                   isMinor === true
-                    ? "border-blue-600 bg-blue-50/70 text-blue-700 ring-2 ring-blue-600/20"
+                    ? "border-amber-600 bg-amber-50/70 text-amber-800 ring-2 ring-amber-600/20"
                     : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                 }`}
               >
@@ -408,7 +408,7 @@ function SignupForm() {
                 }}
                 className={`py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                   isMinor === false
-                    ? "border-blue-600 bg-blue-50/70 text-blue-700 ring-2 ring-blue-600/20"
+                    ? "border-amber-600 bg-amber-50/70 text-amber-800 ring-2 ring-amber-600/20"
                     : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                 }`}
               >
@@ -418,9 +418,9 @@ function SignupForm() {
 
             {/* Conditional Guardian Acknowledgment Checkbox */}
             {isMinor === true && (
-              <div className="mt-3 rounded-xl border border-blue-200 bg-blue-50/50 p-3.5 space-y-2">
+              <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50/50 p-3.5 space-y-2">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-blue-900">
-                  <ShieldCheck className="h-4 w-4 text-blue-600 shrink-0" />
+                  <ShieldCheck className="h-4 w-4 text-amber-700 shrink-0" />
                   <span>إقرار ولي الأمر (إلزامي للطلاب دون 18 سنة)</span>
                 </div>
                 <label className="flex items-start gap-2.5 cursor-pointer text-xs text-slate-700 leading-relaxed">
@@ -428,7 +428,7 @@ function SignupForm() {
                     type="checkbox"
                     checked={guardianAck}
                     onChange={(e) => setGuardianAck(e.target.checked)}
-                    className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    className="mt-0.5 h-4 w-4 rounded border-slate-300 text-amber-700 focus:ring-amber-500"
                   />
                   <span>
                     أقر بموافقة ولي أمري على إنشاء الحساب واستخدام خدمات المنصة وفقاً لشروط الاستخدام وسياسة الخصوصية.
@@ -441,7 +441,7 @@ function SignupForm() {
           <button
             type="submit"
             disabled={!isFormValid || loading || oauthLoading}
-            className="w-full mt-4 flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 px-4 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-600/20 active:scale-[0.99] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-xs"
+            className="w-full mt-4 flex items-center justify-center gap-2 rounded-xl bg-[#FACC15] py-3 px-4 text-sm font-semibold text-slate-950 hover:bg-[#EAB308] focus:outline-hidden focus:ring-2 focus:ring-amber-600/20 active:scale-[0.99] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-xs"
           >
             {loading ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -456,7 +456,7 @@ function SignupForm() {
           لديك حساب بالفعل؟{" "}
           <Link
             href={`/login${rawNext ? `?next=${encodeURIComponent(nextPath)}` : ""}`}
-            className="font-bold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+            className="font-bold text-amber-700 hover:text-amber-800 hover:underline transition-colors"
           >
             تسجيل الدخول
           </Link>
@@ -482,7 +482,7 @@ export default function SignupPage() {
       <Suspense
         fallback={
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+            <Loader2 className="h-8 w-8 animate-spin text-amber-700" />
           </div>
         }
       >

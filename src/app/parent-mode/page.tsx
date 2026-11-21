@@ -243,8 +243,8 @@ export default function ParentModePage() {
             onClick={handleToggleParentMode}
             className={`px-4 py-2.5 rounded-xl text-[13px] font-bold inline-flex items-center gap-2 transition cursor-pointer shadow-xs ${
               mvpState.parentModeEnabled
-                ? "bg-emerald-600 hover:bg-emerald-700 text-white"
-                : "bg-[#377ef0] hover:bg-[#2962be] text-white"
+                ? "bg-emerald-600 hover:bg-emerald-700 text-slate-950"
+                : "bg-[#FACC15] hover:bg-[#EAB308] text-slate-950"
             }`}
           >
             {mvpState.parentModeEnabled ? (
@@ -269,7 +269,7 @@ export default function ParentModePage() {
         )}
 
         <div className="bg-slate-50 border border-slate-200/80 rounded-xl px-4 py-3 text-[12px] text-slate-600 flex items-start gap-2">
-          <ShieldCheck className="w-4 h-4 text-[#377ef0] mt-0.5 shrink-0" />
+          <ShieldCheck className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
           <span>
             <strong>مبدأ ChooseU:</strong> وضع ولي الأمر اختياري تماماً ويُفعَّل بإرادة الطالب فقط. دور الأسرة هو الدعم والمشاورة الواعية بينما يظل الطالب في قلب اختيار مستقبله الأكاديمي.
           </span>
@@ -292,7 +292,7 @@ export default function ParentModePage() {
           <button
             type="button"
             onClick={handleToggleParentMode}
-            className="bg-[#377ef0] hover:bg-[#2962be] text-white px-6 py-2.5 rounded-xl text-[13px] font-bold inline-flex items-center gap-2 transition cursor-pointer"
+            className="bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 px-6 py-2.5 rounded-xl text-[13px] font-bold inline-flex items-center gap-2 transition cursor-pointer"
           >
             <Unlock className="w-4 h-4" />
             <span>تفعيل وضع ولي الأمر الآن</span>
@@ -304,7 +304,7 @@ export default function ParentModePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs space-y-4">
               <div className="flex items-center gap-2 font-bold text-slate-900 text-[15px]">
-                <Users className="w-4 h-4 text-[#377ef0]" />
+                <Users className="w-4 h-4 text-amber-600" />
                 <span>1. ملخص ملف الطالب ونتائج التقييم</span>
               </div>
               <div className="grid grid-cols-2 gap-3 text-[12px]">
@@ -332,7 +332,7 @@ export default function ParentModePage() {
                 </div>
               </div>
               {mvpState.extendedProfile.goalsText && (
-                <div className="bg-blue-50/70 border border-blue-200 rounded-xl p-3 text-[12px] text-slate-700">
+                <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3 text-[12px] text-slate-700">
                   <strong className="text-slate-900 block mb-0.5">أهداف الطالب المكتوبة:</strong>
                   {mvpState.extendedProfile.goalsText}
                 </div>
@@ -341,7 +341,7 @@ export default function ParentModePage() {
 
             <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs space-y-4">
               <div className="flex items-center gap-2 font-bold text-slate-900 text-[15px]">
-                <Sparkles className="w-4 h-4 text-[#377ef0]" />
+                <Sparkles className="w-4 h-4 text-amber-600" />
                 <span>2. التخصصات المقترحة ولماذا تناسب الطالب</span>
               </div>
               <div className="space-y-2.5">
@@ -354,7 +354,7 @@ export default function ParentModePage() {
                       <span className="font-bold text-[13px] text-slate-900">
                         {idx + 1}. {track.title}
                       </span>
-                      <span className="text-[11px] font-bold text-[#377ef0] bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full tabular-nums">
+                      <span className="text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full tabular-nums">
                         توافق {track.percentage > 0 ? `${track.percentage}%` : "مقترح للشعبة"}
                       </span>
                     </div>
@@ -371,12 +371,12 @@ export default function ParentModePage() {
           <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2 font-bold text-slate-900 text-[15px]">
-                <Wallet className="w-4 h-4 text-[#377ef0]" />
+                <Wallet className="w-4 h-4 text-amber-600" />
                 <span>3. النظرة المالية ومقارنة المسارات الجامعية (بعد المنح)</span>
               </div>
               <Link
                 href="/tco-matrix"
-                className="text-[12px] font-semibold text-[#377ef0] hover:underline"
+                className="text-[12px] font-semibold text-amber-600 hover:underline"
               >
                 فتح الحاسبة التفصيلية الكاملة ←
               </Link>
@@ -424,7 +424,7 @@ export default function ParentModePage() {
                         <td className="py-3 px-3 tabular-nums text-emerald-700 font-semibold">
                           {tco.scholarshipCoveragePct ? `${tco.scholarshipCoveragePct}% (-${(tco.scholarshipDiscount4Yr || 0).toLocaleString()} ج.م)` : "لا يوجد خصم تلقائي"}
                         </td>
-                        <td className="py-3 px-3 tabular-nums font-extrabold text-[#377ef0]">
+                        <td className="py-3 px-3 tabular-nums font-extrabold text-amber-600">
                           {(tco.remainingFamily4Yr ?? tco.total4Yr).toLocaleString()} ج.م
                         </td>
                       </tr>
@@ -441,7 +441,7 @@ export default function ParentModePage() {
                   <Award className="w-4 h-4 text-amber-600" />
                   <span>أبرز المنح المتاحة لتقليل العبء المالي على الأسرة:</span>
                 </span>
-                <Link href="/scholarships" className="text-[11px] font-bold text-[#377ef0] hover:underline">
+                <Link href="/scholarships" className="text-[11px] font-bold text-amber-600 hover:underline">
                   عرض كل المنح ←
                 </Link>
               </div>
@@ -487,7 +487,7 @@ export default function ParentModePage() {
                     value={parentName}
                     onChange={(e) => setParentName(e.target.value)}
                     placeholder="مثال: والد الطالب / والدة الطالب"
-                    className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-[#377ef0]"
+                    className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-amber-500"
                   />
                 </div>
                 <div>
@@ -495,7 +495,7 @@ export default function ParentModePage() {
                   <select
                     value={stance}
                     onChange={(e) => setStance(e.target.value as ParentFeedbackEntry["stance"])}
-                    className="w-full border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:border-[#377ef0]"
+                    className="w-full border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:border-amber-500"
                   >
                     <option value="supportive">موافق وداعم لاختيارات الطالب</option>
                     <option value="needs_discussion">نحتاج جلسة نقاش عائلية إضافية</option>
@@ -511,7 +511,7 @@ export default function ParentModePage() {
                   value={preferredOption}
                   onChange={(e) => setPreferredOption(e.target.value)}
                   placeholder="مثال: حاسبات ومعلومات جامعة المنوفية أو الأهلية القريبة"
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-[#377ef0]"
+                  className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-amber-500"
                 />
               </div>
 
@@ -522,7 +522,7 @@ export default function ParentModePage() {
                   value={opinion}
                   onChange={(e) => setOpinion(e.target.value)}
                   placeholder="ما أكثر ما أعجبك في التخصصات والجامعات المقترحة؟"
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-[#377ef0]"
+                  className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-amber-500"
                 />
               </div>
 
@@ -534,7 +534,7 @@ export default function ParentModePage() {
                     value={concerns}
                     onChange={(e) => setConcerns(e.target.value)}
                     placeholder="مثل: السفر، السكن الجامعي، أو زيادة المصروفات..."
-                    className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-[#377ef0]"
+                    className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-amber-500"
                   />
                 </div>
                 <div>
@@ -544,7 +544,7 @@ export default function ParentModePage() {
                     value={suggestions}
                     onChange={(e) => setSuggestions(e.target.value)}
                     placeholder="مثل: حجز جلسة مع مستشار بشري أو التقديم على منحة..."
-                    className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-[#377ef0]"
+                    className="w-full border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>

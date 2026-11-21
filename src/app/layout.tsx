@@ -30,7 +30,7 @@ const SITE_URL = (
 ).replace(/\/+$/, "");
 
 export const viewport: Viewport = {
-  themeColor: "#2563eb",
+  themeColor: "#EAB308",
   width: "device-width",
   initialScale: 1,
 };
@@ -108,7 +108,7 @@ export default function RootLayout({
       dir="rtl"
       className={`${ibmPlexSansArabic.variable} ${jost.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="bg-[var(--paper)] text-slate-900 font-sans antialiased selection:bg-blue-600/20 selection:text-blue-900 min-h-screen">
+      <body className="bg-[var(--paper)] text-slate-900 font-sans antialiased selection:bg-[#FACC15]/20 selection:text-blue-900 min-h-screen">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

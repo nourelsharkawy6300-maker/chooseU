@@ -67,7 +67,7 @@ function ForgotPasswordForm() {
           href="/"
           className="inline-flex items-center gap-3 group focus:outline-hidden"
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white font-bold text-xl tracking-tight shadow-xs">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FACC15] text-slate-950 font-bold text-xl tracking-tight shadow-xs">
             U
           </div>
           <div className="text-right">
@@ -108,7 +108,7 @@ function ForgotPasswordForm() {
             </div>
             <Link
               href="/login"
-              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 px-4 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#FACC15] py-3 px-4 text-sm font-semibold text-slate-950 hover:bg-[#EAB308] transition-colors"
             >
               <span>العودة لتسجيل الدخول</span>
             </Link>
@@ -146,7 +146,7 @@ function ForgotPasswordForm() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@example.com"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pr-10 pl-3 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-600/20 transition-all text-left"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pr-10 pl-3 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-600 focus:outline-hidden focus:ring-2 focus:ring-amber-600/20 transition-all text-left"
                   />
                 </div>
               </div>
@@ -154,7 +154,7 @@ function ForgotPasswordForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 px-4 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-600/20 active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-xs"
+                className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-[#FACC15] py-3 px-4 text-sm font-semibold text-slate-950 hover:bg-[#EAB308] focus:outline-hidden focus:ring-2 focus:ring-amber-600/20 active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-xs"
               >
                 {loading ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
@@ -168,7 +168,7 @@ function ForgotPasswordForm() {
               تذكرت كلمة المرور؟{" "}
               <Link
                 href="/login"
-                className="font-bold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+                className="font-bold text-amber-700 hover:text-amber-800 hover:underline transition-colors"
               >
                 العودة لتسجيل الدخول
               </Link>
@@ -196,7 +196,7 @@ export default function ForgotPasswordPage() {
       <Suspense
         fallback={
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+            <Loader2 className="h-8 w-8 animate-spin text-amber-700" />
           </div>
         }
       >

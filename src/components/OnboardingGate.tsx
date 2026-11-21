@@ -87,7 +87,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
     return (
       <div className="min-h-screen bg-[#fbfaf6] flex items-center justify-center" dir="rtl">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 rounded-full border-3 border-[#377ef0] border-t-transparent animate-spin" />
+          <div className="w-10 h-10 rounded-full border-3 border-amber-500 border-t-transparent animate-spin" />
           <span className="text-xs font-mono text-slate-500">INITIALIZING CHOOSEU ENGINE...</span>
         </div>
       </div>
@@ -173,12 +173,12 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
           className="absolute inset-0 pointer-events-none opacity-20"
           style={{
             backgroundImage:
-              "radial-gradient(#377ef0 1px, transparent 1px), radial-gradient(#377ef0 1px, #0F172A 1px)",
+              "radial-gradient(#EAB308 1px, transparent 1px), radial-gradient(#EAB308 1px, #0F172A 1px)",
             backgroundSize: "40px 40px",
             backgroundPosition: "0 0, 20px 20px",
           }}
         />
-        <div className="absolute top-1/4 -right-20 w-96 h-96 bg-[#377ef0]/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/4 -right-20 w-96 h-96 bg-[#FACC15]/15 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top Header Badge */}
         <div className="relative z-10 space-y-4">
@@ -189,7 +189,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
 
           <div className="space-y-1">
             <h1 className="text-4xl lg:text-6xl font-extrabold tracking-tight font-mono text-white">
-              CHOOSE<span className="text-[#377ef0]">U</span>
+              CHOOSE<span className="text-amber-600">U</span>
             </h1>
             <p className="text-sm font-medium text-slate-400 max-w-md leading-relaxed">
               المنظومة المعمارية لقرارات التنسيق المصري، حساب التكلفة الشاملة (TCO)، واختبار الميول التخصصية.
@@ -211,7 +211,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
           </div>
           <div className="flex items-center justify-between text-slate-300">
             <span className="text-slate-400">02 // STREAM:</span>
-            <span className="font-bold text-[#377ef0]">
+            <span className="font-bold text-amber-600">
               {stream
                 ? STREAM_OPTIONS.find((s) => s.id === stream)?.label
                 : "PENDING_SELECTION..."}
@@ -226,7 +226,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
         {/* Middle Feature Highlights */}
         <div className="relative z-10 space-y-4 max-w-md">
           <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-800/40 border border-slate-700/50 backdrop-blur-xs">
-            <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 text-[#377ef0] flex items-center justify-center shrink-0 mt-0.5">
+            <div className="w-8 h-8 rounded-lg bg-amber-400/10 border border-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
               <Compass className="w-4 h-4" />
             </div>
             <div className="space-y-0.5">
@@ -277,7 +277,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
         <div className="w-full max-w-xl mx-auto space-y-4">
           <div className="flex items-center justify-between text-xs font-mono">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#377ef0]" />
+              <span className="w-2 h-2 rounded-full bg-[#FACC15]" />
               <span className="text-slate-500 font-bold">
                 {step === 1 && "STEP 01 // THE IDENTITY"}
                 {step === 2 && "STEP 02 // ACADEMIC FORK"}
@@ -290,7 +290,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
           {/* Progress Hairline */}
           <div className="w-full h-1 bg-slate-200/80 rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-[#377ef0]"
+              className="h-full bg-[#FACC15]"
               initial={false}
               animate={{ width: `${(step / 3) * 100}%` }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
@@ -324,7 +324,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                 className="space-y-8"
               >
                 <div className="space-y-3">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-semibold text-[#377ef0]">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-600">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>الخطوة الأولى // هويتك</span>
                   </div>
@@ -347,7 +347,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                         if (errorMsg) setErrorMsg("");
                       }}
                       placeholder="اكتب اسمك الثلاثي..."
-                      className="w-full text-2xl sm:text-4xl font-extrabold text-slate-900 placeholder:text-slate-300 bg-transparent border-b-2 border-slate-300 focus:border-[#377ef0] pb-3 focus:outline-none transition-colors"
+                      className="w-full text-2xl sm:text-4xl font-extrabold text-slate-900 placeholder:text-slate-300 bg-transparent border-b-2 border-slate-300 focus:border-amber-500 pb-3 focus:outline-none transition-colors"
                       dir="rtl"
                     />
                     <div className="mt-2 flex items-center justify-between text-xs text-slate-400">
@@ -360,7 +360,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                     <button
                       type="submit"
                       disabled={name.trim().length < 2}
-                      className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-[#377ef0] hover:bg-[#2563eb] disabled:bg-slate-200 text-white disabled:text-slate-400 font-bold text-base shadow-lg shadow-blue-500/20 disabled:shadow-none disabled:cursor-not-allowed transition-all duration-200 active:scale-[0.98] cursor-pointer overflow-hidden min-h-[48px]"
+                      className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-[#FACC15] hover:bg-[#EAB308] disabled:bg-slate-200 text-slate-950 disabled:text-slate-400 font-bold text-base shadow-lg shadow-amber-500/20 disabled:shadow-none disabled:cursor-not-allowed transition-all duration-200 active:scale-[0.98] cursor-pointer overflow-hidden min-h-[48px]"
                     >
                       <span>التالي</span>
                       <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
@@ -383,7 +383,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                 className="space-y-6"
               >
                 <div className="flex items-center justify-between">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-semibold text-[#377ef0]">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-600">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>الخطوة الثانية // مسارك</span>
                   </div>
@@ -420,12 +420,12 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                         onClick={() => handleStep2Select(opt.id)}
                         className={`p-5 rounded-2xl border text-right transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[130px] hover:scale-105 active:scale-95 group relative overflow-hidden ${
                           isSelected
-                            ? "bg-white border-[#377ef0] shadow-md ring-2 ring-[#377ef0]/30"
-                            : "bg-white border-slate-200 hover:border-[#377ef0]/50 hover:shadow-xl hover:shadow-blue-500/5"
+                            ? "bg-white border-amber-500 shadow-md ring-2 ring-amber-400/30"
+                            : "bg-white border-slate-200 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/5"
                         }`}
                       >
                         <div className="flex items-center justify-between w-full">
-                          <span className="font-extrabold text-base sm:text-lg text-slate-900 group-hover:text-[#377ef0] transition-colors">
+                          <span className="font-extrabold text-base sm:text-lg text-slate-900 group-hover:text-amber-600 transition-colors">
                             {opt.label}
                           </span>
                           <span className="text-[10px] font-mono tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200/80">
@@ -436,7 +436,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                           {opt.desc}
                         </p>
                         {isSelected && (
-                          <div className="mt-2 flex items-center gap-1 text-[11px] font-bold text-[#377ef0]">
+                          <div className="mt-2 flex items-center gap-1 text-[11px] font-bold text-amber-600">
                             <Check className="w-3.5 h-3.5 stroke-[2.5]" />
                             <span>تم الاختيار.. جاري الانتقال</span>
                           </div>
@@ -461,7 +461,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                 className="space-y-6"
               >
                 <div className="flex items-center justify-between">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-semibold text-[#377ef0]">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-600">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>الخطوة الأخيرة // المعايير</span>
                   </div>
@@ -509,10 +509,10 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                           if (errorMsg) setErrorMsg("");
                         }}
                         placeholder="مثال: 88.5"
-                        className="w-full text-2xl sm:text-3xl font-mono font-extrabold text-slate-900 placeholder:text-slate-300 bg-transparent border-b-2 border-slate-300 focus:border-[#377ef0] pb-2 focus:outline-none transition-colors tabular-nums"
+                        className="w-full text-2xl sm:text-3xl font-mono font-extrabold text-slate-900 placeholder:text-slate-300 bg-transparent border-b-2 border-slate-300 focus:border-amber-500 pb-2 focus:outline-none transition-colors tabular-nums"
                         dir="ltr"
                       />
-                      <span className="absolute left-0 text-lg font-mono font-bold text-[#377ef0]">
+                      <span className="absolute left-0 text-lg font-mono font-bold text-amber-600">
                         %
                       </span>
                     </div>
@@ -541,7 +541,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                           if (errorMsg) setErrorMsg("");
                         }}
                         placeholder="0 للكليات الحكومية، أو اكتب الميزانية..."
-                        className="w-full text-2xl sm:text-3xl font-mono font-extrabold text-slate-900 placeholder:text-slate-300 bg-transparent border-b-2 border-slate-300 focus:border-[#377ef0] pb-2 focus:outline-none transition-colors tabular-nums"
+                        className="w-full text-2xl sm:text-3xl font-mono font-extrabold text-slate-900 placeholder:text-slate-300 bg-transparent border-b-2 border-slate-300 focus:border-amber-500 pb-2 focus:outline-none transition-colors tabular-nums"
                         dir="ltr"
                       />
                       <span className="absolute left-0 text-sm font-mono font-bold text-emerald-600">
@@ -586,7 +586,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                       id="step3-gov-input"
                       value={gov}
                       onChange={(e) => setGov(e.target.value)}
-                      className="w-full text-sm font-bold text-slate-800 bg-white border border-slate-300 focus:border-[#377ef0] rounded-xl px-4 py-3 focus:outline-none cursor-pointer transition-colors"
+                      className="w-full text-sm font-bold text-slate-800 bg-white border border-slate-300 focus:border-amber-500 rounded-xl px-4 py-3 focus:outline-none cursor-pointer transition-colors"
                     >
                       {EGYPT_GOVERNORATES.map((g) => (
                         <option key={g} value={g}>
@@ -608,14 +608,14 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                             setErrorMsg("");
                           }
                         }}
-                        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#377ef0] focus:ring-[#377ef0] cursor-pointer shrink-0"
+                        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-amber-600 focus:ring-amber-400 cursor-pointer shrink-0"
                       />
                       <span className="text-xs text-slate-600 leading-relaxed">
                         أوافق على{" "}
                         <Link
                           href="/privacy"
                           target="_blank"
-                          className="text-[#377ef0] font-bold hover:underline"
+                          className="text-amber-600 font-bold hover:underline"
                         >
                           سياسة الخصوصية
                         </Link>{" "}
@@ -623,7 +623,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                         <Link
                           href="/terms"
                           target="_blank"
-                          className="text-[#377ef0] font-bold hover:underline"
+                          className="text-amber-600 font-bold hover:underline"
                         >
                           الشروط
                         </Link>
@@ -641,7 +641,7 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
                     )}
                     <button
                       type="submit"
-                      className="group relative w-full py-4 px-8 rounded-xl bg-[#377ef0] hover:bg-[#2563eb] text-white font-extrabold text-base shadow-xl shadow-blue-500/20 transition-all duration-200 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-3 overflow-hidden min-h-[52px]"
+                      className="group relative w-full py-4 px-8 rounded-xl bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 font-extrabold text-base shadow-xl shadow-amber-500/20 transition-all duration-200 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-3 overflow-hidden min-h-[52px]"
                     >
                       <span>ابدأ الآن واستكشف كلياتك</span>
                       <Sparkles className="w-5 h-5 text-amber-300 transition-transform group-hover:scale-110" />

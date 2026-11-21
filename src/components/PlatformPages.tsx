@@ -52,7 +52,7 @@ function getCategoryBadgeStyle(type: string): string {
     return "bg-emerald-50 text-emerald-800 border-emerald-200";
   }
   if (type === "برامج خاصة وساعات معتمدة") {
-    return "bg-blue-50 text-blue-800 border-blue-200";
+    return "bg-amber-50 text-blue-800 border-amber-200";
   }
   if (type === "جامعات أهلية") {
     return "bg-slate-100 text-slate-800 border-slate-300";
@@ -65,7 +65,7 @@ function getDemandBadgeStyle(demand: string): string {
     return "bg-emerald-50 text-emerald-800 border-emerald-200";
   }
   if (demand === "مرتفع") {
-    return "bg-blue-50 text-blue-800 border-blue-200";
+    return "bg-amber-50 text-blue-800 border-amber-200";
   }
   return "bg-slate-100 text-slate-700 border-slate-300";
 }
@@ -103,7 +103,7 @@ export function LandingView({
       <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-10 lg:p-12 shadow-2xs space-y-8">
         <div className="space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-[12px] font-medium text-slate-700">
-            <span className="w-2 h-2 rounded-full bg-blue-600" />
+            <span className="w-2 h-2 rounded-full bg-[#FACC15]" />
             <span>
               مدقق وفق الحدود الدنيا لتنسيق القبول ولوائح الجامعات المصرية 2026
             </span>
@@ -134,7 +134,7 @@ export function LandingView({
                   onClick={() => setStream(st.id)}
                   className={`py-1.5 px-2 rounded-lg text-[12px] whitespace-nowrap transition cursor-pointer ${
                     stream === st.id
-                      ? "bg-[#377ef0] text-white font-semibold shadow-2xs"
+                      ? "bg-[#FACC15] text-slate-950 font-semibold shadow-2xs"
                       : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
@@ -149,7 +149,7 @@ export function LandingView({
               <label className="text-[12px] font-medium text-slate-700">
                 المجموع المئوي (%)
               </label>
-              <span className="text-[12px] font-bold text-blue-600 tabular-nums">
+              <span className="text-[12px] font-bold text-amber-700 tabular-nums">
                 {score.toFixed(1)}%
               </span>
             </div>
@@ -163,7 +163,7 @@ export function LandingView({
                 const val = parseFloat(e.target.value);
                 if (!isNaN(val)) setScore(Math.min(100, Math.max(50, val)));
               }}
-              className="w-full bg-white border border-slate-200 focus:border-blue-600 rounded-xl px-3.5 py-2 text-[13px] font-semibold text-slate-900 tabular-nums focus:outline-none"
+              className="w-full bg-white border border-slate-200 focus:border-amber-600 rounded-xl px-3.5 py-2 text-[13px] font-semibold text-slate-900 tabular-nums focus:outline-none"
             />
           </div>
 
@@ -174,7 +174,7 @@ export function LandingView({
             <select
               value={gov}
               onChange={(e) => setGov(e.target.value)}
-              className="w-full bg-white border border-slate-200 focus:border-blue-600 rounded-xl px-3.5 py-2 text-[13px] font-medium text-slate-900 focus:outline-none"
+              className="w-full bg-white border border-slate-200 focus:border-amber-600 rounded-xl px-3.5 py-2 text-[13px] font-medium text-slate-900 focus:outline-none"
             >
               {EGYPT_GOVERNORATES.map((g) => (
                 <option key={g} value={g}>
@@ -190,7 +190,7 @@ export function LandingView({
               if (setWorkspaceTab) setWorkspaceTab("scenarios");
               setActiveView("workspace");
             }}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition cursor-pointer h-[42px] shadow-sm"
+            className="w-full bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 py-2.5 px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition cursor-pointer h-[42px] shadow-sm"
           >
             <span>ابدأ التحليل المالي والأكاديمي فوراً</span>
             <ArrowLeft className="w-4 h-4 shrink-0" strokeWidth={1.5} />
@@ -253,7 +253,7 @@ export function LandingView({
                     {card.desc}
                   </p>
                 </div>
-                <div className="pt-3 border-t border-slate-100 text-xs font-semibold text-blue-700 tabular-nums">
+                <div className="pt-3 border-t border-slate-100 text-xs font-semibold text-amber-800 tabular-nums">
                   {card.metric}
                 </div>
               </div>
@@ -310,16 +310,16 @@ export function LandingView({
           </button>
         </div>
 
-        <div className="bg-white border-2 border-blue-600 rounded-xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-sm">
+        <div className="bg-white border-2 border-amber-600 rounded-xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-sm">
           <div className="space-y-3">
-            <span className="text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded">
+            <span className="text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded">
               الخدمة الاستشارية الكاملة للأسر
             </span>
             <div className="flex items-baseline justify-between">
               <h3 className="text-[20px] font-bold text-slate-900">
                 التقرير الاستشاري المخصص + المذكرة الصوتية
               </h3>
-              <span className="text-[20px] font-bold text-blue-600 tabular-nums">
+              <span className="text-[20px] font-bold text-amber-700 tabular-nums">
                 150 ج.م
               </span>
             </div>
@@ -336,7 +336,7 @@ export function LandingView({
               ].map((feat) => (
                 <li key={feat} className="flex items-center gap-2.5">
                   <Check
-                    className="w-4 h-4 text-blue-600 shrink-0"
+                    className="w-4 h-4 text-amber-700 shrink-0"
                     strokeWidth={1.5}
                   />
                   <span>{feat}</span>
@@ -349,7 +349,7 @@ export function LandingView({
             <button
               type="button"
               onClick={onOpenCheckout}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl text-[13px] font-semibold transition cursor-pointer tabular-nums shadow-sm"
+              className="w-full bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 py-3 px-4 rounded-xl text-[13px] font-semibold transition cursor-pointer tabular-nums shadow-sm"
             >
               إصدار التقرير المعتمد — 150 ج.م
             </button>
@@ -427,7 +427,7 @@ export function FutureMeView({
       <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs flex flex-wrap items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <Briefcase className="w-5 h-5 text-blue-600" strokeWidth={1.5} />
+            <Briefcase className="w-5 h-5 text-amber-700" strokeWidth={1.5} />
             <h1 className="text-[20px] font-bold text-slate-900 leading-[1.45]">
               المسار الوظيفي ومستقبلي
             </h1>
@@ -449,7 +449,7 @@ export function FutureMeView({
               );
               if (found) setSelectedFaculty(found);
             }}
-            className="w-full border border-slate-200 focus:border-blue-600 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold bg-slate-50 text-slate-900 focus:outline-none"
+            className="w-full border border-slate-200 focus:border-amber-600 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold bg-slate-50 text-slate-900 focus:outline-none"
           >
             {availableFaculties.map((f) => (
               <option key={f.id} value={f.id}>
@@ -504,7 +504,7 @@ export function FutureMeView({
 
           <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-1.5">
             <div className="text-[12px] font-semibold text-slate-800 flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4 text-blue-600" strokeWidth={1.5} />
+              <TrendingUp className="w-4 h-4 text-amber-700" strokeWidth={1.5} />
               <span>مسار التدرج الوظيفي:</span>
             </div>
             <p className="text-[13px] text-slate-700 font-medium leading-relaxed">
@@ -516,7 +516,7 @@ export function FutureMeView({
         {/* Salary & Academic Entry Requirements Card */}
         <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs flex flex-col justify-between space-y-5">
           <div className="space-y-4">
-            <span className="text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded inline-block">
+            <span className="text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded inline-block">
               العائد الوظيفي المتوقع في مصر
             </span>
             <div>
@@ -537,7 +537,7 @@ export function FutureMeView({
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-600 font-medium">مصروفات السنة الأولى:</span>
-                <strong className="text-blue-700">
+                <strong className="text-amber-800">
                   {activeFaculty.y1_base_fee.toLocaleString()} ج.م
                 </strong>
               </div>
@@ -554,7 +554,7 @@ export function FutureMeView({
             <button
               type="button"
               onClick={() => setActiveView("workspace")}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-xl text-[12px] font-semibold transition cursor-pointer shadow-sm"
+              className="w-full bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 py-2.5 px-4 rounded-xl text-[12px] font-semibold transition cursor-pointer shadow-sm"
             >
               مقارنة هذه الكلية في محرك التوجيه
             </button>
@@ -580,7 +580,7 @@ export function FutureMeView({
               المهارات التقنية والعملية المطلوب إتقانها في كل عام جامعي لضمان الجاهزية الفورية لسوق العمل.
             </p>
           </div>
-          <span className="text-[12px] font-medium text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-xl">
+          <span className="text-[12px] font-medium text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1 rounded-xl">
             خطة تنفيذية من السنة الأولى حتى التخرج
           </span>
         </div>
@@ -598,7 +598,7 @@ export function FutureMeView({
             return (
               <div key={title} className="relative">
                 {/* Timeline node */}
-                <span className="absolute -start-[31px] top-1.5 w-3 h-3 rounded-full bg-white border-2 border-blue-600 ring-2 ring-blue-100 shrink-0" />
+                <span className="absolute -start-[31px] top-1.5 w-3 h-3 rounded-full bg-white border-2 border-amber-600 ring-2 ring-amber-100 shrink-0" />
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <h4 className="text-[14px] font-bold text-slate-900 leading-snug">
@@ -698,7 +698,7 @@ export function DirectoryView({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="ابحث باسم الكلية، الجامعة، أو المحافظة..."
-              className="w-full border border-slate-200 focus:border-blue-600 rounded-xl pr-10 pl-4 py-2.5 text-[13px] text-slate-900 placeholder:text-slate-400 focus:outline-none"
+              className="w-full border border-slate-200 focus:border-amber-600 rounded-xl pr-10 pl-4 py-2.5 text-[13px] text-slate-900 placeholder:text-slate-400 focus:outline-none"
             />
             <Search
               className="w-4 h-4 text-slate-400 absolute right-3.5 top-3"
@@ -719,7 +719,7 @@ export function DirectoryView({
                 onClick={() => setStreamFilter(st.id)}
                 className={`relative py-1.5 px-2 rounded-lg whitespace-nowrap transition cursor-pointer text-center ${
                   streamFilter === st.id
-                    ? "text-[#377ef0] font-bold"
+                    ? "text-amber-600 font-bold"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -739,7 +739,7 @@ export function DirectoryView({
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="w-full border border-slate-200 focus:border-blue-600 rounded-xl px-3.5 py-2.5 text-[12px] font-medium bg-white text-slate-900 focus:outline-none"
+              className="w-full border border-slate-200 focus:border-amber-600 rounded-xl px-3.5 py-2.5 text-[12px] font-medium bg-white text-slate-900 focus:outline-none"
             >
               <option value="الكل">الكل (جميع القطاعات)</option>
               <option value="حكومي انتظام">حكومي انتظام</option>
@@ -759,7 +759,7 @@ export function DirectoryView({
       <div className="flex items-center justify-between px-1">
         <div className="text-[13px] font-semibold text-slate-800 flex items-center gap-1">
           <span>قائمة الرغبات المختارة (</span>
-          <span dir="ltr" className="font-mono tabular-nums font-bold text-blue-700">
+          <span dir="ltr" className="font-mono tabular-nums font-bold text-amber-800">
             {comparedIds.length}
           </span>
           <span>)</span>
@@ -768,7 +768,7 @@ export function DirectoryView({
           <button
             type="button"
             onClick={onOpenCompareTab}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-xl text-[12px] font-semibold cursor-pointer transition shadow-sm"
+            className="bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 px-3.5 py-1.5 rounded-xl text-[12px] font-semibold cursor-pointer transition shadow-sm"
           >
             فتح المقارنة
           </button>
@@ -797,7 +797,7 @@ export function DirectoryView({
                 key={fac.id}
                 indexCode={`${numStr} // DIR`}
                 badgeText={fac.type}
-                statusDotColor={fac.type.includes("حكومي") ? "bg-emerald-500" : "bg-[#377ef0]"}
+                statusDotColor={fac.type.includes("حكومي") ? "bg-emerald-500" : "bg-[#FACC15]"}
                 className="shadow-2xs text-right"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -823,7 +823,7 @@ export function DirectoryView({
                       {fac.university} • محافظة {fac.gov}
                     </p>
                     {fac.scholarship_rule && (
-                      <p className="text-xs text-blue-700 font-medium">
+                      <p className="text-xs text-amber-800 font-medium">
                         {fac.scholarship_rule}
                       </p>
                     )}
@@ -927,7 +927,7 @@ export function SampleReportView({
           <button
             type="button"
             onClick={onOpenCheckout}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-[12px] font-semibold cursor-pointer tabular-nums shadow-sm"
+            className="bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 px-4 py-2 rounded-xl text-[12px] font-semibold cursor-pointer tabular-nums shadow-sm"
           >
             اطلب تقريرك المخصص الآن (150 ج.م)
           </button>
@@ -946,7 +946,7 @@ export function SampleReportView({
         <div className="relative z-10 space-y-8">
           <div className="border-b-2 border-slate-900 pb-5 flex flex-wrap items-start justify-between gap-4">
             <div>
-              <div className="text-xs font-semibold text-blue-600">
+              <div className="text-xs font-semibold text-amber-700">
                 وثيقة التقييم الأكاديمي والمالي الشامل — ChooseU Advisory
               </div>
               <h2 className="text-[20px] font-bold text-slate-900 mt-1 leading-[1.45]">
@@ -992,7 +992,7 @@ export function SampleReportView({
             </div>
             <div>
               <span className="text-slate-500 block">المسار المتصدر</span>
-              <strong className="text-blue-700 font-semibold">
+              <strong className="text-amber-800 font-semibold">
                 {topTrack && TRACK_DETAILS[topTrack]
                   ? TRACK_DETAILS[topTrack].title
                   : "قيد التحديد عبر التقييم"}
@@ -1007,7 +1007,7 @@ export function SampleReportView({
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="border border-slate-200 rounded-xl p-4 bg-white space-y-2.5">
-                <div className="text-[12px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded inline-block">
+                <div className="text-[12px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded inline-block">
                   الرغبات الأساسية المستهدفة (الأقرب للمجموع والميول)
                 </div>
                 <ul className="space-y-2 text-[12px] text-slate-700 tabular-nums">
@@ -1303,7 +1303,7 @@ export function TrackOrderView({
             type="button"
             disabled={isLoading}
             onClick={handleSearchOrder}
-            className="bg-[#377ef0] hover:bg-[#2962be] text-white px-6 py-2.5 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition cursor-pointer shrink-0 shadow-sm"
+            className="bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 px-6 py-2.5 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition cursor-pointer shrink-0 shadow-sm"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.5} />
@@ -1374,7 +1374,7 @@ export function TrackOrderView({
                     }}
                     className={`text-right rounded-xl border p-3 transition cursor-pointer space-y-1.5 ${
                       isSelected
-                        ? "border-[#377ef0] bg-blue-50/50 ring-1 ring-[#377ef0]/30"
+                        ? "border-amber-500 bg-amber-50/50 ring-1 ring-amber-400/30"
                         : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
                     }`}
                   >
@@ -1550,7 +1550,7 @@ export function TrackOrderView({
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="bg-[#377ef0] hover:bg-[#2962be] text-white px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 transition cursor-pointer shadow-sm"
+                  className="bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 px-5 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-2 transition cursor-pointer shadow-sm"
                 >
                   <Printer className="w-4 h-4" strokeWidth={1.5} />
                   <span>طباعة وتحميل التقرير المعتمد النهائي (PDF)</span>
@@ -1644,7 +1644,7 @@ export function TrackOrderView({
                             </td>
                             <td className="py-3 px-4 text-xs leading-relaxed align-top">
                               <div>{f.gpa_requirement}</div>
-                              <div className="text-blue-700 font-medium mt-0.5">
+                              <div className="text-amber-800 font-medium mt-0.5">
                                 {f.scholarship_rule}
                               </div>
                             </td>
@@ -1823,7 +1823,7 @@ export function CheckoutModal({
 
         {!authUser && !createdOrder ? (
           <div className="space-y-4">
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-2">
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-2">
               <div className="text-[14px] font-bold text-slate-900">
                 سجّل دخولك أولاً لربط التقرير بحسابك
               </div>
@@ -1834,7 +1834,7 @@ export function CheckoutModal({
             <div className="flex flex-col sm:flex-row gap-2.5">
               <a
                 href={`/login?next=${loginNextParam}`}
-                className="flex-1 bg-[#377ef0] hover:bg-[#2962be] text-white py-2.5 px-4 rounded-xl text-[13px] font-semibold text-center transition shadow-sm"
+                className="flex-1 bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 py-2.5 px-4 rounded-xl text-[13px] font-semibold text-center transition shadow-sm"
               >
                 تسجيل الدخول بحسابك
               </a>
@@ -1973,7 +1973,7 @@ export function CheckoutModal({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition cursor-pointer shadow-sm"
+              className="w-full bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 py-3 px-4 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition cursor-pointer shadow-sm"
             >
               {isSubmitting ? (
                 <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.5} />

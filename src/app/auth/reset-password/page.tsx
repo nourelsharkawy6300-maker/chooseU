@@ -101,7 +101,7 @@ export default function ResetPasswordPage() {
             href="/"
             className="inline-flex items-center gap-3 group focus:outline-hidden"
           >
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white font-bold text-xl tracking-tight shadow-xs">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FACC15] text-slate-950 font-bold text-xl tracking-tight shadow-xs">
               U
             </div>
             <div className="text-right">
@@ -124,7 +124,7 @@ export default function ResetPasswordPage() {
         <div className="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-xs">
           {checkingSession ? (
             <div className="flex flex-col items-center justify-center py-10 gap-3 text-slate-500">
-              <Loader2 className="h-7 w-7 animate-spin text-blue-600" />
+              <Loader2 className="h-7 w-7 animate-spin text-amber-700" />
               <span className="text-xs font-medium">جاري التحقق من رابط الاستعادة...</span>
             </div>
           ) : !hasValidSession ? (
@@ -142,7 +142,7 @@ export default function ResetPasswordPage() {
               </div>
               <Link
                 href="/auth/forgot-password"
-                className="w-full inline-flex items-center justify-center rounded-xl bg-blue-600 py-3 px-4 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+                className="w-full inline-flex items-center justify-center rounded-xl bg-[#FACC15] py-3 px-4 text-sm font-semibold text-slate-950 hover:bg-[#EAB308] transition-colors"
               >
                 طلب رابط جديد
               </Link>
@@ -181,7 +181,7 @@ export default function ResetPasswordPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pr-10 pl-10 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-600/20 transition-all text-left"
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pr-10 pl-10 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-600 focus:outline-hidden focus:ring-2 focus:ring-amber-600/20 transition-all text-left"
                     />
                     <button
                       type="button"
@@ -219,7 +219,7 @@ export default function ResetPasswordPage() {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pr-10 pl-3 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:outline-hidden focus:ring-2 focus:ring-blue-600/20 transition-all text-left"
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pr-10 pl-3 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-amber-600 focus:outline-hidden focus:ring-2 focus:ring-amber-600/20 transition-all text-left"
                     />
                   </div>
                 </div>
@@ -227,7 +227,7 @@ export default function ResetPasswordPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 px-4 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-600/20 active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-xs"
+                  className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-[#FACC15] py-3 px-4 text-sm font-semibold text-slate-950 hover:bg-[#EAB308] focus:outline-hidden focus:ring-2 focus:ring-amber-600/20 active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-xs"
                 >
                   {loading ? (
                     <Loader2 className="h-5 w-5 animate-spin" />

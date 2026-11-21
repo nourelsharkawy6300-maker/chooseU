@@ -133,7 +133,7 @@ function DeclareAgeForm() {
   if (initialChecking) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[360px] py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600 mb-3" />
+        <Loader2 className="w-8 h-8 animate-spin text-amber-700 mb-3" />
         <p className="text-sm text-slate-500 font-medium">جاري التحقق من بيانات الحساب...</p>
       </div>
     );
@@ -147,7 +147,7 @@ function DeclareAgeForm() {
           href="/"
           className="inline-flex items-center gap-3 group focus:outline-hidden"
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white font-bold text-xl tracking-tight shadow-xs">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FACC15] text-slate-950 font-bold text-xl tracking-tight shadow-xs">
             U
           </div>
           <div className="text-right">
@@ -189,7 +189,7 @@ function DeclareAgeForm() {
             <label
               className={`flex items-start gap-3.5 p-4 rounded-xl border cursor-pointer transition-all ${
                 isMinor === false
-                  ? "border-blue-600 bg-blue-50/40 ring-1 ring-blue-600/30"
+                  ? "border-amber-600 bg-amber-50/40 ring-1 ring-amber-600/30"
                   : "border-slate-200 hover:border-slate-300 bg-white"
               }`}
             >
@@ -203,7 +203,7 @@ function DeclareAgeForm() {
                   setGuardianAck(false);
                   setErrorMessage(null);
                 }}
-                className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-600 border-slate-300"
+                className="mt-1 h-4 w-4 text-amber-700 focus:ring-amber-600 border-slate-300"
               />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
@@ -222,7 +222,7 @@ function DeclareAgeForm() {
             <label
               className={`flex items-start gap-3.5 p-4 rounded-xl border cursor-pointer transition-all ${
                 isMinor === true
-                  ? "border-blue-600 bg-blue-50/40 ring-1 ring-blue-600/30"
+                  ? "border-amber-600 bg-amber-50/40 ring-1 ring-amber-600/30"
                   : "border-slate-200 hover:border-slate-300 bg-white"
               }`}
             >
@@ -235,11 +235,11 @@ function DeclareAgeForm() {
                   setIsMinor(true);
                   setErrorMessage(null);
                 }}
-                className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-600 border-slate-300"
+                className="mt-1 h-4 w-4 text-amber-700 focus:ring-amber-600 border-slate-300"
               />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-blue-600" />
+                  <ShieldCheck className="h-4 w-4 text-amber-700" />
                   <span className="text-sm font-semibold text-slate-900">
                     أنا دون سن 18 عاماً (قاصر)
                   </span>
@@ -253,9 +253,9 @@ function DeclareAgeForm() {
 
           {/* Minor Guardian Consent Accordion */}
           {isMinor === true && (
-            <div className="rounded-xl border border-blue-200 bg-blue-50/60 p-4.5 space-y-3 animate-in fade-in duration-200">
+            <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4.5 space-y-3 animate-in fade-in duration-200">
               <div className="flex items-center gap-2 text-xs font-semibold text-blue-900">
-                <HelpCircle className="h-4 w-4 text-blue-600 shrink-0" />
+                <HelpCircle className="h-4 w-4 text-amber-700 shrink-0" />
                 <span>إقرار موافقة ولي الأمر (إلزامي للطلاب دون 18 عاماً)</span>
               </div>
               <p className="text-xs text-slate-600 leading-relaxed">
@@ -270,14 +270,14 @@ function DeclareAgeForm() {
                     setGuardianAck(e.target.checked);
                     setErrorMessage(null);
                   }}
-                  className="mt-0.5 h-4 w-4 rounded-sm border-slate-300 text-blue-600 focus:ring-blue-600 cursor-pointer"
+                  className="mt-0.5 h-4 w-4 rounded-sm border-slate-300 text-amber-700 focus:ring-amber-600 cursor-pointer"
                 />
                 <span className="text-xs font-semibold text-slate-800 leading-relaxed">
                   أقر بموافقة ولي أمري الصريحة على تسجيلي في منصة ChooseU والموافقة على{" "}
                   <Link
                     href="/terms"
                     target="_blank"
-                    className="text-blue-600 hover:underline"
+                    className="text-amber-700 hover:underline"
                   >
                     شروط الاستخدام
                   </Link>{" "}
@@ -285,7 +285,7 @@ function DeclareAgeForm() {
                   <Link
                     href="/privacy"
                     target="_blank"
-                    className="text-blue-600 hover:underline"
+                    className="text-amber-700 hover:underline"
                   >
                     سياسة الخصوصية
                   </Link>
@@ -299,7 +299,7 @@ function DeclareAgeForm() {
           <button
             type="submit"
             disabled={!isFormValid || loading}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 px-4 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-600/30 active:scale-[0.99] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-xs"
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#FACC15] py-3 px-4 text-sm font-semibold text-slate-950 hover:bg-[#EAB308] focus:outline-hidden focus:ring-2 focus:ring-amber-600/30 active:scale-[0.99] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-xs"
           >
             {loading ? (
               <>
@@ -334,7 +334,7 @@ export default function OnboardingAgePage() {
       <Suspense
         fallback={
           <div className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600 mb-3" />
+            <Loader2 className="w-8 h-8 animate-spin text-amber-700 mb-3" />
             <p className="text-sm text-slate-500 font-medium">جاري التحميل...</p>
           </div>
         }

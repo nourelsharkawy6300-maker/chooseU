@@ -13,13 +13,13 @@
   --color-ink: #1c1736;
   --color-ink-2: #48425f;
   --color-ink-3: #68637d;
-  --color-blue: #377ef0;
-  --color-blue-hover: #2962be;
+  --color-blue: #EAB308;
+  --color-blue-hover: #CA8A04;
   --color-orange: #fe6d2e;
   --color-gold: #f5a623;
   --color-violet: #6b4ff0;
-  --color-accent: #377ef0;
-  --color-accent-hover: #2962be;
+  --color-accent: #EAB308;
+  --color-accent-hover: #CA8A04;
   --color-highlight: #f5a623;
 }
 
@@ -41,13 +41,13 @@
   --ink: #1c1736;
   --ink-2: #48425f;
   --ink-3: #68637d;
-  --color-blue: #377ef0;
-  --color-blue-hover: #2962be;
+  --color-blue: #EAB308;
+  --color-blue-hover: #CA8A04;
   --color-orange: #fe6d2e;
   --color-gold: #f5a623;
   --color-violet: #6b4ff0;
-  --accent: #377ef0;
-  --accent-hover: #2962be;
+  --accent: #EAB308;
+  --accent-hover: #CA8A04;
   --highlight: #f5a623;
 
   --bg-canvas: var(--paper);
@@ -57,7 +57,7 @@
   --border-default: #cbd5e1;
   --text-primary: #1c1736;
   --text-secondary: #48425f;
-  --accent-primary: #377ef0;
+  --accent-primary: #EAB308;
 }
 
 html,
@@ -135,7 +135,7 @@ table th {
   pointer-events: none;
   background: radial-gradient(
     500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(55, 126, 240, 0.08),
+    rgba(234, 179, 8, 0.08),
     transparent 50%
   );
   opacity: 0;
@@ -202,7 +202,7 @@ input[type="range"]::-webkit-slider-thumb {
   width: 16px;
   height: 16px;
   border-radius: 9999px;
-  background: #2563eb;
+  background: #EAB308;
   border: 2px solid #ffffff;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
   cursor: pointer;
@@ -213,7 +213,7 @@ input[type="range"]::-moz-range-thumb {
   width: 16px;
   height: 16px;
   border-radius: 9999px;
-  background: #2563eb;
+  background: #EAB308;
   border: 2px solid #ffffff;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
   cursor: pointer;
@@ -243,7 +243,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .uimaven-card:hover {
-  border-color: rgba(55, 126, 240, 0.45);
+  border-color: rgba(234, 179, 8, 0.45);
   box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 1), 0 6px 20px -2px rgba(28, 23, 54, 0.06);
 }
 
@@ -312,7 +312,7 @@ input[type="range"]::-moz-range-thumb {
   transition: border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .uimaven-shell:hover {
-  border-color: rgba(55, 126, 240, 0.45);
+  border-color: rgba(234, 179, 8, 0.45);
   background-color: #eaeff8;
   transform: translateY(-3px);
 }
@@ -326,8 +326,8 @@ input[type="range"]::-moz-range-thumb {
   transition: box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .uimaven-shell:hover .uimaven-inner {
-  border-color: rgba(55, 126, 240, 0.3);
-  box-shadow: 0 20px 40px -15px rgba(28, 23, 54, 0.09), 0 0 0 1px rgba(55, 126, 240, 0.12);
+  border-color: rgba(234, 179, 8, 0.3);
+  box-shadow: 0 20px 40px -15px rgba(28, 23, 54, 0.09), 0 0 0 1px rgba(234, 179, 8, 0.12);
 }
 
 /* 2. Dsquared Media Full-Row Curtain Sweep */
@@ -340,7 +340,7 @@ input[type="range"]::-moz-range-thumb {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(55, 126, 240, 0.04) 0%, rgba(55, 126, 240, 0.09) 100%);
+  background: linear-gradient(90deg, rgba(234, 179, 8, 0.04) 0%, rgba(234, 179, 8, 0.09) 100%);
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -367,7 +367,7 @@ input[type="range"]::-moz-range-thumb {
   content: "";
   position: absolute;
   inset: -150%;
-  background: conic-gradient(from 0deg, transparent 70%, #377ef0 85%, #fe6d2e 95%, transparent 100%);
+  background: conic-gradient(from 0deg, transparent 70%, #EAB308 85%, #fe6d2e 95%, transparent 100%);
   animation: anima-beam-spin 8s linear infinite;
   opacity: 0.65;
   pointer-events: none;

@@ -84,7 +84,7 @@ export default function ScholarshipsPage() {
       <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-2xs space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#377ef0] bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full">
+            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full">
               <Award className="w-3.5 h-3.5" />
               <span>محرك مطابقة المنح الدراسية 2026</span>
             </div>
@@ -144,7 +144,7 @@ export default function ScholarshipsPage() {
               onClick={() => setScopeFilter(sc)}
               className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition cursor-pointer ${
                 scopeFilter === sc
-                  ? "bg-[#377ef0] text-white shadow-xs"
+                  ? "bg-[#FACC15] text-slate-950 shadow-xs"
                   : "bg-slate-100 text-slate-700 hover:bg-slate-200"
               }`}
             >
@@ -158,7 +158,7 @@ export default function ScholarshipsPage() {
             type="checkbox"
             checked={eligibleOnly}
             onChange={(e) => setEligibleOnly(e.target.checked)}
-            className="rounded border-slate-300 text-[#377ef0]"
+            className="rounded border-slate-300 text-amber-600"
           />
           <span>عرض المنح المؤهّل لها بمجموعي فقط</span>
         </label>
@@ -169,13 +169,13 @@ export default function ScholarshipsPage() {
         {matched.map((s) => (
           <div
             key={s.id}
-            className="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs flex flex-col justify-between gap-4 hover:border-blue-300 transition"
+            className="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs flex flex-col justify-between gap-4 hover:border-amber-300 transition"
           >
             <div className="space-y-3">
               <div className="flex items-start justify-between gap-3">
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
                       {SCOPE_LABELS[s.scope]}
                     </span>
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-700 inline-flex items-center gap-1">
@@ -191,7 +191,7 @@ export default function ScholarshipsPage() {
 
                 <div className="text-center shrink-0 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5">
                   <div className="text-[10px] text-slate-500">نسبة التوافق</div>
-                  <div className="text-[16px] font-extrabold text-[#377ef0] tabular-nums">
+                  <div className="text-[16px] font-extrabold text-amber-600 tabular-nums">
                     {s.matchScore}%
                   </div>
                 </div>
@@ -215,7 +215,7 @@ export default function ScholarshipsPage() {
                       key={idx}
                       className="text-[12px] text-slate-600 flex items-start gap-1.5"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 mt-0.5 shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-amber-700 mt-0.5 shrink-0" />
                       <span>{cond}</span>
                     </li>
                   ))}
@@ -238,7 +238,7 @@ export default function ScholarshipsPage() {
                 href={s.officialUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-[#377ef0] hover:text-[#2962be] font-bold"
+                className="inline-flex items-center gap-1.5 text-amber-600 hover:text-amber-700 font-bold"
               >
                 <span>المصدر الرسمي للتقديم</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -282,7 +282,7 @@ export default function ScholarshipsPage() {
                   </div>
                   <div className="flex justify-between pt-1 border-t border-slate-200 font-extrabold text-slate-900">
                     <span>صافي مساهمة الأسرة:</span>
-                    <span className="text-[#377ef0]">
+                    <span className="text-amber-600">
                       {(tco.remainingFamily4Yr ?? tco.total4Yr).toLocaleString()} ج.م
                     </span>
                   </div>

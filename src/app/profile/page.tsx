@@ -195,7 +195,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-[#377ef0]" />
+        <Loader2 className="h-6 w-6 animate-spin text-amber-600" />
       </div>
     );
   }
@@ -204,7 +204,7 @@ export default function ProfilePage() {
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="h-10 w-10 rounded-xl bg-[#377ef0]/10 text-[#377ef0] flex items-center justify-center">
+          <div className="h-10 w-10 rounded-xl bg-[#FACC15]/10 text-amber-600 flex items-center justify-center">
             <User className="h-5 w-5" />
           </div>
           <div>
@@ -256,7 +256,7 @@ export default function ProfilePage() {
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             placeholder="اكتب اسمك"
-            className="w-full rounded-lg border border-[#dedad0] bg-[#faf8f5] px-3.5 py-2.5 text-sm text-[#1c1736] focus:border-[#377ef0] focus:bg-white focus:outline-none"
+            className="w-full rounded-lg border border-[#dedad0] bg-[#faf8f5] px-3.5 py-2.5 text-sm text-[#1c1736] focus:border-amber-500 focus:bg-white focus:outline-none"
           />
         </div>
 
@@ -268,7 +268,7 @@ export default function ProfilePage() {
             <select
               value={track}
               onChange={(e) => setTrack(e.target.value)}
-              className="w-full rounded-lg border border-[#dedad0] bg-[#faf8f5] px-3.5 py-2.5 text-sm text-[#1c1736] focus:border-[#377ef0] focus:bg-white focus:outline-none"
+              className="w-full rounded-lg border border-[#dedad0] bg-[#faf8f5] px-3.5 py-2.5 text-sm text-[#1c1736] focus:border-amber-500 focus:bg-white focus:outline-none"
             >
               {TRACK_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -291,7 +291,7 @@ export default function ProfilePage() {
               value={score}
               onChange={(e) => setScore(e.target.value)}
               placeholder="مثال: 90.5"
-              className="w-full rounded-lg border border-[#dedad0] bg-[#faf8f5] px-3.5 py-2.5 text-sm text-[#1c1736] font-mono focus:border-[#377ef0] focus:bg-white focus:outline-none"
+              className="w-full rounded-lg border border-[#dedad0] bg-[#faf8f5] px-3.5 py-2.5 text-sm text-[#1c1736] font-mono focus:border-amber-500 focus:bg-white focus:outline-none"
             />
           </div>
         </div>
@@ -308,14 +308,14 @@ export default function ProfilePage() {
             value={annualBudget}
             onChange={(e) => setAnnualBudget(e.target.value)}
             placeholder="مثال: 60000"
-            className="w-full rounded-lg border border-[#dedad0] bg-[#faf8f5] px-3.5 py-2.5 text-sm text-[#1c1736] font-mono focus:border-[#377ef0] focus:bg-white focus:outline-none"
+            className="w-full rounded-lg border border-[#dedad0] bg-[#faf8f5] px-3.5 py-2.5 text-sm text-[#1c1736] font-mono focus:border-amber-500 focus:bg-white focus:outline-none"
           />
         </div>
 
         <button
           type="submit"
           disabled={saving}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#377ef0] hover:bg-[#2a6ad6] active:scale-[0.985] disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition-all cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#FACC15] hover:bg-[#2a6ad6] active:scale-[0.985] disabled:opacity-50 text-slate-950 text-sm font-semibold px-5 py-2.5 transition-all cursor-pointer"
         >
           {saving ? (
             <Loader2 className="h-4 w-4 animate-spin" />

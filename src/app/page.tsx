@@ -88,7 +88,7 @@ export default function HomePage() {
             <h1 className="text-[clamp(2.1rem,4.4vw,3.5rem)] font-extrabold text-[#1c1736] leading-[1.2] tracking-tight">
               قرارك الأكاديمي والمالي
             </h1>
-            <h2 className="text-[clamp(2.1rem,4.4vw,3.5rem)] font-extrabold text-[#377ef0] leading-[1.2] tracking-tight">
+            <h2 className="text-[clamp(2.1rem,4.4vw,3.5rem)] font-extrabold text-amber-600 leading-[1.2] tracking-tight">
               بأرقام واضحة لمصاريف سنوات دراستك
             </h2>
           </div>
@@ -104,7 +104,7 @@ export default function HomePage() {
             <span className="text-slate-300 hidden sm:inline">|</span>
             <span>التقرير المخصص والمراجعة: <strong className="text-[#1c1736]">150 ج.م</strong></span>
             <span className="text-slate-300 hidden sm:inline">|</span>
-            <span>التسليم: <strong className="text-[#377ef0]">خلال 24 ساعة عبر واتساب</strong></span>
+            <span>التسليم: <strong className="text-amber-600">خلال 24 ساعة عبر واتساب</strong></span>
           </div>
 
           {/* 3-Column Live Summary / Empty State */}
@@ -116,7 +116,7 @@ export default function HomePage() {
               </div>
               <div className="bg-white p-3.5 rounded-xl border border-[#e6e4dd] flex flex-col justify-between shadow-2xs">
                 <span className="text-[11px] font-semibold text-slate-500">المجموع</span>
-                <span className="text-sm font-bold text-[#377ef0] mt-1">
+                <span className="text-sm font-bold text-amber-600 mt-1">
                   <AnimatedCounter
                     value={scorePercentage}
                     decimals={scorePercentage % 1 !== 0 ? 1 : 0}
@@ -147,7 +147,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => router.push("/workspace")}
-                className="shrink-0 px-4 py-2 rounded-xl bg-white border border-[#dedad0] text-xs font-bold text-[#377ef0] hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+                className="shrink-0 px-4 py-2 rounded-xl bg-white border border-[#dedad0] text-xs font-bold text-amber-600 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
               >
                 إدخال بياناتي الآن
               </button>
@@ -181,7 +181,7 @@ export default function HomePage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between border-b border-[#dedad0] pb-3">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#377ef0]" />
+            <span className="w-2 h-2 rounded-full bg-[#FACC15]" />
             <h2 className="text-sm font-bold text-slate-900">
               أدوات المنصة
             </h2>
@@ -203,10 +203,10 @@ export default function HomePage() {
                 <div className="space-y-4 flex flex-col justify-between h-full min-h-[175px]">
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-blue-50/80 border border-blue-200/80 flex items-center justify-center text-[#377ef0] group-hover:bg-[#377ef0] group-hover:text-white transition-colors duration-300 shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-amber-50/80 border border-amber-200/80 flex items-center justify-center text-amber-600 group-hover:bg-[#FACC15] group-hover:text-white transition-colors duration-300 shrink-0">
                         <Icon className="h-5 w-5 stroke-[1.75]" />
                       </div>
-                      <h3 className="text-base font-bold text-[#1c1736] group-hover:text-[#377ef0] transition-colors leading-[1.4]">
+                      <h3 className="text-base font-bold text-[#1c1736] group-hover:text-amber-600 transition-colors leading-[1.4]">
                         {m.title}
                       </h3>
                     </div>
@@ -217,9 +217,9 @@ export default function HomePage() {
 
                   <div className="space-y-3 pt-2">
                     <div className="border-t border-dashed border-[#dedad0]" />
-                    <div className="flex items-center justify-between text-xs font-semibold text-slate-500 group-hover:text-[#377ef0] transition-colors">
+                    <div className="flex items-center justify-between text-xs font-semibold text-slate-500 group-hover:text-amber-600 transition-colors">
                       <span>افتح الأداة</span>
-                      <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-[#377ef0] group-hover:-translate-x-1.5 transition-transform duration-200 shrink-0" />
+                      <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-amber-600 group-hover:-translate-x-1.5 transition-transform duration-200 shrink-0" />
                     </div>
                   </div>
                 </div>
@@ -253,7 +253,7 @@ export default function HomePage() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn"
-            className="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-[#dedad0] bg-white text-[#0A66C2] hover:bg-blue-50 transition-colors"
+            className="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-[#dedad0] bg-white text-[#0A66C2] hover:bg-amber-50 transition-colors"
           >
             <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
@@ -265,7 +265,7 @@ export default function HomePage() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Facebook"
-            className="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-[#dedad0] bg-white text-[#1877F2] hover:bg-blue-50 transition-colors"
+            className="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-[#dedad0] bg-white text-[#1877F2] hover:bg-amber-50 transition-colors"
           >
             <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z" />
