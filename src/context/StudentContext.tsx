@@ -383,6 +383,12 @@ export function StudentProvider({ children }: { children: React.ReactNode }) {
             localStorage.removeItem(getUserStorageKey(previousUserId));
           }
           localStorage.removeItem(LEGACY_STORAGE_KEY);
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const k = localStorage.key(i);
+        if (k && k.toLowerCase().includes("chooseu") && !k.toLowerCase().includes("admin")) {
+          localStorage.removeItem(k);
+        }
+      }
         } catch {
           // ignore storage errors
         }
@@ -441,6 +447,12 @@ export function StudentProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem(getUserStorageKey(previousUserId));
       }
       localStorage.removeItem(LEGACY_STORAGE_KEY);
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const k = localStorage.key(i);
+        if (k && k.toLowerCase().includes("chooseu") && !k.toLowerCase().includes("admin")) {
+          localStorage.removeItem(k);
+        }
+      }
     } catch {
       // ignore storage errors
     }

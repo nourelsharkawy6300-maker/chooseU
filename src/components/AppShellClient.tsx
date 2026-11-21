@@ -130,8 +130,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
       await signOut();
       setIsMobileNavOpen(false);
       setIsEditingProfile(false);
-      router.replace("/login");
-      router.refresh();
+      window.location.assign("/login");
     } finally {
       setSigningOut(false);
     }
