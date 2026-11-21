@@ -1,4 +1,5 @@
 "use client";
+import { InlineScholarshipRecommendations } from "./InlineScholarshipRecommendations";
 
 import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -1422,6 +1423,13 @@ export function FourStationJourney({
                 </button>
               </div>
             </div>
+
+            <InlineScholarshipRecommendations
+              stream={stream}
+              score={score > 0 ? Math.min(100, Math.max(0, score + scoreTweak)) : 0}
+              budget={budget}
+              topTrack={dominantTrack}
+            />
           </motion.div>
         )}
 

@@ -1,4 +1,5 @@
 "use client";
+import { InlineScholarshipRecommendations } from "./InlineScholarshipRecommendations";
 
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -993,6 +994,14 @@ export function WorkspaceTabs({
               </div>
             )}
 
+            <div className="px-6 pb-6">
+              <InlineScholarshipRecommendations
+                stream={stream}
+                score={score}
+                budget={budget}
+                topTrack={topTrack}
+              />
+            </div>
             <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-between">
               <button
                 type="button"
