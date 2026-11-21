@@ -84,7 +84,8 @@ export type UniversityCategory =
   | "جامعات أهلية"
   | "جامعات أهلية منبثقة"
   | "جامعات أهلية دولية"
-  | "جامعات خاصة وتكنولوجية";
+  | "جامعات خاصة وتكنولوجية"
+  | "جامعات دولية مختارة";
 
 export type TrackKey =
   | "Med_Clinical"
@@ -137,6 +138,8 @@ export interface Faculty {
   aptitude_test: boolean;
   duration_years?: number;
   credit_hour_bylaw?: boolean;
+  accreditation?: string;
+  country?: string;
   tracks: TrackKey[];
   future_career: FutureCareerProfile;
 }
@@ -154,6 +157,9 @@ export interface TcoMetrics {
   basePct: number;
   adminPct: number;
   livingPct: number;
+  scholarshipCoveragePct?: number;
+  scholarshipDiscount4Yr?: number;
+  remainingFamily4Yr?: number;
 }
 
 export interface RankedFaculty extends Faculty {
@@ -206,4 +212,31 @@ export interface QuizQuestion {
   id: number;
   question: string;
   options: QuizQuestionOption[];
+}
+
+export type ScholarshipScope = "local" | "university" | "international";
+
+export interface Scholarship {
+  id: string;
+  name: string;
+  provider: string;
+  scope: ScholarshipScope;
+  country: string;
+  supportedTracks: TrackKey[];
+  supportedStreams: Array<StreamType | "All">;
+  minScore: number;
+  maxAnnualBudgetHint?: number;
+  fundingCoverageLabel: string;
+  coveragePct: number;
+  includesLiving?: boolean;
+  eligibilityConditions: string[];
+  deadline: string;
+  officialUrl: string;
+  notes: string;
+}
+
+export interface MatchedScholarship extends Scholarship {
+  matchScore: number;
+  isEligibleByScore: boolean;
+  eligibilityReason: string;
 }

@@ -8,6 +8,11 @@ import {
   Compass,
   Bot,
   Calculator,
+  Award,
+  HeartHandshake,
+  UserCheck,
+  ClipboardCheck,
+  FileText,
   Building2,
   Milestone,
   FileCheck2,
@@ -26,6 +31,7 @@ import {
   Loader2,
   AlertCircle,
 } from "lucide-react";
+import { FloatingAiAdvisor } from "./FloatingAiAdvisor";
 import { useStudent } from "@/context/StudentContext";
 import { StreamType } from "@/types/chooseu";
 import { AnimatedCounter } from "./MotionPrimitives";
@@ -55,6 +61,36 @@ const NAVIGATION_ITEMS: NavItem[] = [
     sublabel: "الجامعات الحكومية والأهلية والخاصة",
     href: "/universities",
     icon: Building2,
+  },
+  {
+    label: "المنح الدراسية",
+    sublabel: "منح محلية وجامعية ودولية مطابقة لك",
+    href: "/scholarships",
+    icon: Award,
+  },
+  {
+    label: "وضع ولي الأمر",
+    sublabel: "مشاركة القرار الأسري والملاحظات",
+    href: "/parent-mode",
+    icon: HeartHandshake,
+  },
+  {
+    label: "استشارة الخبراء",
+    sublabel: "مرشدون مهنيون وأكاديميون وطلاب جامعات",
+    href: "/consultations",
+    icon: UserCheck,
+  },
+  {
+    label: "تقرير القرار الشامل",
+    sublabel: "ملفك الكامل الموحد للطباعة وPDF",
+    href: "/decision-report",
+    icon: FileText,
+  },
+  {
+    label: "خطة التنفيذ والمتابعة",
+    sublabel: "القائمة المختصرة والمستندات والمواعيد",
+    href: "/action-plan",
+    icon: ClipboardCheck,
   },
   {
     label: "دليل الوظائف وسوق العمل",
@@ -149,6 +185,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
         <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth">
           {children}
         </main>
+      <FloatingAiAdvisor />
       </div>
     );
   }
@@ -572,6 +609,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
             {children}
           </div>
         </main>
+      <FloatingAiAdvisor />
 
         {/* Quick Profile Editor Modal */}
         <AnimatePresence>

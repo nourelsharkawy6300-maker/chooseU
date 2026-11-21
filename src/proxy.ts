@@ -52,6 +52,11 @@ const PROTECTED_ROUTES = [
   "/workspace",
   "/tco-matrix",
   "/universities",
+  "/scholarships",
+  "/parent-mode",
+  "/consultations",
+  "/decision-report",
+  "/action-plan",
   "/future-me",
   "/track-order",
 ];

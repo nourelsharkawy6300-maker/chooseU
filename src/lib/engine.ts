@@ -6,6 +6,7 @@ import {
   TcoMetrics,
   TrackKey,
 } from "../types/chooseu";
+import { estimateFacultyScholarshipPct } from "../data/scholarships-db";
 import {
   FACULTIES_DATABASE,
   STREAM_QUIZ_BANKS,
@@ -458,4 +459,25 @@ export function generateAcademicSummary(
   )}% — ${streamName} — ${gov}): ${top1.name} — ${top1.university} (${
     top1.type
   }) بمصروفات أساسية ${top1.y1_base_fee.toLocaleString()} ج.م.`;
+}
+
+export function computeFacultyTcoWithScholarship(
+  faculty: Faculty,
+  studentGov: string,
+  livingMode: "commute" | "dorm",
+  inflationPct: number,
+  studentScore: number
+): TcoMetrics {
+  const base = computeFacultyTcoMetrics(faculty, studentGov, livingMode, inflationPct);
+  const pct =
+    studentScore > 0
+      ? estimateFacultyScholarshipPct(faculty.type, studentScore, base.y1Base)
+      : 0;
+  const discount4Yr = Math.round(base.tuition4Yr * (pct / 100));
+  return {
+    ...base,
+    scholarshipCoveragePct: pct,
+    scholarshipDiscount4Yr: discount4Yr,
+    remainingFamily4Yr: Math.max(0, base.total4Yr - discount4Yr),
+  };
 }
