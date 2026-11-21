@@ -566,10 +566,10 @@ export function FourStationJourney({
           {/* Continuous Animated Progress Bar */}
           <div className="w-full bg-[#dedad0]/60 h-1 rounded-full overflow-hidden mt-3">
             <motion.div
-              className="h-full bg-gradient-to-r from-[#377ef0] to-[#fe6d2e]"
+              className="h-full w-full origin-right bg-[#377ef0] will-change-transform"
               initial={false}
-              animate={{ width: `${(station / 4) * 100}%` }}
-              transition={{ type: "spring", stiffness: 320, damping: 28 }}
+              animate={{ scaleX: station / 4 }}
+              transition={{ type: "spring", stiffness: 380, damping: 32 }}
             />
           </div>
         </BlueprintFrame>
@@ -586,10 +586,10 @@ export function FourStationJourney({
           {station === 1 && (
             <motion.div
               key="station-1"
-              initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -16, filter: "blur(4px)" }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
               className="space-y-6"
             >
             {/* Header Description */}
@@ -729,10 +729,10 @@ export function FourStationJourney({
         {station === 2 && (
           <motion.div
             key="station-2"
-            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: -16, filter: "blur(4px)" }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
             className="space-y-6"
           >
             {/* Header */}
@@ -1044,10 +1044,10 @@ export function FourStationJourney({
         {station === 3 && (
           <motion.div
             key="station-3"
-            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: -16, filter: "blur(4px)" }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
             className="space-y-6"
           >
             {/* Header */}
@@ -1431,10 +1431,10 @@ export function FourStationJourney({
         {station === 4 && (
           <motion.div
             key="station-4"
-            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: -16, filter: "blur(4px)" }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
             className="space-y-6"
           >
             {/* Header */}
