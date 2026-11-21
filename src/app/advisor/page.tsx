@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Bot, Send, Loader2, Sparkles } from "lucide-react";
+import { Bot, Send, Loader2 } from "lucide-react";
 
 interface ChatMessage {
   id: string;
@@ -167,8 +167,8 @@ export default function AdvisorPage() {
             </p>
           </div>
         </div>
-        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 shrink-0">
-          <Sparkles className="h-3 w-3" />
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 shrink-0">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
           <span>متصل</span>
         </span>
       </div>

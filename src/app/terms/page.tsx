@@ -10,12 +10,6 @@ export const metadata = {
 export default function TermsPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-8 py-4">
-      {/* Top Legal Review Notice Banner */}
-      <div className="bg-amber-50 border-2 border-amber-300 text-amber-950 px-5 py-4 rounded-2xl text-sm sm:text-base font-bold flex items-center gap-3 shadow-xs">
-        <span className="text-xl">⚠️</span>
-        <span>مسودة — تحتاج مراجعة قانونية قبل الإطلاق</span>
-      </div>
-
       <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-10 shadow-xs space-y-8">
         <div className="border-b border-slate-200 pb-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-3">
