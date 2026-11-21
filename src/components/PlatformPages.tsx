@@ -386,11 +386,21 @@ export function FutureMeView({
   setActiveView,
   onOpenCheckout,
 }: FutureMeViewProps) {
+  const availableFaculties = useMemo(() => {
+    return evaluation.allRanked.length > 0
+      ? evaluation.allRanked
+      : FACULTIES_DATABASE;
+  }, [evaluation.allRanked]);
+
   const activeFaculty = useMemo(() => {
-    if (selectedFaculty) return selectedFaculty;
-    if (evaluation.allRanked.length > 0) return evaluation.allRanked[0];
-    return FACULTIES_DATABASE[0] || null;
-  }, [selectedFaculty, evaluation.allRanked]);
+    if (
+      selectedFaculty &&
+      availableFaculties.some((f) => f.id === selectedFaculty.id)
+    ) {
+      return selectedFaculty;
+    }
+    return availableFaculties[0] || null;
+  }, [selectedFaculty, availableFaculties]);
 
   if (!activeFaculty) {
     return (
@@ -434,14 +444,14 @@ export function FutureMeView({
           <select
             value={activeFaculty.id}
             onChange={(e) => {
-              const found = FACULTIES_DATABASE.find(
+              const found = availableFaculties.find(
                 (f) => f.id === e.target.value
               );
               if (found) setSelectedFaculty(found);
             }}
             className="w-full border border-slate-200 focus:border-blue-600 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold bg-slate-50 text-slate-900 focus:outline-none"
           >
-            {FACULTIES_DATABASE.map((f) => (
+            {availableFaculties.map((f) => (
               <option key={f.id} value={f.id}>
                 {f.name} — {f.university}
               </option>
