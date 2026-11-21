@@ -901,16 +901,39 @@ export function SampleReportView({
       ? evaluation.allRanked.slice(0, 6)
       : FACULTIES_DATABASE.slice(0, 6);
 
+  const tcoList = sampleFaculties.map((f) =>
+    computeFacultyTcoMetrics(f, gov, livingMode, inflationScenario)
+  );
+  const avg4YrTco =
+    tcoList.length > 0
+      ? Math.round(
+          tcoList.reduce((acc, item) => acc + item.total4Yr, 0) / tcoList.length
+        )
+      : 0;
+  const topFaculty = sampleFaculties[0];
+  const topMargin = topFaculty ? +(score - topFaculty.cutoff_2026).toFixed(1) : 0;
+
+  const easeEditorial = [0.22, 1, 0.36, 1] as const;
+
   return (
     <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8 space-y-6">
       {/* Top Preview Action Bar */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4 shadow-2xs no-print">
-        <div>
-          <h1 className="text-[18px] font-bold text-slate-900 leading-[1.45]">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: easeEditorial }}
+        className="bg-white border border-[#dedad0] rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4 shadow-xs no-print"
+      >
+        <div className="space-y-0.5">
+          <div className="inline-flex items-center gap-2 text-[11px] font-semibold text-[#377ef0]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#377ef0]" />
+            <span>معاينة حية لوثيقة A4</span>
+          </div>
+          <h1 className="text-[18px] font-bold text-[#1c1736] leading-[1.4]">
             نموذج تجريبي — تقرير استشاري (A4)
           </h1>
-          <p className="text-[12px] text-slate-500 mt-0.5">
-            نموذج استرشادي تجريبي يوضح هيكل الوثيقة الاستشارية وقائمة الرغبات كعينة افتراضية.
+          <p className="text-[12px] text-slate-500">
+            يوضح هيكل الوثيقة الاستشارية، ترتيب الرغبات، والتدفق المالي لسنوات الدراسة.
           </p>
         </div>
 
@@ -918,188 +941,305 @@ export function SampleReportView({
           <button
             type="button"
             onClick={() => window.print()}
-            className="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-xl text-[12px] font-medium flex items-center gap-1.5 cursor-pointer"
+            className="border border-slate-300 bg-white hover:bg-slate-50 active:scale-[0.98] text-slate-700 px-4 py-2.5 rounded-xl text-[12px] font-semibold flex items-center gap-1.5 transition-all cursor-pointer"
           >
-            <Printer className="w-4 h-4" strokeWidth={1.5} />
+            <Printer className="w-4 h-4" strokeWidth={1.75} />
             <span>طباعة نموذج المعاينة (PDF)</span>
           </button>
 
           <button
             type="button"
             onClick={onOpenCheckout}
-            className="bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 px-4 py-2 rounded-xl text-[12px] font-semibold cursor-pointer tabular-nums shadow-sm"
+            className="bg-[#377ef0] hover:bg-[#2962be] active:scale-[0.98] text-white px-4 py-2.5 rounded-xl text-[12px] font-semibold cursor-pointer tabular-nums shadow-sm transition-all"
           >
             اطلب تقريرك المخصص الآن (150 ج.م)
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* A4 Print-Ready Sample Document Container */}
-      <div className="relative max-w-[210mm] mx-auto bg-white text-slate-950 shadow-2xl rounded-sm p-8 sm:p-12 space-y-8 print-only-sheet">
-        {/* Diagonal Watermark */}
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, delay: 0.06, ease: easeEditorial }}
+        className="relative max-w-[210mm] mx-auto bg-white text-slate-950 border border-[#dedad0] shadow-xl rounded-2xl overflow-hidden print:shadow-none print:border-none print:rounded-none print-only-sheet"
+      >
+        {/* Subtle Watermark */}
         <div className="pointer-events-none select-none absolute inset-0 flex items-center justify-center z-0 overflow-hidden no-print">
-          <span className="text-[28px] sm:text-[36px] font-bold text-slate-900/[0.04] -rotate-12 whitespace-nowrap">
+          <span className="text-[28px] sm:text-[34px] font-bold text-slate-900/[0.03] -rotate-12 whitespace-nowrap">
             نسخة معاينة استرشادية — ChooseU Advisory
           </span>
         </div>
 
-        <div className="relative z-10 space-y-8">
-          <div className="border-b-2 border-slate-900 pb-5 flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <div className="text-xs font-semibold text-amber-700">
-                وثيقة التقييم الأكاديمي والمالي الشامل — ChooseU Advisory
+        {/* Executive Dark Header Band */}
+        <div className="relative z-10 bg-[#1c1736] text-white px-7 sm:px-10 py-7 print:bg-[#1c1736]">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="space-y-1.5 max-w-xl">
+              <div className="inline-flex items-center gap-2 text-[11px] font-semibold text-blue-300 tracking-wide">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span>وثيقة التقييم الأكاديمي والمالي الشامل — ChooseU Advisory</span>
               </div>
-              <h2 className="text-[20px] font-bold text-slate-900 mt-1 leading-[1.45]">
-                نموذج تجريبي استرشادي لتنسيق الجامعات والتدفق المالي لسنوات الدراسة
+              <h2 className="text-[20px] sm:text-[22px] font-bold text-white leading-snug">
+                التقرير الاستشاري لتنسيق الجامعات والتدفق المالي لسنوات الدراسة
               </h2>
-              <p className="text-xs text-slate-600 font-medium mt-1 tabular-nums">
-                عينة استرشادية توضيحية وفق الحدود الدنيا ولوائح المصروفات المعلنة
+              <p className="text-xs text-slate-300 leading-relaxed">
+                تحليل مخصص وفق الحدود الدنيا المتوقعة، الميزانية السنوية، ولوائح المصروفات المعلنة.
               </p>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-left text-[12px] tabular-nums space-y-0.5">
-              <div className="font-mono font-semibold text-slate-900">
+            <div className="bg-white/10 border border-white/15 rounded-xl px-4 py-2.5 text-left text-[11px] tabular-nums space-y-1 shrink-0">
+              <div className="font-mono font-semibold text-white">
                 REF: ORD-2026-SAMPLE
               </div>
-              <div className="text-amber-700 font-medium">
-                مراجعة المستشار: نموذج تجريبي
+              <div className="text-amber-300 font-medium">
+                الحالة: نسخة معاينة تجريبية
+              </div>
+              <div className="text-slate-300">
+                الطالب: {studentName.trim() || "طالب تجريبي"}
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Student Metadata Summary */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-50 border border-slate-200 rounded-xl p-4 text-[12px] tabular-nums">
-            <div>
-              <span className="text-slate-500 block">اسم الطالب</span>
-              <strong className="text-slate-900 font-semibold">
-                {studentName.trim() || "طالب تجريبي (عينة افتراضية)"}
-              </strong>
-            </div>
-            <div>
-              <span className="text-slate-500 block">الشعبة والمجموع</span>
-              <strong className="text-slate-900 font-semibold">
-                {formatStream(stream)}{" "}
-                ({score.toFixed(1)}%)
-              </strong>
-            </div>
-            <div>
-              <span className="text-slate-500 block">
-                الميزانية السنوية والمحافظة
+        {/* Document Body */}
+        <div className="relative z-10 p-7 sm:p-10 space-y-8">
+          {/* 4 Executive KPI Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 tabular-nums">
+            {[
+              {
+                label: "الشعبة والمجموع",
+                value: `${score.toFixed(1)}%`,
+                sub: formatStream(stream),
+                accent: "border-t-[#377ef0]",
+              },
+              {
+                label: "الميزانية والمحافظة",
+                value: `${budget.toLocaleString()} ج.م`,
+                sub: `محافظة ${gov}`,
+                accent: "border-t-emerald-500",
+              },
+              {
+                label: "متوسط تكلفة الدراسة",
+                value: `${avg4YrTco.toLocaleString()} ج.م`,
+                sub: `بمعدل تضخم ${inflationScenario}%`,
+                accent: "border-t-amber-500",
+              },
+              {
+                label: "المسار المتصدر",
+                value:
+                  topTrack && TRACK_DETAILS[topTrack]
+                    ? TRACK_DETAILS[topTrack].title
+                    : "قيد التحديد",
+                sub:
+                  topFaculty
+                    ? `هامش أعلى ترشيح: ${topMargin >= 0 ? `+${topMargin}%` : `${topMargin}%`}`
+                    : "عبر التقييم",
+                accent: "border-t-slate-700",
+              },
+            ].map((kpi, idx) => (
+              <motion.div
+                key={kpi.label}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.3,
+                  delay: 0.1 + idx * 0.05,
+                  ease: easeEditorial,
+                }}
+                className={`rounded-xl border border-slate-200 border-t-2 ${kpi.accent} bg-[#faf8f5]/70 p-3.5 hover:bg-white hover:shadow-xs transition-all`}
+              >
+                <span className="text-[11px] font-medium text-slate-500 block">
+                  {kpi.label}
+                </span>
+                <strong className="text-[14px] font-bold text-[#1c1736] block mt-1 truncate">
+                  {kpi.value}
+                </strong>
+                <span className="text-[11px] text-slate-500 block mt-0.5 truncate">
+                  {kpi.sub}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Section 1: Recommended Tansik Ordering */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.35, ease: easeEditorial }}
+            className="space-y-3.5"
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="h-6 w-6 rounded-lg bg-[#1c1736] text-white text-xs font-bold flex items-center justify-center shrink-0">
+                1
               </span>
-              <strong className="text-slate-900 font-semibold">
-                {budget.toLocaleString()} ج.م • {gov}
-              </strong>
+              <h3 className="text-[15px] font-bold text-[#1c1736]">
+                الترتيب الاستراتيجي الموصى به لرغبات التنسيق والبدائل الآمنة
+              </h3>
             </div>
-            <div>
-              <span className="text-slate-500 block">المسار المتصدر</span>
-              <strong className="text-amber-800 font-semibold">
-                {topTrack && TRACK_DETAILS[topTrack]
-                  ? TRACK_DETAILS[topTrack].title
-                  : "قيد التحديد عبر التقييم"}
-              </strong>
-            </div>
-          </div>
 
-          {/* Recommended Tansik Ordering */}
-          <div className="space-y-3">
-            <h3 className="text-[15px] font-semibold text-slate-900">
-              أولاً: الترتيب الاستراتيجي الموصى به لرغبات التنسيق والبدائل الآمنة
-            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="border border-slate-200 rounded-xl p-4 bg-white space-y-2.5">
-                <div className="text-[12px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded inline-block">
-                  الرغبات الأساسية المستهدفة (الأقرب للمجموع والميول)
+              {/* Primary Targets */}
+              <div className="border border-slate-200 rounded-xl p-4 bg-white space-y-3 hover:border-blue-200 transition-colors">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[12px] font-bold text-[#377ef0] bg-blue-50 border border-blue-200/80 px-2.5 py-1 rounded-lg">
+                    الرغبات الأساسية المستهدفة
+                  </span>
+                  <span className="text-[11px] text-slate-500">الأقرب للمجموع والميول</span>
                 </div>
-                <ul className="space-y-2 text-[12px] text-slate-700 tabular-nums">
-                  {sampleFaculties.slice(0, 3).map((f, i) => (
-                    <li
-                      key={f.id}
-                      className="flex items-center justify-between border-b border-slate-100 pb-1.5 last:border-none"
-                    >
-                      <span className="font-medium text-slate-900">
-                        0{i + 1}. {f.name} ({f.university})
-                      </span>
-                      <span className="text-slate-500 font-semibold">
-                        مؤشر القبول الاسترشادي: {f.cutoff_2026.toFixed(1)}%
-                      </span>
-                    </li>
-                  ))}
+
+                <ul className="space-y-3 text-[12px] text-slate-700 tabular-nums">
+                  {sampleFaculties.slice(0, 3).map((f, i) => {
+                    const barPct = Math.min(100, Math.max(25, Math.round(f.cutoff_2026)));
+                    return (
+                      <li
+                        key={f.id}
+                        className="space-y-1.5 border-b border-slate-100 pb-2.5 last:border-none last:pb-0"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <span className="font-bold text-[#1c1736]">
+                              0{i + 1}. {f.name}
+                            </span>
+                            <span className="block text-[11px] text-slate-500">
+                              {f.university}
+                            </span>
+                          </div>
+                          <span className="shrink-0 rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-[#1c1736]">
+                            {f.cutoff_2026.toFixed(1)}%
+                          </span>
+                        </div>
+                        <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${barPct}%` }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease: easeEditorial }}
+                            className="h-full rounded-full bg-[#377ef0]"
+                          />
+                        </div>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
 
-              <div className="border border-slate-200 rounded-xl p-4 bg-white space-y-2.5">
-                <div className="text-[12px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded inline-block">
-                  البدائل الاستراتيجية الآمنة (تأمين التخصص استرشادياً)
+              {/* Safe Alternatives */}
+              <div className="border border-slate-200 rounded-xl p-4 bg-white space-y-3 hover:border-emerald-200 transition-colors">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[12px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-lg">
+                    البدائل الاستراتيجية الآمنة
+                  </span>
+                  <span className="text-[11px] text-slate-500">تأمين التخصص</span>
                 </div>
-                <ul className="space-y-2 text-[12px] text-slate-700 tabular-nums">
-                  {sampleFaculties.slice(3, 6).map((f, i) => (
-                    <li
-                      key={f.id}
-                      className="flex items-center justify-between border-b border-slate-100 pb-1.5 last:border-none"
-                    >
-                      <span className="font-medium text-slate-900">
-                        0{i + 4}. {f.name} ({f.university})
-                      </span>
-                      <span className="text-slate-500 font-semibold">
-                        {f.y1_base_fee.toLocaleString()} ج.م/سنة
-                      </span>
-                    </li>
-                  ))}
+
+                <ul className="space-y-3 text-[12px] text-slate-700 tabular-nums">
+                  {sampleFaculties.slice(3, 6).map((f, i) => {
+                    const barPct = Math.min(100, Math.max(25, Math.round(f.cutoff_2026)));
+                    return (
+                      <li
+                        key={f.id}
+                        className="space-y-1.5 border-b border-slate-100 pb-2.5 last:border-none last:pb-0"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <span className="font-bold text-[#1c1736]">
+                              0{i + 4}. {f.name}
+                            </span>
+                            <span className="block text-[11px] text-slate-500">
+                              {f.university}
+                            </span>
+                          </div>
+                          <span className="shrink-0 rounded-md bg-emerald-50 text-emerald-800 px-2 py-0.5 text-[11px] font-bold">
+                            {f.y1_base_fee.toLocaleString()} ج.م/سنة
+                          </span>
+                        </div>
+                        <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${barPct}%` }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: 0.15 + i * 0.08, ease: easeEditorial }}
+                            className="h-full rounded-full bg-emerald-500"
+                          />
+                        </div>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* 4-Year TCO Cashflow Table */}
-          <div className="space-y-3">
-            <h3 className="text-[15px] font-semibold text-slate-900">
-              ثانياً: جدول التدفقات المالية لسنوات الدراسة بالكامل (TCO) ولوائح الـ GPA الداخلي
-            </h3>
+          {/* Section 2: 4-Year TCO Cashflow Table */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.35, ease: easeEditorial }}
+            className="space-y-3.5"
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="h-6 w-6 rounded-lg bg-[#1c1736] text-white text-xs font-bold flex items-center justify-center shrink-0">
+                2
+              </span>
+              <h3 className="text-[15px] font-bold text-[#1c1736]">
+                جدول التدفقات المالية لسنوات الدراسة بالكامل (TCO) ولوائح الـ GPA الداخلي
+              </h3>
+            </div>
+
             <div className="overflow-x-auto border border-slate-200 rounded-xl">
               <table className="w-full text-right border-collapse text-[12px] tabular-nums">
                 <thead>
-                  <tr className="bg-slate-100 text-slate-700 font-semibold border-b border-slate-200">
-                    <th className="py-3 px-3.5 min-w-[230px]">الكلية والجامعة</th>
-                    <th className="py-3 px-3.5">حد 2026</th>
-                    <th className="py-3 px-3.5">مصروفات سنة 1</th>
-                    <th className="py-3 px-3.5">
-                      إجمالي سنوات الدراسة بالكامل (تضخم {inflationScenario}%)
+                  <tr className="bg-[#1c1736]/5 text-[#1c1736] font-bold border-b border-slate-200">
+                    <th className="py-3 px-3.5 min-w-[220px]">الكلية والجامعة</th>
+                    <th className="py-3 px-3">حد 2026</th>
+                    <th className="py-3 px-3">سنة 1</th>
+                    <th className="py-3 px-3">
+                      الإجمالي (تضخم {inflationScenario}%)
                     </th>
-                    <th className="py-3 px-3.5">الاستقرار الجغرافي ({gov})</th>
-                    <th className="py-3 px-3.5">شرط الـ GPA الداخلي</th>
+                    <th className="py-3 px-3">الاستقرار ({gov})</th>
+                    <th className="py-3 px-3">شرط الـ GPA الداخلي</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
+                <tbody className="divide-y divide-slate-200/80">
                   {sampleFaculties.map((f, i) => {
-                    const m = computeFacultyTcoMetrics(
-                      f,
-                      gov,
-                      livingMode,
-                      inflationScenario
-                    );
+                    const m = tcoList[i];
+                    const isSafe = score >= f.cutoff_2026;
                     return (
-                      <tr key={f.id} className="bg-white">
+                      <tr
+                        key={f.id}
+                        className="bg-white hover:bg-[#faf8f5] transition-colors"
+                      >
                         <td className="py-3 px-3.5 align-top">
-                          <div className="font-semibold text-slate-900">
+                          <div className="font-bold text-[#1c1736]">
                             0{i + 1}. {f.name}
                           </div>
-                          <div className="text-xs text-slate-600 font-medium">
+                          <div className="text-[11px] text-slate-500 mt-0.5">
                             {f.university} • {f.type}
                           </div>
                         </td>
-                        <td className="py-3 px-3.5 font-semibold align-top">
-                          {f.cutoff_2026.toFixed(1)}%
+                        <td className="py-3 px-3 align-top">
+                          <span
+                            className={`inline-block rounded-md px-2 py-0.5 text-[11px] font-bold ${
+                              isSafe
+                                ? "bg-emerald-50 text-emerald-700"
+                                : "bg-amber-50 text-amber-800"
+                            }`}
+                          >
+                            {f.cutoff_2026.toFixed(1)}%
+                          </span>
                         </td>
-                        <td className="py-3 px-3.5 align-top">
+                        <td className="py-3 px-3 align-top text-slate-700 font-medium whitespace-nowrap">
                           {f.y1_base_fee.toLocaleString()} ج.م
                         </td>
-                        <td className="py-3 px-3.5 font-bold text-slate-900 whitespace-nowrap align-top">
+                        <td className="py-3 px-3 font-bold text-[#1c1736] whitespace-nowrap align-top">
                           {m.total4Yr.toLocaleString()} ج.م
                         </td>
-                        <td className="py-3 px-3.5 text-xs align-top">
+                        <td className="py-3 px-3 text-[11px] text-slate-600 align-top">
                           {m.livingDesc}
                         </td>
-                        <td className="py-3 px-3.5 text-xs leading-relaxed align-top">
+                        <td className="py-3 px-3 text-[11px] text-slate-600 leading-relaxed align-top">
                           {f.gpa_requirement}
                         </td>
                       </tr>
@@ -1108,34 +1248,54 @@ export function SampleReportView({
                 </tbody>
               </table>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Internal Bylaw & Risk Analysis */}
-          <div className="space-y-2">
-            <h3 className="text-[15px] font-semibold text-slate-900">
-              ثالثاً: تحليل مخاطر السنة التأسيسية الأولى وتوصية المستشار
-            </h3>
-            <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/70 text-[12px] text-slate-700 leading-relaxed space-y-2">
-              <p>
-                • <strong>تنبيه التشعيب الداخلي:</strong> تشترط كليات الذكاء الاصطناعي والجامعات الأهلية تحقيق معدل تراكمي (GPA &gt;= 2.7) في نهاية السنة التأسيسية الأولى للالتحاق بالأقسام التنافسية (الذكاء الاصطناعي والأمن السيبراني).
-              </p>
-              <p>
-                • <strong>التوصية المالية والجغرافية:</strong> أولوية القبول داخل محافظة {gov} توفر على الأسرة ما يقارب 24,000 إلى 32,000 ج.م سنوياً من نفقات السكن الطلابي المغترب والإعاشة.
-              </p>
+          {/* Section 3: Internal Bylaw & Risk Analysis */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.35, ease: easeEditorial }}
+            className="space-y-3.5"
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="h-6 w-6 rounded-lg bg-[#1c1736] text-white text-xs font-bold flex items-center justify-center shrink-0">
+                3
+              </span>
+              <h3 className="text-[15px] font-bold text-[#1c1736]">
+                تحليل مخاطر السنة التأسيسية الأولى وتوصية المستشار
+              </h3>
             </div>
-          </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-[12px] leading-relaxed">
+              <div className="rounded-xl border border-amber-200/80 border-r-4 border-r-amber-500 bg-amber-50/50 p-4 text-slate-800">
+                <strong className="text-amber-900 block mb-1">
+                  تنبيه التشعيب الداخلي (GPA)
+                </strong>
+                تشترط كليات الذكاء الاصطناعي والجامعات الأهلية تحقيق معدل تراكمي (GPA &gt;= 2.7) في نهاية السنة التأسيسية الأولى للالتحاق بالأقسام التنافسية (الذكاء الاصطناعي والأمن السيبراني).
+              </div>
+
+              <div className="rounded-xl border border-emerald-200/80 border-r-4 border-r-emerald-500 bg-emerald-50/50 p-4 text-slate-800">
+                <strong className="text-emerald-900 block mb-1">
+                  التوصية المالية والجغرافية
+                </strong>
+                أولوية القبول داخل محافظة {gov} توفر على الأسرة ما يقارب 24,000 إلى 32,000 ج.م سنوياً من نفقات السكن الطلابي المغترب والإعاشة.
+              </div>
+            </div>
+          </motion.div>
 
           {/* Indicative Disclaimer Bar */}
-          <div className="border-t border-slate-200 pt-3 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
+          <div className="border-t border-slate-200 pt-4 flex flex-wrap items-center justify-between text-[11px] text-slate-500 gap-2">
             <span>{INDICATIVE_DISCLAIMER}</span>
-            <span className="font-mono text-[11px] tabular-nums">آخر تحديث للبيانات: {DATA_LAST_UPDATED}</span>
+            <span className="font-mono tabular-nums">
+              آخر تحديث للبيانات: {DATA_LAST_UPDATED}
+            </span>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
-
 // ============================================================================
 // 5. TRACK ORDER VIEW (`متابعة حالة الطلب واستلام التقرير`)
 // ============================================================================
