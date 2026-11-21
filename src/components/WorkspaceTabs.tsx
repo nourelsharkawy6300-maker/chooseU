@@ -85,7 +85,7 @@ function getCategoryBadgeStyle(type: string): string {
     return "bg-emerald-50 text-emerald-800 border-emerald-200";
   }
   if (type === "برامج خاصة وساعات معتمدة") {
-    return "bg-amber-50 text-blue-800 border-amber-200";
+    return "bg-amber-50 text-amber-900 border-amber-200";
   }
   if (type === "جامعات أهلية") {
     return "bg-purple-50 text-purple-800 border-purple-200";
@@ -650,7 +650,7 @@ export function WorkspaceTabs({
                             }
                             className={`w-full text-right px-4 py-3.5 rounded-xl border text-[13px] transition-all duration-150 hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-between gap-3 cursor-pointer ${
                               selected
-                                ? "bg-amber-50 border-amber-600 text-blue-900 font-medium"
+                                ? "bg-amber-50 border-amber-600 text-amber-900 font-medium"
                                 : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-normal"
                             }`}
                           >
@@ -1350,7 +1350,7 @@ export function WorkspaceTabs({
               >
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[13px] font-bold text-blue-900">
+                    <span className="text-[13px] font-bold text-amber-900">
                       الخيار الأنسب لملفك الأكاديمي والمالي
                     </span>
                     <span className="text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded border border-amber-200 tabular-nums">

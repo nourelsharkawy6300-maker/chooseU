@@ -165,15 +165,15 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-[#fbfaf6] text-slate-900" dir="rtl">
       {/* ================================================================== */}
-      {/* 1. LEFT BRANDING STAGE (Desktop Only - 50% width, #0F172A Dark)    */}
+      {/* 1. LEFT BRANDING STAGE (Desktop Only - 50% width, #18181B Dark)    */}
       {/* ================================================================== */}
-      <div className="hidden lg:flex lg:w-1/2 bg-[#0F172A] text-white p-12 lg:p-16 flex-col justify-between relative overflow-hidden select-none">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#18181B] text-white p-12 lg:p-16 flex-col justify-between relative overflow-hidden select-none">
         {/* Subtle radial blueprint background */}
         <div
           className="absolute inset-0 pointer-events-none opacity-20"
           style={{
             backgroundImage:
-              "radial-gradient(#EAB308 1px, transparent 1px), radial-gradient(#EAB308 1px, #0F172A 1px)",
+              "radial-gradient(#EAB308 1px, transparent 1px), radial-gradient(#EAB308 1px, #18181B 1px)",
             backgroundSize: "40px 40px",
             backgroundPosition: "0 0, 20px 20px",
           }}
@@ -182,8 +182,8 @@ export function OnboardingGate({ children }: OnboardingGateProps) {
 
         {/* Top Header Badge */}
         <div className="relative z-10 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-xs font-mono tracking-wider text-blue-400">
-            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-xs font-mono tracking-wider text-amber-400">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             <span>PROGRESSIVE ONBOARDING WIZARD // 2026</span>
           </div>
 

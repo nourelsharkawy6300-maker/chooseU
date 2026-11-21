@@ -386,7 +386,7 @@ export function evaluateAndRankFaculties(params: {
         groupKey = "target";
         safetyBadge = {
           label: `نطاق مستهدف (${formattedMargin})`,
-          style: "bg-amber-50 text-blue-800 border-amber-200",
+          style: "bg-amber-50 text-amber-900 border-amber-200",
         };
       } else if (margin >= 2.0 && scoreGap <= 11.0) {
         groupKey = "safe";

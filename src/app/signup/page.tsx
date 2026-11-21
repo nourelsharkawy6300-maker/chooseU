@@ -419,7 +419,7 @@ function SignupForm() {
             {/* Conditional Guardian Acknowledgment Checkbox */}
             {isMinor === true && (
               <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50/50 p-3.5 space-y-2">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-blue-900">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900">
                   <ShieldCheck className="h-4 w-4 text-amber-700 shrink-0" />
                   <span>إقرار ولي الأمر (إلزامي للطلاب دون 18 سنة)</span>
                 </div>

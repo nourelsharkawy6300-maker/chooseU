@@ -52,7 +52,7 @@ function getCategoryBadgeStyle(type: string): string {
     return "bg-emerald-50 text-emerald-800 border-emerald-200";
   }
   if (type === "برامج خاصة وساعات معتمدة") {
-    return "bg-amber-50 text-blue-800 border-amber-200";
+    return "bg-amber-50 text-amber-900 border-amber-200";
   }
   if (type === "جامعات أهلية") {
     return "bg-slate-100 text-slate-800 border-slate-300";
@@ -65,7 +65,7 @@ function getDemandBadgeStyle(demand: string): string {
     return "bg-emerald-50 text-emerald-800 border-emerald-200";
   }
   if (demand === "مرتفع") {
-    return "bg-amber-50 text-blue-800 border-amber-200";
+    return "bg-amber-50 text-amber-900 border-amber-200";
   }
   return "bg-slate-100 text-slate-700 border-slate-300";
 }
@@ -925,8 +925,8 @@ export function SampleReportView({
         className="bg-white border border-[#dedad0] rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4 shadow-xs no-print"
       >
         <div className="space-y-0.5">
-          <div className="inline-flex items-center gap-2 text-[11px] font-semibold text-[#377ef0]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#377ef0]" />
+          <div className="inline-flex items-center gap-2 text-[11px] font-semibold text-[#FACC15]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#FACC15]" />
             <span>معاينة حية لوثيقة A4</span>
           </div>
           <h1 className="text-[18px] font-bold text-[#1c1736] leading-[1.4]">
@@ -950,7 +950,7 @@ export function SampleReportView({
           <button
             type="button"
             onClick={onOpenCheckout}
-            className="bg-[#377ef0] hover:bg-[#2962be] active:scale-[0.98] text-white px-4 py-2.5 rounded-xl text-[12px] font-semibold cursor-pointer tabular-nums shadow-sm transition-all"
+            className="bg-[#FACC15] hover:bg-[#CA8A04] active:scale-[0.98] text-slate-950 px-4 py-2.5 rounded-xl text-[12px] font-semibold cursor-pointer tabular-nums shadow-sm transition-all"
           >
             اطلب تقريرك المخصص الآن (150 ج.م)
           </button>
@@ -975,7 +975,7 @@ export function SampleReportView({
         <div className="relative z-10 bg-[#1c1736] text-white px-7 sm:px-10 py-7 print:bg-[#1c1736]">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="space-y-1.5 max-w-xl">
-              <div className="inline-flex items-center gap-2 text-[11px] font-semibold text-blue-300 tracking-wide">
+              <div className="inline-flex items-center gap-2 text-[11px] font-semibold text-amber-300 tracking-wide">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                 <span>وثيقة التقييم الأكاديمي والمالي الشامل — ChooseU Advisory</span>
               </div>
@@ -1010,7 +1010,7 @@ export function SampleReportView({
                 label: "الشعبة والمجموع",
                 value: `${score.toFixed(1)}%`,
                 sub: formatStream(stream),
-                accent: "border-t-[#377ef0]",
+                accent: "border-t-[#FACC15]",
               },
               {
                 label: "الميزانية والمحافظة",
@@ -1080,9 +1080,9 @@ export function SampleReportView({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Primary Targets */}
-              <div className="border border-slate-200 rounded-xl p-4 bg-white space-y-3 hover:border-blue-200 transition-colors">
+              <div className="border border-slate-200 rounded-xl p-4 bg-white space-y-3 hover:border-amber-200 transition-colors">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-[12px] font-bold text-[#377ef0] bg-blue-50 border border-blue-200/80 px-2.5 py-1 rounded-lg">
+                  <span className="text-[12px] font-bold text-[#FACC15] bg-amber-50 border border-amber-200/80 px-2.5 py-1 rounded-lg">
                     الرغبات الأساسية المستهدفة
                   </span>
                   <span className="text-[11px] text-slate-500">الأقرب للمجموع والميول</span>
@@ -1115,7 +1115,7 @@ export function SampleReportView({
                             whileInView={{ width: `${barPct}%` }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease: easeEditorial }}
-                            className="h-full rounded-full bg-[#377ef0]"
+                            className="h-full rounded-full bg-[#FACC15]"
                           />
                         </div>
                       </li>

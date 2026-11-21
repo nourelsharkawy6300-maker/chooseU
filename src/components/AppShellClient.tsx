@@ -99,12 +99,6 @@ const NAVIGATION_ITEMS: NavItem[] = [
     icon: Milestone,
   },
   {
-    label: "تقريري (A4)",
-    sublabel: "التقرير الاسترشادي والمراجعة الأكاديمية",
-    href: "/sample-report",
-    icon: FileCheck2,
-  },
-  {
     label: "المستشار الذكي",
     sublabel: "محادثة فورية مع الذكاء الاصطناعي",
     href: "/advisor",
@@ -505,7 +499,7 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                           onClick={() => setIsMobileNavOpen(false)}
                           className={`group relative flex items-start gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200 ${
                             isActive
-                              ? "text-blue-900 font-semibold"
+                              ? "text-amber-900 font-semibold"
                               : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                           }`}
                         >
@@ -803,7 +797,6 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
             { label: "المصروفات", href: "/tco-matrix", icon: Calculator },
             { label: "الجامعات", href: "/universities", icon: Building2 },
             { label: "سوق العمل", href: "/future-me", icon: Milestone },
-            { label: "التقرير A4", href: "/sample-report", icon: FileCheck2 },
             { label: "متابعة الطلب", href: "/track-order", icon: Receipt },
           ].map((item) => {
             const Icon = item.icon;

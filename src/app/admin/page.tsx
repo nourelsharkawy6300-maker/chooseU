@@ -479,11 +479,11 @@ export default function AdvisorAdminPortalPage() {
             </div>
 
             <div className="bg-amber-50/60 border border-amber-200 rounded-xl p-4">
-              <span className="text-[11px] text-blue-800 flex items-center gap-1">
+              <span className="text-[11px] text-amber-900 flex items-center gap-1">
                 <Wallet className="w-3.5 h-3.5" strokeWidth={1.5} />
                 <span>إجمالي الإيرادات المعتمدة</span>
               </span>
-              <strong className="text-[20px] font-bold text-blue-900 mt-0.5 block">
+              <strong className="text-[20px] font-bold text-amber-900 mt-0.5 block">
                 {totalRevenueEgp.toLocaleString()} ج.م
               </strong>
             </div>

@@ -254,7 +254,7 @@ function DeclareAgeForm() {
           {/* Minor Guardian Consent Accordion */}
           {isMinor === true && (
             <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4.5 space-y-3 animate-in fade-in duration-200">
-              <div className="flex items-center gap-2 text-xs font-semibold text-blue-900">
+              <div className="flex items-center gap-2 text-xs font-semibold text-amber-900">
                 <HelpCircle className="h-4 w-4 text-amber-700 shrink-0" />
                 <span>إقرار موافقة ولي الأمر (إلزامي للطلاب دون 18 عاماً)</span>
               </div>

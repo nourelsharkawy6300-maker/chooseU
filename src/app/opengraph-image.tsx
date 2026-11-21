@@ -18,7 +18,7 @@ export default function OpenGraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "64px",
-          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #CA8A04 100%)",
+          background: "linear-gradient(135deg, #18181B 0%, #1e293b 55%, #CA8A04 100%)",
           color: "#ffffff",
           fontFamily: "sans-serif",
         }}
@@ -36,7 +36,7 @@ export default function OpenGraphImage() {
               fontSize: "40px",
               fontWeight: 800,
               color: "#ffffff",
-              boxShadow: "0 12px 30px rgba(37, 99, 235, 0.45)",
+              boxShadow: "0 12px 30px rgba(234, 179, 8, 0.45)",
             }}
           >
             U

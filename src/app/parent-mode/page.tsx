@@ -225,7 +225,7 @@ export default function ParentModePage() {
       <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-2xs space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-full">
+            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full">
               <HeartHandshake className="w-3.5 h-3.5" />
               <span>Parent Mode — دعم القرار الأسري المشترك</span>
             </div>
@@ -278,7 +278,7 @@ export default function ParentModePage() {
 
       {!mvpState.parentModeEnabled ? (
         <div className="bg-white border border-dashed border-slate-300 rounded-2xl p-10 text-center space-y-4">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center mx-auto">
             <Users className="w-6 h-6" />
           </div>
           <div className="space-y-1 max-w-lg mx-auto">
@@ -465,7 +465,7 @@ export default function ParentModePage() {
             >
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 font-bold text-slate-900 text-[15px]">
-                  <MessageSquareHeart className="w-4 h-4 text-indigo-600" />
+                  <MessageSquareHeart className="w-4 h-4 text-amber-700" />
                   <span>4. رأي وملاحظات ولي الأمر (Parent Feedback)</span>
                 </div>
                 {mvpState.parentFeedback && (
@@ -552,7 +552,7 @@ export default function ParentModePage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 px-4 rounded-xl text-[13px] font-bold inline-flex items-center justify-center gap-2 transition cursor-pointer shadow-xs"
+                className="w-full bg-[#FACC15] hover:bg-[#EAB308] text-slate-950 py-2.5 px-4 rounded-xl text-[13px] font-bold inline-flex items-center justify-center gap-2 transition cursor-pointer shadow-xs"
               >
                 <Save className="w-4 h-4" />
                 <span>{saving ? "جاري الحفظ..." : "حفظ ملاحظات ولي الأمر ودمجها في التقرير"}</span>

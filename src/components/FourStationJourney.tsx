@@ -321,7 +321,7 @@ export function FourStationJourney({
       let groupKey: "target" | "safe" | "fallback" = "target";
       let safetyBadge = {
         label: "واقعية متوازنة",
-        style: "bg-amber-50 text-blue-800 border-amber-200",
+        style: "bg-amber-50 text-amber-900 border-amber-200",
       };
 
       if (margin >= 1.5) {
@@ -659,7 +659,7 @@ export function FourStationJourney({
                                 onClick={() => handleAnswerQuestion(q.id, opt.track)}
                                 className={`w-full text-right p-3 rounded-lg border text-[12px] transition-colors cursor-pointer flex items-center justify-between gap-3 ${
                                   isSelected
-                                    ? "bg-amber-50/80 border-amber-500 text-blue-950 font-medium shadow-xs"
+                                    ? "bg-amber-50/80 border-amber-500 text-amber-900 font-medium shadow-xs"
                                     : "bg-white hover:bg-slate-50 border-slate-200 text-slate-700"
                                 }`}
                               >
@@ -849,7 +849,7 @@ export function FourStationJourney({
                       </div>
 
                       <div>
-                        <h3 className="text-sm font-bold text-slate-900 leading-snug group-hover:text-blue-900 transition-colors">
+                        <h3 className="text-sm font-bold text-slate-900 leading-snug group-hover:text-amber-900 transition-colors">
                           {fac.name}
                         </h3>
                         <p className="text-xs text-slate-600 mt-0.5">
@@ -903,7 +903,7 @@ export function FourStationJourney({
                       <button
                         type="button"
                         onClick={() => setExplainFaculty(fac)}
-                        className="w-full py-2 px-3 bg-amber-50 hover:bg-amber-100 text-blue-800 border border-amber-200 rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                        className="w-full py-2 px-3 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                       >
                         <HelpCircle className="w-3.5 h-3.5 stroke-[1.5]" />
                         <span>لماذا هذا التخصص؟</span>
@@ -1261,7 +1261,7 @@ export function FourStationJourney({
                       ].map((role, rIdx) => (
                         <span
                           key={rIdx}
-                          className="px-2.5 py-1 rounded-md bg-amber-50 border border-amber-200 text-blue-800 text-xs font-medium"
+                          className="px-2.5 py-1 rounded-md bg-amber-50 border border-amber-200 text-amber-900 text-xs font-medium"
                         >
                           {role}
                         </span>
@@ -1517,7 +1517,7 @@ export function FourStationJourney({
                       <div className="whitespace-pre-line">{msg.text}</div>
                       <div
                         className={`text-xs mt-1 text-right ${
-                          msg.sender === "user" ? "text-blue-100 font-medium" : "text-slate-600 font-medium"
+                          msg.sender === "user" ? "text-amber-100 font-medium" : "text-slate-600 font-medium"
                         }`}
                       >
                         {msg.timestamp}
@@ -1793,7 +1793,7 @@ export function FourStationJourney({
                   <div className="text-xs font-bold text-amber-800">
                     <span dir="ltr" className="font-mono tabular-nums">16 - 50</span> (<span dir="ltr" className="font-mono tabular-nums">35</span> رغبة)
                   </div>
-                  <div className="font-bold text-blue-900">خيارات واقعية متوازنة</div>
+                  <div className="font-bold text-amber-900">خيارات واقعية متوازنة</div>
                   <p className="text-xs text-slate-600 leading-relaxed">
                     الكليات التي تطابق مجموعك تماماً بنطاقك الجغرافي والنطاق الإقليمي المجاور، وهي الخيارات المرجحة بنسبة 85%+.
                   </p>

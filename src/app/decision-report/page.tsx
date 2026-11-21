@@ -338,7 +338,7 @@ export default function DecisionReportPage() {
           {/* Parent Feedback */}
           <div className="border border-slate-200 rounded-xl p-4 space-y-2">
             <div className="font-bold text-slate-900 flex items-center gap-1.5">
-              <HeartHandshake className="w-4 h-4 text-indigo-600" />
+              <HeartHandshake className="w-4 h-4 text-amber-700" />
               <span>5. ملاحظات ولي الأمر</span>
             </div>
             {mvpState.parentFeedback ? (

@@ -192,7 +192,7 @@ export default function AdvisorPage() {
               <p>{m.text}</p>
               <span
                 className={`block mt-1.5 text-[10px] ${
-                  m.role === "user" ? "text-blue-100" : "text-[#64748b]"
+                  m.role === "user" ? "text-amber-100" : "text-[#64748b]"
                 }`}
               >
                 {m.time}
