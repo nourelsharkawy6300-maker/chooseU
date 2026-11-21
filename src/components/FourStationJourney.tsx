@@ -491,7 +491,7 @@ export function FourStationJourney({
       {/* 1. STICKY 4-STATION STEPPER DOCK (BlueprintFrame + Progress Spring)  */}
       {/* ==================================================================== */}
       <div className="sticky top-0 z-30 bg-[var(--paper)]/95 backdrop-blur-md border-b border-[#e2e2e2] px-4 sm:px-6 py-3 no-print">
-        <BlueprintFrame label="STATION ENGINE // 01 - 04" className="pt-10 sm:pt-4 px-4 pb-3.5 sm:px-5 sm:pb-4 bg-white/90">
+        <BlueprintFrame label="رحلة اختيار التخصص" className="pt-11 px-4 pb-3.5 sm:px-5 sm:pb-4 bg-white/90">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             {/* Brand & Active Station Indicator */}
             <div className="flex items-center gap-3">
@@ -509,7 +509,7 @@ export function FourStationJourney({
                   </span>
                 </div>
                 <div className="text-[11px] text-slate-500 font-mono">
-                  PROGRESS: {((station / 4) * 100).toFixed(0)}% // STEP 0{station}
+                  التقدم: {((station / 4) * 100).toFixed(0)}% • الخطوة {station} من 4
                 </div>
               </div>
             </div>
