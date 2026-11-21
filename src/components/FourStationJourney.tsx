@@ -626,7 +626,7 @@ export function FourStationJourney({
                   {activeQuestions.map((q, idx) => (
                     <UIMavenCard
                       key={q.id}
-                      indexCode={`0${idx + 1} // QUIZ`}
+                      indexCode={`0${idx + 1}`}
                       badgeText={assessmentAnswers[q.id] ? "مكتمل" : "سؤال تفاعلي"}
                       statusDotColor={assessmentAnswers[q.id] ? "bg-emerald-500" : "bg-[#377ef0]"}
                       className="shadow-xs text-right"
@@ -675,17 +675,7 @@ export function FourStationJourney({
                                   )}
                                   <span>{opt.label}</span>
                                 </div>
-                                <span
-                                  className={`text-xs px-2.5 py-1 rounded-md border shrink-0 font-medium ${
-                                    isSelected
-                                      ? "bg-[#377ef0] border-[#377ef0] text-white"
-                                      : "bg-slate-100 border-slate-200 text-slate-700"
-                                  }`}
-                                >
-                                  {(opt as { label: string; track: TrackKey; badge?: string }).badge ||
-                                    TRACK_DETAILS[opt.track]?.title ||
-                                    "مسار تخصصي"}
-                                </span>
+                                
                               </motion.button>
                             );
                           })}
