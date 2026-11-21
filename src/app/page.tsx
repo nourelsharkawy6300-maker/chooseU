@@ -170,15 +170,7 @@ export default function HomePage() {
               معاينة نموذج التقرير A4
             </KineticRollButton>
 
-            <a
-              href="https://wa.me/201066594552"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-[#dedad0] text-xs font-bold text-emerald-700 hover:bg-emerald-50 transition-colors"
-            >
-              <MessageCircle className="h-4 w-4" />
-              <span dir="ltr">01066594552</span>
-            </a>
+
           </div>
         </div>
       </BlueprintFrame>
@@ -236,6 +228,51 @@ export default function HomePage() {
           })}
         </div>
       </div>
+
+      {/* Site Footer */}
+      <footer className="mt-10 border-t border-[#dedad0] pt-6 pb-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#64748b]">
+        <div className="flex items-center gap-2">
+          <span className="font-bold text-[#1c1736]">ChooseU</span>
+          <span>•</span>
+          <span>دليلك الذكي لاختيار الكلية والمسار الجامعي في مصر</span>
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          <a
+            href="https://wa.me/201066594552"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[#dedad0] bg-white px-3 py-1.5 font-semibold text-emerald-700 hover:bg-emerald-50 transition-colors"
+          >
+            <MessageCircle className="h-4 w-4" />
+            <span dir="ltr">01066594552</span>
+          </a>
+
+          <a
+            href="https://www.linkedin.com/in/nour-mawhoub/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            className="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-[#dedad0] bg-white text-[#0A66C2] hover:bg-blue-50 transition-colors"
+          >
+            <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+            </svg>
+          </a>
+
+          <a
+            href="https://www.facebook.com/N0UR11?locale=ar_AR"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+            className="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-[#dedad0] bg-white text-[#1877F2] hover:bg-blue-50 transition-colors"
+          >
+            <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z" />
+            </svg>
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }

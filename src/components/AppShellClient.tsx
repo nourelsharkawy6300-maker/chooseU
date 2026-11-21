@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Compass,
+  Bot,
   Calculator,
   Building2,
   Milestone,
@@ -66,6 +67,12 @@ const NAVIGATION_ITEMS: NavItem[] = [
     sublabel: "التقرير الاسترشادي والمراجعة الأكاديمية",
     href: "/sample-report",
     icon: FileCheck2,
+  },
+  {
+    label: "المستشار الذكي",
+    sublabel: "محادثة فورية مع الذكاء الاصطناعي",
+    href: "/advisor",
+    icon: Bot,
   },
   {
     label: "متابعة الطلب",
