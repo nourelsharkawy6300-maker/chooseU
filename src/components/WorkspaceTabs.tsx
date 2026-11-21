@@ -858,7 +858,7 @@ export function WorkspaceTabs({
                     return (
                       <div
                         key={fac.id}
-                        className="p-4 hover:bg-slate-50/70 transition flex flex-col 2xl:flex-row 2xl:items-center justify-between gap-3.5"
+                        className="p-4 hover:bg-slate-50/70 transition flex flex-col gap-3.5"
                       >
                         {/* Number & Primary Info */}
                         <div className="flex items-start gap-3 min-w-0 flex-1">
@@ -902,7 +902,7 @@ export function WorkspaceTabs({
                         </div>
 
                         {/* Aligned Metadata Columns: governorate, cutoff, yearly fee, total cost */}
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-start shrink-0 text-xs pt-3 2xl:pt-1 border-t 2xl:border-t-0 border-slate-100">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-start text-xs pt-3 border-t border-slate-100 w-full">
                           <div className="space-y-0.5 min-w-[70px]">
                             <div className="text-xs text-slate-600 font-medium">المحافظة</div>
                             <div className="font-medium text-slate-700">{fac.gov}</div>
