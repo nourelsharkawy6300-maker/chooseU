@@ -14,9 +14,10 @@ import {
 } from "lucide-react";
 
 const TRACK_OPTIONS = [
-  { value: "Science_Bio", label: "علمي علوم" },
-  { value: "Science_Math", label: "علمي رياضة" },
-  { value: "Literary", label: "أدبي" },
+  { value: "Science", label: "علمي علوم" },
+  { value: "Math", label: "علمي رياضة" },
+  { value: "Arts", label: "أدبي" },
+  { value: "stem", label: "مدارس المتفوقين (STEM)" },
 ];
 
 export default function ProfilePage() {
@@ -27,7 +28,7 @@ export default function ProfilePage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
-  const [track, setTrack] = useState("Science_Bio");
+  const [track, setTrack] = useState("Science");
   const [score, setScore] = useState("");
   const [annualBudget, setAnnualBudget] = useState("");
 

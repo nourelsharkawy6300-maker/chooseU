@@ -18,8 +18,9 @@ const SUGGESTIONS = [
 ];
 
 function formatTrack(track?: string | null) {
-  if (track === "Science_Math") return "علمي رياضة";
-  if (track === "Literary") return "أدبي";
+  if (track === "Math") return "علمي رياضة";
+  if (track === "Arts") return "أدبي";
+  if (track === "stem") return "STEM";
   return "علمي علوم";
 }
 
