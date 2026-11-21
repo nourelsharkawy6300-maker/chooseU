@@ -145,7 +145,7 @@ export function rateLimitExceededResponse(reset: number): NextResponse {
     JSON.stringify({
       success: false,
       error: "Too Many Requests",
-      message: "Rate limit exceeded. System under protection.",
+      message: "تم إرسال عدد كبير من الطلبات. يرجى الانتظار بضع ثوانٍ ثم المحاولة مرة أخرى.",
     }),
     {
       status: 429,
