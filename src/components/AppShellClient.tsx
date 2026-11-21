@@ -256,6 +256,13 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                   </div>
                 </div>
               </div>
+              <Link
+                href="/profile"
+                className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition-colors"
+              >
+                <User className="h-3.5 w-3.5" />
+                <span>الملف الشخصي</span>
+              </Link>
               <button
                 type="button"
                 onClick={handleSignOut}
@@ -492,6 +499,14 @@ export function AppShellClient({ children }: { children: React.ReactNode }) {
                           {studentName.trim() || authUser.email || "حساب الطالب"}
                         </p>
                       </div>
+                      <Link
+                        href="/profile"
+                        onClick={() => setIsMobileNavOpen(false)}
+                        className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition-colors"
+                      >
+                        <User className="h-3.5 w-3.5" />
+                        <span>الملف الشخصي</span>
+                      </Link>
                       <button
                         type="button"
                         onClick={handleSignOut}
